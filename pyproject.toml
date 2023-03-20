@@ -1,0 +1,116 @@
+[project]
+  authors = [
+    { name = "Sasan Jacob Rasti", email = "sasan_jacob.rasti@tu-dresden.de" },
+
+    { name = "Laura Fiedler", email = "laura.fiedler1@tu-dresden.de" },
+    { name = "Maximilian Schmidt", email = "maximilian.schmidt@tu-dresden.de" },
+    { name = "Sebastian Krahmer", email = "sebastian.krahmer@tu-dresden.de" },
+  ]
+  dependencies = ["loguru", "pydantic"]
+  description = "A data model for describing power systems"
+  license = { file = "LICENSE" }
+  name = "ieeh-power-system-data-model"
+  readme = "README.md"
+  requires-python = ">=3.10,<3.11"
+  version = "1.1.0"
+
+  [project.urls]
+    Source = "https://github.com/ieeh-tu-dresden/power-system-data-model"
+
+  [project.optional-dependencies]
+
+[build-system]
+  build-backend = "pdm.pep517.api"
+  requires      = ["pdm-pep517"]
+
+[tool]
+
+  [tool.pdm]
+
+    [tool.pdm.dev-dependencies]
+      deployment = ["commitizen"]
+      formatting = ["black"]
+      linter     = ["ruff"]
+      prototype  = ["ipykernel"]
+      test       = ["pytest", "pytest-cov", "pytest-xdist"]
+      typing     = ["mypy @ git+https://github.com/python/mypy.git@master"]
+
+[tool.ruff]
+  extend-exclude = ["tests"]
+  ignore = [
+    "ANN002",
+    "ANN003",
+    "ANN101",
+    "ANN102",
+    "C901",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D202",
+    "D203",
+    "D401",
+    "E402",
+    "E501",
+  ]
+  line-length = 120
+  select = ["ALL"]
+
+  [tool.ruff.flake8-type-checking]
+    runtime-evaluated-base-classes = ["psdm.base.Base", "pydantic.BaseModel"]
+
+  [tool.ruff.isort]
+    force-single-line = true
+
+  [tool.ruff.pydocstyle]
+    convention = "pep257"
+
+  [tool.ruff.pep8-naming]
+    classmethod-decorators = [
+      "classmethod",
+      "pydantic.root_validator",
+      "pydantic.validator",
+    ]
+
+[tool.black]
+  line_length = 120
+
+[tool.commitizen]
+  name          = "cz_conventional_commits"
+  tag_format    = "$version"
+  version       = "1.1.0"
+  version_files = ["psdm/meta.py:VERSION", "pyproject.toml:version"]
+
+[tool.mypy]
+  follow_imports         = "normal"
+  ignore_missing_imports = true
+  mypy_path              = "psdm"
+  namespace_packages     = true
+  plugins                = "pydantic.mypy"
+  strict_optional        = true
+  warn_no_return         = true
+  warn_redundant_casts   = true
+  warn_unused_ignores    = true
+
+[tool.pytest.ini_options]
+  addopts      = "-ra --strict-markers -p pytester --cov=psdm --cov-report xml --cov-report term"
+  python_files = "test_*.py"
+  testpaths    = ["tests"]
+
+[tool.coverage.run]
+  branch = true
+  omit   = ["__pypackages__/*", "build/*", "tests/*"]
+  source = ["psdm"]
+
+[tool.coverage.report]
+  show_missing = true
+
+[tool.coverage.xml]
+  output = "coverage.xml"
+
+[tool.pyright]
+  exclude = ["**/__pycache__"]

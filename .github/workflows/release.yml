@@ -1,0 +1,129 @@
+name: release
+
+on:
+  workflow_dispatch:
+  milestone:
+    types: [closed]
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+  release:
+    name: Release a new version
+    runs-on: ubuntu-latest
+    needs: [tests]
+    env:
+      PYTHON_VERSION: "3.10"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Temporarily disable 'include administrators' default branch protection
+        uses: benjefferies/branch-protection-bot@master
+        if: always()
+        with:
+          access_token: ${{ secrets.ACCESS_TOKEN }}
+          branch: ${{ github.event.repository.default_branch }}
+          enforce_admins: false
+
+      - name: Update license year
+        uses: FantasticFiasco/action-update-license-year@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge license year pull request
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: gh pr merge --squash --delete-branch --admin
+
+      - name: Find new version
+        id: cz
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          push: false
+          commit: false
+          changelog: false
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: true
+          architecture: x64
+          prerelease: true
+          enable-pep582: true
+
+      - name: Installing dependencies
+        run: pdm install
+
+      - name: Generate schema JSON files
+        run: pdm run python -c '$COMMAND'
+        env:
+          COMMAND: |
+            from psdm.steadystate_case.case import Case as SteadystateCase
+            from psdm.topology.topology import Topology
+            from psdm.topology_case.case import Case as TopologyCase
+            from pathlib import Path
+            f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.json")
+            f_top.parent.mkdir(exist_ok=True, parents=True)
+            with open(f_top, "w") as f:
+                f.write(Topology.schema_json(indent=2))
+            f_topc = Path(f"./schema/${{ steps.cz.outputs.version }}/topology_case.json")
+            f_topc.parent.mkdir(exist_ok=True, parents=True)
+            with open(f_topc, "w") as f:
+                f.write(TopologyCase.schema_json(indent=2))
+            f_ssc = Path(f"./schema/${{ steps.cz.outputs.version }}/steady_state_case.json")
+            f_ssc.parent.mkdir(exist_ok=True, parents=True)
+            with open(f_ssc, "w") as f:
+                f.write(SteadystateCase.schema_json(indent=2))
+
+      - name: Stage schema JSON files
+        run: git add ./schema
+
+      - name: Bump version and create changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          changelog_increment_filename: body.md
+
+      - name: Restore 'include administrators' default branch protection
+        uses: benjefferies/branch-protection-bot@master
+        if: always()
+        with:
+          access_token: ${{ secrets.ACCESS_TOKEN }}
+          branch: ${{ github.event.repository.default_branch }}
+          enforce_admins: ${{ steps.disable_include_admins.outputs.initial_status }}
+
+      - name: Build Python packages
+        run: pdm build
+
+      - name: Publish Python packages
+        run: pdm publish
+        env:
+          PDM_PUBLISH_REPO: pypi
+          PDM_PUBLISH_USERNAME: __token__
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: body.md
+          tag_name: ${{ env.REVISION }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+            LICENSE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
