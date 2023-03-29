@@ -92,6 +92,19 @@ jobs:
       - name: Stage schema JSON files
         run: git add ./schema
 
+      - name: Get current date
+        id: get_date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Update .zenodo.json date
+        run: echo "`jq '.publication_date="${{ steps.get_date.outputs.date }}"' .zenodo.json`" > .zenodo.json
+
+      - name: Update .zenodo.json url
+        run: echo "`jq '.related_identifiers[0].identifier="https://github.com/ieeh-tu-dresden/power-system-data-model/tree/${{ steps.cz.outputs.version }}"' .zenodo.json`" > .zenodo.json
+
+      - name: Update .CITATION.cff version number
+        run: echo "`jq '.cff-version="${{ steps.cz.outputs.version }}"' .CITATION.cff`" > .CITATION.cff
+
       - name: Bump version and create changelog
         uses: commitizen-tools/commitizen-action@master
         with:
