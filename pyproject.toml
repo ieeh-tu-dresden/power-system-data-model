@@ -83,7 +83,7 @@
   name          = "cz_conventional_commits"
   tag_format    = "$version"
   version       = "1.2.0"
-  version_files = ["psdm/meta.py:VERSION", "pyproject.toml:version"]
+  version_files = [".CITATION.cff:cff-version", "psdm/meta.py:VERSION", "pyproject.toml:version"]
 
 [tool.mypy]
   follow_imports         = "normal"
