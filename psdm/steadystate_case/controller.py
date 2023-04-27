@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import enum
 from typing import Annotated
-from typing import Union
 
 import pydantic
 
@@ -148,16 +147,14 @@ class ControlQP(Base):
 
 
 ControlType = Annotated[
-    Union[
-        ControlQConst,
-        ControlUConst,
-        ControlTanphiConst,
-        ControlCosphiConst,
-        ControlCosphiP,
-        ControlCosphiU,
-        ControlQU,
-        ControlQP,
-    ],
+    ControlQConst
+    | ControlUConst
+    | ControlTanphiConst
+    | ControlCosphiConst
+    | ControlCosphiP
+    | ControlCosphiU
+    | ControlQU
+    | ControlQP,
     pydantic.Field(discriminator="control_strategy"),
 ]
 
