@@ -34,3 +34,12 @@ class Branch(Base):
     f_n: float | None = None  # nominal frequency the values x and b apply
     description: str | None = None
     energized: bool | None = None
+    length: float | None = None  # length of the line the impedance and admittance values apply
+    rn: float | None = None  # neutral natural values
+    xn: float | None = None  # neutral natural values
+    gn: float | None = None  # neutral natural values
+    bn: float | None = None  # neutral natural values
+    rpn: float | None = None  # neutral-line couple values
+    xpn: float | None = None  # neutral-line couple values
+    gpn: float | None = None  # neutral-line couple values
+    bpn: float | None = None  # neutral-line couple values
