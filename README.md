@@ -2,33 +2,26 @@
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-A data model for describing power systems.
+A data model for the description of electrical power systems.
 
 - [IEEH Power System Data Model](#ieeh-power-system-data-model)
-  - [ Field of Application](#-field-of-application)
-  - [ Tutorials](#-tutorials)
-  - [ Installation](#-installation)
-  - [ Development](#-development)
-  - [ Attribution](#-attribution)
+  - [Field of Application](#-field-of-application)
+  - [Installation](#-installation)
+  - [Development](#-development)
+  - [Attribution](#-attribution)
 
 ## <div id="application" /> Field of Application
 
-This data model is intended to use to describe power systems...TODO
+This data model is intended to describe electrical power systems. It provides a hierarchical structure/schema to describe unique entity relations as well as parameter sets.
 
 The data model is structured as the following schema:
 
-* grid topology:
-  * base topology containing all elements of the exported grid
-* topology case;
-  * information about disabled elements to represent a specific operational case based on the base topology
-* steadystate case
-  * information about power draw/infeed for a specific operational case
-
-## <div id="tutorials" /> Tutorials
-
-Jupyter notebooks are provided to get in touch with the usage of this toolbox:
-
-* for export: [powerfactory_export.ipynb](./examples/powerfactory_export.ipynb)
+- grid topology:
+  - base topology containing all elements of the exported grid
+- topology case;
+  - information about disabled elements to represent a specific operational case based on the base topology
+- steadystate case
+  - information about power draw/infeed for a specific operational case
 
 ## <div id="installation" /> Installation
 
@@ -85,9 +78,9 @@ pdm install
 
 For development in [Visual Studio Code](https://github.com/microsoft/vscode), all configurations are already provided:
 
-* [flake8](https://github.com/PyCQA/flake8)
-* [black](https://github.com/psf/black)
-* [mypy](https://github.com/python/mypy)
+- [flake8](https://github.com/PyCQA/flake8)
+- [black](https://github.com/psf/black)
+- [mypy](https://github.com/python/mypy)
 
 ## <div id="attribution" /> Attribution
 
@@ -97,6 +90,6 @@ Please provide a link to this repository:
 
 Please cite as:
 
-Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, _Power System Data Model_, Zenodo, 2022. <https://doi.org/10.5281/zenodo.TODO>.
+Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, _Power System Data Model - A data model for the description of electrical power systems_, Zenodo, 2023. <https://doi.org/10.5281/zenodo.7781375>.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7074968.svg)](https://doi.org/10.5281/zenodo.TODO)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7781375.svg)](https://doi.org/10.5281/zenodo.7781375)
