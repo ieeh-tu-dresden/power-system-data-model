@@ -26,5 +26,8 @@ class Winding(Base):
     x1: float
     r0: float | None = None  # zero sequence values of transformer T-representation
     x0: float | None = None
+    re: float | None = None  # earthing of neutral point
+    xe: float | None = None  # earthing of neutral point
     phase_angle_clock: int | None = None
     vector_group: VectorGroup | None = None
+    neutral_connected: bool = False  # indicates if neutral line is connected to winding object
