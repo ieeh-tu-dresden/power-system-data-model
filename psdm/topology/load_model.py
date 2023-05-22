@@ -22,29 +22,18 @@ class LoadModel(Base):
     """
 
     name: str | None = None
-    c_p: float = 1
-    c_i: float = 0
+    c_p: pydantic.confloat(ge=0, le=1) = 1.0  # type: ignore[valid-type]
+    c_i: pydantic.confloat(ge=0, le=1) = 0.0  # type: ignore[valid-type]
     c_z: float = 0
-    exp_p: float = 0
-    exp_i: float = 1
-    exp_z: float = 2
+    exp_p: int = 0
+    exp_i: int = 1
+    exp_z: int = 2
 
     @pydantic.root_validator
     def validate_range_c(cls, values: dict[str, Any]) -> dict[str, Any]:
         name = values["name"]
-
-        # validate c_p
         c_p = values["c_p"]
-        if not (0 <= c_p <= 1):
-            msg = f"Load model {name!r}: Components must be in the range between 0 and 1, but {c_p=}."
-            raise ValueError(msg)
-
-        # validate c_i
         c_i = values["c_i"]
-        if not (0 <= c_i <= 1):
-            msg = f"Load model {name!r}: Components must be in the range between 0 and 1, but {c_i=}."
-            raise ValueError(msg)
-
         if c_p + c_i > 1:
             msg = f"Load model {name!r}: Sum of components must not exceed 1, but {(c_p + c_i)=}."
             raise ValueError(msg)

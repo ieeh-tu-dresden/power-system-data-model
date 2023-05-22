@@ -33,10 +33,10 @@ jobs:
         run: pdm install
 
       - name: Code format checking using black
-        run: pdm run black psdm --check
+        run: pdm run black . --check
 
       - name: Code checking using ruff
-        run: pdm run ruff psdm
+        run: pdm run ruff .
 
       - name: Type checking using mypy
-        run: pdm run mypy psdm
+        run: pdm run mypy .
