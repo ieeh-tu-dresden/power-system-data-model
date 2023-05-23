@@ -1,3 +1,9 @@
+## 1.3.1 (2023-05-23)
+
+### Fix
+
+- correct numeric types (contributors: @sasanjac)
+
 ## 1.3.0 (2023-05-05)
 
 ### Feat
