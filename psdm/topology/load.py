@@ -109,6 +109,9 @@ class Load(Base):  # including assets of type load and generator
     active_power: ActivePower
     reactive_power: ReactivePower
     type: LoadType  # noqa: A003
+    phases_a: Sequence[Phase]
+    phases_b: Sequence[Phase]
+    phases_c: Sequence[Phase]
     connected_phases: Sequence[Phase]
     system_type: SystemType
     phase_connection_type: PhaseConnectionType
