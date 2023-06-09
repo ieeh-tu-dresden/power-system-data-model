@@ -8,6 +8,7 @@ import pydantic
 import pytest
 
 from psdm.topology.load import RatedPower
+from psdm.topology.load import PowerType
 
 
 class TestRatedPower:
@@ -21,15 +22,16 @@ class TestRatedPower:
             "cosphi_a",
             "cosphi_b",
             "cosphi_c",
+            "power_type",
             "expectation",
         ),
         [
-            (0, 0, 0, 0, 0, 0, 0, 0, does_not_raise()),
-            (3, 1, 1, 1, 1, 1, 1, 1, does_not_raise()),
-            (4, 2, 1, 1, 1, 1, 1, 1, does_not_raise()),
-            (2, 2, 1, 1, 1, 1, 2, 1, pytest.raises(pydantic.ValidationError)),
-            (2, -2, 1, 1, 1, 1, 1, 1, pytest.raises(pydantic.ValidationError)),
-            (0, -2, 1, 1, 1, 1, 1, 1, pytest.raises(pydantic.ValidationError)),
+            (0, 0, 0, 0, 0, 0, 0, 0, PowerType.AC_APPARENT, does_not_raise()),
+            (3, 1, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, does_not_raise()),
+            (4, 2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, does_not_raise()),
+            (2, 2, 1, 1, 1, 1, 2, 1, PowerType.AC_APPARENT, pytest.raises(pydantic.ValidationError)),
+            (2, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, pytest.raises(pydantic.ValidationError)),
+            (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(  # noqa: PLR0913
@@ -42,6 +44,7 @@ class TestRatedPower:
         cosphi_a,
         cosphi_b,
         cosphi_c,
+        power_type,
         expectation,
     ) -> None:
         with expectation:
@@ -54,4 +57,5 @@ class TestRatedPower:
                 cosphi_a=cosphi_a,
                 cosphi_b=cosphi_b,
                 cosphi_c=cosphi_c,
+                power_type=power_type,
             )
