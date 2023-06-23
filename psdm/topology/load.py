@@ -65,6 +65,16 @@ class Phase(enum.Enum):
     N = "N"
 
 
+class PowerType(enum.Enum):
+    AC_APPARENT = "AC_APPARENT"
+    AC_ACTIVE = "AC_ACTIVE"
+    AC_REACTIVE = "AC_REACTIVE"
+    DC = "DC"
+    THERMAL = "THERMAL"
+    GAS = "GAS"
+    MECHANICAL = "MECHANICAL"
+
+
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
@@ -87,14 +97,15 @@ def validate_symmetry(values: dict[str, float]) -> dict[str, float]:
 
 
 class RatedPower(Base):
-    value: float = pydantic.Field(..., ge=0)  # rated apparent power; base for p.u. calculation
-    value_a: float = pydantic.Field(..., ge=0)  # rated apparent power (phase a)
-    value_b: float = pydantic.Field(..., ge=0)  # rated apparent power (phase b)
-    value_c: float = pydantic.Field(..., ge=0)  # rated apparent power (phase c)
+    value: float = pydantic.Field(..., ge=0)  # rated power; base for p.u. calculation
+    value_a: float = pydantic.Field(..., ge=0)  # rated power (phase a)
+    value_b: float = pydantic.Field(..., ge=0)  # rated power (phase b)
+    value_c: float = pydantic.Field(..., ge=0)  # rated power (phase c)
     cosphi: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) in relation to rated power
     cosphi_a: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase a)
     cosphi_b: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase b)
     cosphi_c: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase c)
+    power_type: PowerType
 
     @pydantic.root_validator(skip_on_failure=True)
     def _validate_total(cls, values: dict[str, float]) -> dict[str, float]:
