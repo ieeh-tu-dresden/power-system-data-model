@@ -101,6 +101,12 @@ class RatedPower(Base):
         return validate_total(values)
 
 
+class ConnectedPhases:
+    phases_a: Sequence[Phase]
+    phases_b: Sequence[Phase]
+    phases_c: Sequence[Phase]
+
+
 class Load(Base):  # including assets of type load and generator
     name: str
     node: str
@@ -109,10 +115,7 @@ class Load(Base):  # including assets of type load and generator
     active_power: ActivePower
     reactive_power: ReactivePower
     type: LoadType  # noqa: A003
-    phases_a: Sequence[Phase]
-    phases_b: Sequence[Phase]
-    phases_c: Sequence[Phase]
-    connected_phases: Sequence[Phase]
+    connected_phases: ConnectedPhases
     system_type: SystemType
     phase_connection_type: PhaseConnectionType
     voltage_system_type: VoltageSystemType
