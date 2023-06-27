@@ -104,7 +104,7 @@ class RatedPower(Base):
         return validate_total(values)
 
 
-class ConnectedPhases:
+class ConnectedPhases(Base):
     phases_a: Sequence[Phase]
     phases_b: Sequence[Phase]
     phases_c: Sequence[Phase]
