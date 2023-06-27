@@ -1,3 +1,15 @@
+## 1.4.0 (2023-06-27)
+
+### Feat
+
+- assign connected phases for each load component
+- add support for fuse types
+- type of  `RatedPower` must be specified (contributors: @sasanjac)
+
+### Fix
+
+- zenodo reference (contributors: @SebastianDD)
+
 ## 1.3.1 (2023-05-23)
 
 ### Fix

@@ -1,0 +1,569 @@
+{
+  "title": "Case",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "$ref": "#/definitions/Meta"
+    },
+    "loads": {
+      "title": "Loads",
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Load"
+      }
+    },
+    "transformers": {
+      "title": "Transformers",
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Transformer"
+      }
+    },
+    "external_grids": {
+      "title": "External Grids",
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExternalGrid"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "definitions": {
+    "Meta": {
+      "title": "Meta",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "date": {
+          "title": "Date",
+          "type": "string",
+          "format": "date"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "project": {
+          "title": "Project",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "default": "1.3.1",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "date"
+      ]
+    },
+    "ActivePower": {
+      "title": "ActivePower",
+      "type": "object",
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "value_a": {
+          "title": "Value A",
+          "type": "number"
+        },
+        "value_b": {
+          "title": "Value B",
+          "type": "number"
+        },
+        "value_c": {
+          "title": "Value C",
+          "type": "number"
+        },
+        "is_symmetrical": {
+          "title": "Is Symmetrical",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "value",
+        "value_a",
+        "value_b",
+        "value_c",
+        "is_symmetrical"
+      ]
+    },
+    "ControlStrategy": {
+      "title": "ControlStrategy",
+      "description": "An enumeration.",
+      "enum": [
+        "U_CONST",
+        "COSPHI_CONST",
+        "Q_CONST",
+        "Q_U",
+        "Q_P",
+        "COSPHI_P",
+        "COSPHI_U",
+        "TANPHI_CONST",
+        "ND"
+      ]
+    },
+    "ControlQConst": {
+      "title": "ControlQConst",
+      "type": "object",
+      "properties": {
+        "q_set": {
+          "title": "Q Set",
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "Q_CONST",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "q_set"
+      ]
+    },
+    "ControlledVoltageRef": {
+      "title": "ControlledVoltageRef",
+      "description": "An enumeration.",
+      "enum": [
+        "POS_SEQ",
+        "AVG",
+        "A",
+        "B",
+        "C",
+        "AB",
+        "BC",
+        "CA"
+      ]
+    },
+    "ControlUConst": {
+      "title": "ControlUConst",
+      "type": "object",
+      "properties": {
+        "u_set": {
+          "title": "U Set",
+          "minimum": 0,
+          "type": "number"
+        },
+        "u_meas_ref": {
+          "default": "POS_SEQ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlledVoltageRef"
+            }
+          ]
+        },
+        "control_strategy": {
+          "default": "U_CONST",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "u_set"
+      ]
+    },
+    "CosphiDir": {
+      "title": "CosphiDir",
+      "description": "An enumeration.",
+      "enum": [
+        "UE",
+        "OE"
+      ]
+    },
+    "ControlTanphiConst": {
+      "title": "ControlTanphiConst",
+      "type": "object",
+      "properties": {
+        "cosphi_dir": {
+          "$ref": "#/definitions/CosphiDir"
+        },
+        "cosphi": {
+          "title": "Cosphi",
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "TANPHI_CONST",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "cosphi_dir",
+        "cosphi"
+      ]
+    },
+    "ControlCosphiConst": {
+      "title": "ControlCosphiConst",
+      "type": "object",
+      "properties": {
+        "cosphi_dir": {
+          "$ref": "#/definitions/CosphiDir"
+        },
+        "cosphi": {
+          "title": "Cosphi",
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "COSPHI_CONST",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "cosphi_dir",
+        "cosphi"
+      ]
+    },
+    "ControlCosphiP": {
+      "title": "ControlCosphiP",
+      "type": "object",
+      "properties": {
+        "cosphi_ue": {
+          "title": "Cosphi Ue",
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        },
+        "cosphi_oe": {
+          "title": "Cosphi Oe",
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        },
+        "p_threshold_ue": {
+          "title": "P Threshold Ue",
+          "maximum": 0,
+          "type": "number"
+        },
+        "p_threshold_oe": {
+          "title": "P Threshold Oe",
+          "maximum": 0,
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "COSPHI_P",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "cosphi_ue",
+        "cosphi_oe",
+        "p_threshold_ue",
+        "p_threshold_oe"
+      ]
+    },
+    "ControlCosphiU": {
+      "title": "ControlCosphiU",
+      "type": "object",
+      "properties": {
+        "cosphi_ue": {
+          "title": "Cosphi Ue",
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        },
+        "cosphi_oe": {
+          "title": "Cosphi Oe",
+          "minimum": 0,
+          "maximum": 1,
+          "type": "number"
+        },
+        "u_threshold_ue": {
+          "title": "U Threshold Ue",
+          "minimum": 0,
+          "type": "number"
+        },
+        "u_threshold_oe": {
+          "title": "U Threshold Oe",
+          "minimum": 0,
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "COSPHI_U",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "cosphi_ue",
+        "cosphi_oe",
+        "u_threshold_ue",
+        "u_threshold_oe"
+      ]
+    },
+    "ControlQU": {
+      "title": "ControlQU",
+      "type": "object",
+      "properties": {
+        "m_tg_2015": {
+          "title": "M Tg 2015",
+          "minimum": 0,
+          "type": "number"
+        },
+        "m_tg_2018": {
+          "title": "M Tg 2018",
+          "minimum": 0,
+          "type": "number"
+        },
+        "u_q0": {
+          "title": "U Q0",
+          "minimum": 0,
+          "type": "number"
+        },
+        "u_deadband_up": {
+          "title": "U Deadband Up",
+          "minimum": 0,
+          "type": "number"
+        },
+        "u_deadband_low": {
+          "title": "U Deadband Low",
+          "minimum": 0,
+          "type": "number"
+        },
+        "q_max_ue": {
+          "title": "Q Max Ue",
+          "minimum": 0,
+          "type": "number"
+        },
+        "q_max_oe": {
+          "title": "Q Max Oe",
+          "minimum": 0,
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "Q_U",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "m_tg_2015",
+        "m_tg_2018",
+        "u_q0",
+        "u_deadband_up",
+        "u_deadband_low",
+        "q_max_ue",
+        "q_max_oe"
+      ]
+    },
+    "ControlQP": {
+      "title": "ControlQP",
+      "type": "object",
+      "properties": {
+        "q_p_characteristic_name": {
+          "title": "Q P Characteristic Name",
+          "type": "string"
+        },
+        "q_max_ue": {
+          "title": "Q Max Ue",
+          "type": "number"
+        },
+        "q_max_oe": {
+          "title": "Q Max Oe",
+          "type": "number"
+        },
+        "control_strategy": {
+          "default": "Q_P",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ControlStrategy"
+            }
+          ]
+        }
+      },
+      "required": [
+        "q_p_characteristic_name"
+      ]
+    },
+    "Controller": {
+      "title": "Controller",
+      "type": "object",
+      "properties": {
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "control_type": {
+          "title": "Control Type",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ControlQConst"
+            },
+            {
+              "$ref": "#/definitions/ControlUConst"
+            },
+            {
+              "$ref": "#/definitions/ControlTanphiConst"
+            },
+            {
+              "$ref": "#/definitions/ControlCosphiConst"
+            },
+            {
+              "$ref": "#/definitions/ControlCosphiP"
+            },
+            {
+              "$ref": "#/definitions/ControlCosphiU"
+            },
+            {
+              "$ref": "#/definitions/ControlQU"
+            },
+            {
+              "$ref": "#/definitions/ControlQP"
+            }
+          ]
+        },
+        "external_controller_name": {
+          "title": "External Controller Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node_target"
+      ]
+    },
+    "ReactivePower": {
+      "title": "ReactivePower",
+      "type": "object",
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "value_a": {
+          "title": "Value A",
+          "type": "number"
+        },
+        "value_b": {
+          "title": "Value B",
+          "type": "number"
+        },
+        "value_c": {
+          "title": "Value C",
+          "type": "number"
+        },
+        "is_symmetrical": {
+          "title": "Is Symmetrical",
+          "type": "boolean"
+        },
+        "controller": {
+          "$ref": "#/definitions/Controller"
+        }
+      },
+      "required": [
+        "value",
+        "value_a",
+        "value_b",
+        "value_c",
+        "is_symmetrical"
+      ]
+    },
+    "Load": {
+      "title": "Load",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "active_power": {
+          "$ref": "#/definitions/ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/definitions/ReactivePower"
+        }
+      },
+      "required": [
+        "name",
+        "active_power",
+        "reactive_power"
+      ]
+    },
+    "Transformer": {
+      "title": "Transformer",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "tap_pos": {
+          "title": "Tap Pos",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ExternalGrid": {
+      "title": "ExternalGrid",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_0": {
+          "title": "U 0",
+          "type": "number"
+        },
+        "phi_0": {
+          "title": "Phi 0",
+          "type": "number"
+        },
+        "p_0": {
+          "title": "P 0",
+          "type": "number"
+        },
+        "q_0": {
+          "title": "Q 0",
+          "type": "number"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}
