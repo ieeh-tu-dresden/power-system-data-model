@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 import enum
-from collections.abc import Sequence
+import typing as t
 
 import pydantic
 
@@ -13,6 +13,9 @@ from psdm.base import Base
 from psdm.base import VoltageSystemType
 from psdm.topology.active_power import ActivePower
 from psdm.topology.reactive_power import ReactivePower
+
+if t.TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class LoadType(enum.Enum):
