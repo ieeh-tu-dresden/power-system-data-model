@@ -13,6 +13,7 @@ from psdm.base import VoltageSystemType
 class BranchType(Enum):
     LINE = "LINE"
     COUPLER = "COUPLER"
+    FUSE = "FUSE"
 
 
 class Branch(Base):
