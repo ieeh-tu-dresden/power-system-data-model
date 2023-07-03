@@ -47,6 +47,14 @@ Linux/Mac:
 curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
 ```
 
+Alternativ using pipx or pip:
+```bash
+pipx install pdm
+```
+```bash
+pip install --user pdm
+```
+
 Install [pdm-venv](https://github.com/pdm-project/pdm-venv)
 
 ```bash
@@ -90,6 +98,6 @@ Please provide a link to this repository:
 
 Please cite as:
 
-Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, _Power System Data Model - A data model for the description of electrical power systems_, Zenodo, 2023. <https://doi.org/10.5281/zenodo.7781375>.
+Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, _Power System Data Model - A data model for the description of electrical power systems_, Zenodo, 2023. <https://doi.org/10.5281/zenodo.8087079>.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7781375.svg)](https://doi.org/10.5281/zenodo.7781375)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8087079.svg)](https://doi.org/10.5281/zenodo.8087079)
