@@ -72,7 +72,7 @@ class Transformer(Base):
     vector_group: VectorGroup  # specifier for connection of wiring e.g. DYn5
     i_0: float  # no-load current in %
     p_fe: float  # no-load losses (Iron losses)
-    windings: pydantic.conlist(Winding, unique_items=True)  # type: ignore[valid-type]  # winding object for each voltage level
+    windings: pydantic.conset(Winding)  # winding object for each voltage level
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
     tap_u_abs: float | None = None  # voltage deviation per tap position change in %
