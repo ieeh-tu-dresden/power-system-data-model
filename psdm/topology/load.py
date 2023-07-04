@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 import enum
-from collections.abc import Sequence
+import typing as t
 
 import pydantic
 
@@ -78,25 +78,42 @@ class PowerType(enum.Enum):
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
-def validate_total(values: dict[str, float]) -> dict[str, float]:
-    pow_total = values["value_a"] + values["value_b"] + values["value_c"]
-    diff = abs(values["value"] - pow_total)
+class PowerBase(Base):
+    value: float
+    value_a: float
+    value_b: float
+    value_c: float
+    is_symmetrical: bool
+
+
+T = t.TypeVar("T", bound=PowerBase)
+
+
+def validate_total(power: T) -> T:
+    pow_total = power.value_a + power.value_b + power.value_c
+    diff = abs(power.value - pow_total)
     if diff > THRESHOLD:
-        msg = f"Power mismatch: Total power should be {pow_total}, is {values['value']}."
+        msg = f"Power mismatch: Total power should be {pow_total}, is {power.value}."
         raise ValueError(msg)
 
-    return values
+    return power
 
 
-def validate_symmetry(values: dict[str, float]) -> dict[str, float]:
-    if values["is_symmetrical"] and not (values["value_a"] == values["value_b"] == values["value_c"]):
-        msg = "Power mismatch: Three-phase power of load is not symmetrical."
-        raise ValueError(msg)
+def validate_symmetry(power: T) -> T:
+    if power.value != 0:
+        if power.is_symmetrical:
+            if not (power.value_a == power.value_b == power.value_c):
+                msg = "Power mismatch: Three-phase power of load is not symmetrical."
+                raise ValueError(msg)
 
-    return values
+        elif power.value_a == power.value_b == power.value_c:
+            msg = "Power mismatch: Three-phase power of load is symmetrical."
+            raise ValueError(msg)
+
+    return power
 
 
-class RatedPower(Base):
+class RatedPower(PowerBase):
     value: float = pydantic.Field(..., ge=0)  # rated power; base for p.u. calculation
     value_a: float = pydantic.Field(..., ge=0)  # rated power (phase a)
     value_b: float = pydantic.Field(..., ge=0)  # rated power (phase b)
@@ -106,16 +123,26 @@ class RatedPower(Base):
     cosphi_b: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase b)
     cosphi_c: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase c)
     power_type: PowerType
+    is_symmetrical: bool
 
-    @pydantic.root_validator(skip_on_failure=True)
-    def _validate_total(cls, values: dict[str, float]) -> dict[str, float]:
-        return validate_total(values)
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_symmetry(cls, power: RatedPower) -> RatedPower:
+        return validate_symmetry(power)
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_total(cls, power: RatedPower) -> RatedPower:
+        return validate_total(power)
 
 
 class ConnectedPhases(Base):
-    phases_a: Sequence[Phase]
-    phases_b: Sequence[Phase]
-    phases_c: Sequence[Phase]
+    phases_a: tuple[Phase, Phase] | None
+    phases_b: tuple[Phase, Phase] | None
+    phases_c: tuple[Phase, Phase] | None
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def n_connected_phases(self) -> int:
+        return sum([getattr(self, f"phases_{idx}") is not None for idx in ["a", "b", "c"]])
 
 
 class Load(Base):  # including assets of type load and generator

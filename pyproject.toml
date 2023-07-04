@@ -61,7 +61,11 @@
   select = ["ALL"]
 
   [tool.ruff.flake8-type-checking]
-    runtime-evaluated-base-classes = ["psdm.base.Base", "pydantic.BaseModel"]
+    runtime-evaluated-base-classes = [
+      "psdm.base.Base",
+      "psdm.topology.load.PowerBase",
+      "pydantic.BaseModel",
+    ]
 
   [tool.ruff.isort]
     force-single-line = true
@@ -72,8 +76,8 @@
   [tool.ruff.pep8-naming]
     classmethod-decorators = [
       "classmethod",
-      "pydantic.root_validator",
-      "pydantic.validator",
+      "pydantic.field_validator",
+      "pydantic.model_validator",
     ]
 
 [tool.black]
