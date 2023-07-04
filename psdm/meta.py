@@ -16,7 +16,7 @@ VERSION = "1.4.0"
 
 
 class Meta(Base):
-    version: t.ClassVar = VERSION
+    version: t.ClassVar[str] = VERSION
     name: str
     date: datetime.date  # date of export
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
