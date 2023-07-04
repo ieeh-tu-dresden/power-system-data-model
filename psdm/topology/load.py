@@ -89,9 +89,15 @@ def validate_total(values: dict[str, float]) -> dict[str, float]:
 
 
 def validate_symmetry(values: dict[str, float]) -> dict[str, float]:
-    if values["is_symmetrical"] and not (values["value_a"] == values["value_b"] == values["value_c"]):
-        msg = "Power mismatch: Three-phase power of load is not symmetrical."
-        raise ValueError(msg)
+    if values["value"] != 0:
+        if values["is_symmetrical"]:
+            if not (values["value_a"] == values["value_b"] == values["value_c"]):
+                msg = "Power mismatch: Three-phase power of load is not symmetrical."
+                raise ValueError(msg)
+
+        elif values["value_a"] == values["value_b"] == values["value_c"]:
+            msg = "Power mismatch: Three-phase power of load is symmetrical."
+            raise ValueError(msg)
 
     return values
 
