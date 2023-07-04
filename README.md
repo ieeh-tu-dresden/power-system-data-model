@@ -5,10 +5,10 @@
 A data model for the description of electrical power systems.
 
 - [IEEH Power System Data Model](#ieeh-power-system-data-model)
-  - [Field of Application](#-field-of-application)
-  - [Installation](#-installation)
-  - [Development](#-development)
-  - [Attribution](#-attribution)
+  - [ Field of Application](#-field-of-application)
+  - [ Installation](#-installation)
+  - [ Development](#-development)
+  - [ Attribution](#-attribution)
 
 ## <div id="application" /> Field of Application
 
@@ -47,19 +47,12 @@ Linux/Mac:
 curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
 ```
 
-Alternativ using pipx or pip:
+Or using pipx or pip:
 ```bash
 pipx install pdm
 ```
 ```bash
 pip install --user pdm
-```
-
-Install [pdm-venv](https://github.com/pdm-project/pdm-venv)
-
-```bash
-pdm plugin add pdm-venv
-pdm config venv.in_project true
 ```
 
 Clone `power-system-data-model`
