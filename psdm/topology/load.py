@@ -106,6 +106,11 @@ class RatedPower(Base):
     cosphi_b: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase b)
     cosphi_c: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase c)
     power_type: PowerType
+    is_symmetrical: bool
+
+    @pydantic.root_validator(skip_on_failure=True)
+    def _validate_symmetry(cls, values: dict[str, float]) -> dict[str, float]:
+        return validate_symmetry(values)
 
     @pydantic.root_validator(skip_on_failure=True)
     def _validate_total(cls, values: dict[str, float]) -> dict[str, float]:
