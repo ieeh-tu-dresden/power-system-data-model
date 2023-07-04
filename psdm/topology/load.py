@@ -89,9 +89,15 @@ def validate_total(values: dict[str, float]) -> dict[str, float]:
 
 
 def validate_symmetry(values: dict[str, float]) -> dict[str, float]:
-    if values["is_symmetrical"] and not (values["value_a"] == values["value_b"] == values["value_c"]):
-        msg = "Power mismatch: Three-phase power of load is not symmetrical."
-        raise ValueError(msg)
+    if values["value"] != 0:
+        if values["is_symmetrical"]:
+            if not (values["value_a"] == values["value_b"] == values["value_c"]):
+                msg = "Power mismatch: Three-phase power of load is not symmetrical."
+                raise ValueError(msg)
+
+        elif values["value_a"] == values["value_b"] == values["value_c"]:
+            msg = "Power mismatch: Three-phase power of load is symmetrical."
+            raise ValueError(msg)
 
     return values
 
@@ -106,6 +112,11 @@ class RatedPower(Base):
     cosphi_b: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase b)
     cosphi_c: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase c)
     power_type: PowerType
+    is_symmetrical: bool
+
+    @pydantic.root_validator(skip_on_failure=True)
+    def _validate_symmetry(cls, values: dict[str, float]) -> dict[str, float]:
+        return validate_symmetry(values)
 
     @pydantic.root_validator(skip_on_failure=True)
     def _validate_total(cls, values: dict[str, float]) -> dict[str, float]:
