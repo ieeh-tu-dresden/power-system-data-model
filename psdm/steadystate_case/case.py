@@ -21,9 +21,9 @@ if TYPE_CHECKING:
 
 class Case(Base):
     meta: Meta
-    loads: pydantic.conset(Load)
-    transformers: pydantic.conset(Transformer)
-    external_grids: pydantic.conset(ExternalGrid)
+    loads: pydantic.conset(Load)  # type: ignore[valid-type]
+    transformers: pydantic.conset(Transformer)  # type: ignore[valid-type]
+    external_grids: pydantic.conset(ExternalGrid)  # type: ignore[valid-type]
 
     def is_valid_topology(self, topology: Topology) -> bool:
         logger.info("Verifying steadystate case ...")

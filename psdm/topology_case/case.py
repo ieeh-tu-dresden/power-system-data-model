@@ -13,4 +13,4 @@ from psdm.topology_case.element_state import ElementState
 
 class Case(Base):
     meta: Meta
-    elements: pydantic.conset(ElementState)
+    elements: pydantic.conset(ElementState)  # type: ignore[valid-type]

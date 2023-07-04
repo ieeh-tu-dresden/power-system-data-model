@@ -17,8 +17,8 @@ from psdm.topology.transformer import Transformer
 
 class Topology(Base):
     meta: Meta
-    branches: pydantic.conset(Branch)
-    nodes: pydantic.conset(Node)
-    loads: pydantic.conset(Load)
-    transformers: pydantic.conset(Transformer)
-    external_grids: pydantic.conset(ExternalGrid)
+    branches: pydantic.conset(Branch)  # type: ignore[valid-type]
+    nodes: pydantic.conset(Node)  # type: ignore[valid-type]
+    loads: pydantic.conset(Load)  # type: ignore[valid-type]
+    transformers: pydantic.conset(Transformer)  # type: ignore[valid-type]
+    external_grids: pydantic.conset(ExternalGrid)  # type: ignore[valid-type]
