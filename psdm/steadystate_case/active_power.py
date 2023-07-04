@@ -7,22 +7,22 @@ from __future__ import annotations
 
 import pydantic
 
-from psdm.base import Base
+from psdm.topology.load import PowerBase
 from psdm.topology.load import validate_symmetry
 from psdm.topology.load import validate_total
 
 
-class ActivePower(Base):
+class ActivePower(PowerBase):
     value: float  # actual active power (three-phase)
     value_a: float  # actual active power (phase a)
     value_b: float  # actual active power (phase b)
     value_c: float  # actual active power (phase c)
     is_symmetrical: bool
 
-    @pydantic.root_validator(skip_on_failure=True)
-    def _validate_symmetry(cls, values: dict[str, float]) -> dict[str, float]:
-        return validate_symmetry(values)
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_symmetry(cls, power: ActivePower) -> ActivePower:
+        return validate_symmetry(power)
 
-    @pydantic.root_validator(skip_on_failure=True)
-    def _validate_total(cls, values: dict[str, float]) -> dict[str, float]:
-        return validate_total(values)
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_total(cls, power: ActivePower) -> ActivePower:
+        return validate_total(power)

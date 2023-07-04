@@ -64,4 +64,5 @@ class TestRatedPower:
                 cosphi_c=cosphi_c,
                 is_symmetrical=is_symmetrical,
                 power_type=power_type,
+                is_symmetrical=is_symmetrical,
             )

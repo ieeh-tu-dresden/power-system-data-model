@@ -5,14 +5,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import pydantic
 
 from psdm.base import Base
-
-if TYPE_CHECKING:
-    from typing import Any
 
 
 class LoadModel(Base):
@@ -24,23 +19,22 @@ class LoadModel(Base):
     name: str | None = None
     c_p: pydantic.confloat(ge=0, le=1) = 1.0  # type: ignore[valid-type]
     c_i: pydantic.confloat(ge=0, le=1) = 0.0  # type: ignore[valid-type]
-    c_z: float = 0
     exp_p: int = 0
     exp_i: int = 1
     exp_z: int = 2
 
-    @pydantic.root_validator
-    def validate_range_c(cls, values: dict[str, Any]) -> dict[str, Any]:
-        name = values["name"]
-        c_p = values["c_p"]
-        c_i = values["c_i"]
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def validate_range_c(cls, load_model: LoadModel) -> LoadModel:
+        name = load_model.name
+        c_p = load_model.c_p
+        c_i = load_model.c_i
         if c_p + c_i > 1:
             msg = f"Load model {name!r}: Sum of components must not exceed 1, but {(c_p + c_i)=}."
             raise ValueError(msg)
 
-        return values
+        return load_model
 
-    @pydantic.root_validator
-    def compute_c_z(cls, values: dict[str, Any]) -> dict[str, Any]:
-        values["c_z"] = 1 - values["c_p"] - values["c_i"]
-        return values
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def c_z(self) -> int:
+        return 1 - self.c_p - self.c_i
