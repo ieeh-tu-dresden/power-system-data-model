@@ -7,6 +7,7 @@ from __future__ import annotations
 import pydantic
 
 from psdm.base import Base
+from psdm.base import validate_set
 from psdm.meta import Meta
 from psdm.topology.branch import Branch
 from psdm.topology.external_grid import ExternalGrid
@@ -17,8 +18,28 @@ from psdm.topology.transformer import Transformer
 
 class Topology(Base):
     meta: Meta
-    branches: pydantic.conset(Branch)  # type: ignore[valid-type]
-    nodes: pydantic.conset(Node)  # type: ignore[valid-type]
-    loads: pydantic.conset(Load)  # type: ignore[valid-type]
-    transformers: pydantic.conset(Transformer)  # type: ignore[valid-type]
-    external_grids: pydantic.conset(ExternalGrid)  # type: ignore[valid-type]
+    branches: list[Branch]
+    nodes: list[Node]
+    loads: list[Load]
+    transformers: list[Transformer]
+    external_grids: list[ExternalGrid]
+
+    @pydantic.field_validator("branches")
+    def validate_branches(cls, value: list[Branch]) -> list[Branch]:
+        return validate_set(value)
+
+    @pydantic.field_validator("nodes")
+    def validate_nodes(cls, value: list[Node]) -> list[Node]:
+        return validate_set(value)
+
+    @pydantic.field_validator("loads")
+    def validate_loads(cls, value: list[Load]) -> list[Load]:
+        return validate_set(value)
+
+    @pydantic.field_validator("transformers")
+    def validate_transformers(cls, value: list[Transformer]) -> list[Transformer]:
+        return validate_set(value)
+
+    @pydantic.field_validator("external_grids")
+    def validate_external_grids(cls, value: list[ExternalGrid]) -> list[ExternalGrid]:
+        return validate_set(value)

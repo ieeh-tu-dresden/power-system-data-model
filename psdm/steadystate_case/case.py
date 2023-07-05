@@ -10,6 +10,7 @@ import pydantic
 from loguru import logger
 
 from psdm.base import Base
+from psdm.base import validate_set
 from psdm.meta import Meta
 from psdm.steadystate_case.external_grid import ExternalGrid
 from psdm.steadystate_case.load import Load
@@ -21,9 +22,21 @@ if TYPE_CHECKING:
 
 class Case(Base):
     meta: Meta
-    loads: pydantic.conset(Load)  # type: ignore[valid-type]
-    transformers: pydantic.conset(Transformer)  # type: ignore[valid-type]
-    external_grids: pydantic.conset(ExternalGrid)  # type: ignore[valid-type]
+    loads: list[Load]
+    transformers: list[Transformer]
+    external_grids: list[ExternalGrid]
+
+    @pydantic.field_validator("loads")
+    def validate_loads(cls, value: list[Load]) -> list[Load]:
+        return validate_set(value)
+
+    @pydantic.field_validator("transformers")
+    def validate_transformers(cls, value: list[Transformer]) -> list[Transformer]:
+        return validate_set(value)
+
+    @pydantic.field_validator("external_grids")
+    def validate_external_grids(cls, value: list[ExternalGrid]) -> list[ExternalGrid]:
+        return validate_set(value)
 
     def is_valid_topology(self, topology: Topology) -> bool:
         logger.info("Verifying steadystate case ...")

@@ -10,6 +10,7 @@ import enum
 import pydantic
 
 from psdm.base import Base
+from psdm.base import validate_set
 from psdm.topology.windings import Winding
 
 
@@ -72,7 +73,7 @@ class Transformer(Base):
     vector_group: VectorGroup  # specifier for connection of wiring e.g. DYn5
     i_0: float  # no-load current in %
     p_fe: float  # no-load losses (Iron losses)
-    windings: pydantic.conset(Winding)  # type: ignore[valid-type]  # winding object for each voltage level
+    windings: list[Winding]  # winding object for each voltage level
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
     tap_u_abs: float | None = None  # voltage deviation per tap position change in %
@@ -81,3 +82,7 @@ class Transformer(Base):
     tap_min: int | None = None  # lower position of tap for tap control
     tap_neutral: int | None = None  # initial position where rated transformation ratio is specified
     tap_side: TapSide | None = None  # transformer side of where tap changer is installed
+
+    @pydantic.field_validator("windings")
+    def validate_windings(cls, value: list[Winding]) -> list[Winding]:
+        return validate_set(value)
