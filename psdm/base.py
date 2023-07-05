@@ -40,7 +40,9 @@ class Base(pydantic.BaseModel):
         file_path = pathlib.Path(file_path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         with file_path.open("w+", encoding="utf-8") as file_handle:
-            json.dump(self.model_dump(), file_handle, indent=indent, sort_keys=True)
+            _json_data = self.model_dump_json()
+            _data = json.loads(_json_data)
+            json.dump(_data, file_handle, indent=indent, sort_keys=True)
 
     @classmethod
     def from_json(cls, json_str: str) -> Base:
