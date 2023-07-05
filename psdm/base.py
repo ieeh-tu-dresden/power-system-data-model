@@ -45,7 +45,3 @@ class Base(pydantic.BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Base:
         return cls.model_validate_json(json_str)
-
-
-def validate_set(value: list[T]) -> list[T]:
-    return list(set(value))

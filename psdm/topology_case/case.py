@@ -4,18 +4,11 @@
 
 from __future__ import annotations
 
-import pydantic
-
 from psdm.base import Base
-from psdm.base import validate_set
 from psdm.meta import Meta
 from psdm.topology_case.element_state import ElementState
 
 
 class Case(Base):
     meta: Meta
-    elements: list[ElementState]
-
-    @pydantic.field_validator("elements")
-    def validate_elements(cls, value: list[ElementState]) -> list[ElementState]:
-        return validate_set(value)
+    elements: frozenset[ElementState]
