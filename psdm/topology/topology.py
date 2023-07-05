@@ -15,8 +15,8 @@ from psdm.topology.transformer import Transformer
 
 class Topology(Base):
     meta: Meta
-    branches: frozenset[Branch]
-    nodes: frozenset[Node]
-    loads: frozenset[Load]
-    transformers: frozenset[Transformer]
-    external_grids: frozenset[ExternalGrid]
+    branches: list[Branch]
+    nodes: list[Node]
+    loads: list[Load]
+    transformers: list[Transformer]
+    external_grids: list[ExternalGrid]

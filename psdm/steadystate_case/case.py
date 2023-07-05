@@ -20,9 +20,9 @@ if TYPE_CHECKING:
 
 class Case(Base):
     meta: Meta
-    loads: frozenset[Load]
-    transformers: frozenset[Transformer]
-    external_grids: frozenset[ExternalGrid]
+    loads: list[Load]
+    transformers: list[Transformer]
+    external_grids: list[ExternalGrid]
 
     def is_valid_topology(self, topology: Topology) -> bool:
         logger.info("Verifying steadystate case ...")

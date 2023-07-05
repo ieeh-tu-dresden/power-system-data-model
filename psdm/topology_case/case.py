@@ -11,4 +11,4 @@ from psdm.topology_case.element_state import ElementState
 
 class Case(Base):
     meta: Meta
-    elements: frozenset[ElementState]
+    elements: list[ElementState]
