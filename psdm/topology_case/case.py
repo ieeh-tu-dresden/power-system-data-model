@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import pydantic
-
 from psdm.base import Base
 from psdm.meta import Meta
 from psdm.topology_case.element_state import ElementState
@@ -13,4 +11,4 @@ from psdm.topology_case.element_state import ElementState
 
 class Case(Base):
     meta: Meta
-    elements: pydantic.conlist(ElementState, unique_items=True)  # type: ignore[valid-type]
+    elements: list[ElementState]

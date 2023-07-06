@@ -32,7 +32,7 @@ class TestRatedPower:
             (4, 2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, does_not_raise()),
             (2, 2, 1, 1, 1, 1, 2, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
             (2, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
-            (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
+            (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
             (4, 2, 1, 1, 1, 1, 2, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
             (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
             (3, 1, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
@@ -62,6 +62,6 @@ class TestRatedPower:
                 cosphi_a=cosphi_a,
                 cosphi_b=cosphi_b,
                 cosphi_c=cosphi_c,
-                is_symmetrical=is_symmetrical,
                 power_type=power_type,
+                is_symmetrical=is_symmetrical,
             )

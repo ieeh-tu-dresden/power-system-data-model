@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import pydantic
 from loguru import logger
 
 from psdm.base import Base
@@ -21,9 +20,9 @@ if TYPE_CHECKING:
 
 class Case(Base):
     meta: Meta
-    loads: pydantic.conlist(Load, unique_items=True)  # type: ignore[valid-type]
-    transformers: pydantic.conlist(Transformer, unique_items=True)  # type: ignore[valid-type]
-    external_grids: pydantic.conlist(ExternalGrid, unique_items=True)  # type: ignore[valid-type]
+    loads: list[Load]
+    transformers: list[Transformer]
+    external_grids: list[ExternalGrid]
 
     def is_valid_topology(self, topology: Topology) -> bool:
         logger.info("Verifying steadystate case ...")

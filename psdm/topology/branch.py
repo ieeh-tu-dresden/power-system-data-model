@@ -21,7 +21,7 @@ class Branch(Base):
     node_2: str
     name: str
     u_n: float  # nominal voltage of the branch connected nodes
-    i_r: float  # rated current of branch (thermal limit in continuous operation)
+    i_r: float | None  # rated current of branch (thermal limit in continuous operation)
     r1: float  # positive sequence values of PI-representation
     x1: float  # positive sequence values of PI-representation
     g1: float  # positive sequence values of PI-representation

@@ -6,7 +6,7 @@
     { name = "Maximilian Schmidt", email = "maximilian.schmidt@tu-dresden.de" },
     { name = "Sebastian Krahmer", email = "sebastian.krahmer@tu-dresden.de" },
   ]
-  dependencies = ["loguru", "pydantic"]
+  dependencies = ["loguru", "pydantic>=2.0"]
   description = "A data model for describing power systems"
   license = { file = "LICENSE" }
   name = "ieeh-power-system-data-model"
@@ -33,7 +33,7 @@
       linter     = ["ruff"]
       prototype  = ["ipykernel"]
       test       = ["pytest", "pytest-cov", "pytest-xdist"]
-      typing     = ["mypy @ git+https://github.com/python/mypy.git@master"]
+      typing     = ["mypy"]
 
 [tool.ruff]
   extend-exclude = ["tests"]
@@ -61,7 +61,11 @@
   select = ["ALL"]
 
   [tool.ruff.flake8-type-checking]
-    runtime-evaluated-base-classes = ["psdm.base.Base", "pydantic.BaseModel"]
+    runtime-evaluated-base-classes = [
+      "psdm.base.Base",
+      "psdm.topology.load.PowerBase",
+      "pydantic.BaseModel",
+    ]
 
   [tool.ruff.isort]
     force-single-line = true
@@ -72,8 +76,8 @@
   [tool.ruff.pep8-naming]
     classmethod-decorators = [
       "classmethod",
-      "pydantic.root_validator",
-      "pydantic.validator",
+      "pydantic.field_validator",
+      "pydantic.model_validator",
     ]
 
 [tool.black]
