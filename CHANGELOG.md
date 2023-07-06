@@ -1,3 +1,15 @@
+## 1.5.0 (2023-07-06)
+
+### Feat
+
+- Python 3.11 support
+
+### Fix
+
+- migrate to pydantic v2.0
+- add `is_symmetrical` to `RatedPower`
+- zenodo doi
+
 ## 1.4.0 (2023-06-27)
 
 ### Feat

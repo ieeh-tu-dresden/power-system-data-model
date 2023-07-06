@@ -1,0 +1,299 @@
+{
+  "$defs": {
+    "ActivePower": {
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "value_a": {
+          "title": "Value A",
+          "type": "number"
+        },
+        "value_b": {
+          "title": "Value B",
+          "type": "number"
+        },
+        "value_c": {
+          "title": "Value C",
+          "type": "number"
+        },
+        "is_symmetrical": {
+          "title": "Is Symmetrical",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "value",
+        "value_a",
+        "value_b",
+        "value_c",
+        "is_symmetrical"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "ControlType": {
+      "properties": {},
+      "title": "ControlType",
+      "type": "object"
+    },
+    "Controller": {
+      "properties": {
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "control_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "external_controller_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Controller Name"
+        }
+      },
+      "required": [
+        "node_target"
+      ],
+      "title": "Controller",
+      "type": "object"
+    },
+    "ExternalGrid": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "U 0"
+        },
+        "phi_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phi 0"
+        },
+        "p_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P 0"
+        },
+        "q_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Q 0"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ExternalGrid",
+      "type": "object"
+    },
+    "Load": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "active_power": {
+          "$ref": "#/$defs/ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/$defs/ReactivePower"
+        }
+      },
+      "required": [
+        "name",
+        "active_power",
+        "reactive_power"
+      ],
+      "title": "Load",
+      "type": "object"
+    },
+    "Meta": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        }
+      },
+      "required": [
+        "name",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "ReactivePower": {
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "value_a": {
+          "title": "Value A",
+          "type": "number"
+        },
+        "value_b": {
+          "title": "Value B",
+          "type": "number"
+        },
+        "value_c": {
+          "title": "Value C",
+          "type": "number"
+        },
+        "is_symmetrical": {
+          "title": "Is Symmetrical",
+          "type": "boolean"
+        },
+        "controller": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Controller"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "value",
+        "value_a",
+        "value_b",
+        "value_c",
+        "is_symmetrical"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    },
+    "Transformer": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "tap_pos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Pos"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Transformer",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/Load"
+      },
+      "title": "Loads",
+      "type": "array"
+    },
+    "transformers": {
+      "items": {
+        "$ref": "#/$defs/Transformer"
+      },
+      "title": "Transformers",
+      "type": "array"
+    },
+    "external_grids": {
+      "items": {
+        "$ref": "#/$defs/ExternalGrid"
+      },
+      "title": "External Grids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "meta",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "title": "Case",
+  "type": "object"
+}
