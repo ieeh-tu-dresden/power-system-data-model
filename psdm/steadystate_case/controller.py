@@ -155,7 +155,19 @@ class ControlQP(ControlType):
         return validate_pos(v)
 
 
-class Controller(ControlType):
+ControlTypeType = (
+    ControlQConst
+    | ControlUConst
+    | ControlTanphiConst
+    | ControlCosphiConst
+    | ControlCosphiP
+    | ControlCosphiU
+    | ControlQU
+    | ControlQP
+)
+
+
+class Controller(Base):
     node_target: str  # the controlled node (which can be differ from node the load is connected to)
-    control_type: ControlType | None = None
+    control_type: ControlTypeType | None = None
     external_controller_name: str | None = None  # if external controller is specified --> name
