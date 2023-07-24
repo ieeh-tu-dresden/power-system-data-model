@@ -62,7 +62,6 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: true
           architecture: x64
-          prerelease: true
           enable-pep582: true
         env:
           PDM_DEPS: "urllib3<2"
