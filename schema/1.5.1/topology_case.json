@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "ElementState": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "disabled": {
+          "default": false,
+          "title": "Disabled",
+          "type": "boolean"
+        },
+        "open_switches": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Open Switches",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ElementState",
+      "type": "object"
+    },
+    "Meta": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        }
+      },
+      "required": [
+        "name",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "elements": {
+      "items": {
+        "$ref": "#/$defs/ElementState"
+      },
+      "title": "Elements",
+      "type": "array"
+    }
+  },
+  "required": [
+    "meta",
+    "elements"
+  ],
+  "title": "Case",
+  "type": "object"
+}

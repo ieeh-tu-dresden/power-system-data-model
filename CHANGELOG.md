@@ -1,3 +1,9 @@
+## 1.5.1 (2023-07-25)
+
+### Fix
+
+- missing control type information in controller
+
 ## 1.5.0 (2023-07-06)
 
 ### Feat

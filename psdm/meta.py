@@ -12,7 +12,7 @@ import pydantic
 
 from psdm.base import Base
 
-VERSION = "1.5.0"
+VERSION = "1.5.1"
 
 
 class Meta(Base):
