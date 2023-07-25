@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import enum
-import typing as t
 
 import pydantic
 
@@ -37,42 +36,38 @@ class ControlledVoltageRef(enum.Enum):
     CA = "CA"
 
 
-class ControlType(Base):
-    control_strategy: t.ClassVar[ControlStrategy]
-
-
-class ControlQConst(ControlType):
+class ControlQConst(Base):
     # q-setpoint control mode
     q_set: float  # Setpoint of reactive power. Counted demand based.
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.Q_CONST
+    control_strategy: ControlStrategy = ControlStrategy.Q_CONST
 
 
-class ControlUConst(ControlType):
+class ControlUConst(Base):
     # u-setpoint control mode
     u_set: float = pydantic.Field(ge=0)  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.U_CONST
+    control_strategy: ControlStrategy = ControlStrategy.U_CONST
 
 
-class ControlTanphiConst(ControlType):
+class ControlTanphiConst(Base):
     # cos(phi) control mode
     cosphi_dir: CosphiDir
     cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.TANPHI_CONST
+    control_strategy: ControlStrategy = ControlStrategy.TANPHI_CONST
 
 
-class ControlCosphiConst(ControlType):
+class ControlCosphiConst(Base):
     # cos(phi) control mode
     cosphi_dir: CosphiDir
     cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.COSPHI_CONST
+    control_strategy: ControlStrategy = ControlStrategy.COSPHI_CONST
 
 
-class ControlCosphiP(ControlType):
+class ControlCosphiP(Base):
     # cos(phi(P)) control mode
     cosphi_ue: float = pydantic.Field(
         ge=0,
@@ -85,10 +80,10 @@ class ControlCosphiP(ControlType):
     p_threshold_ue: float = pydantic.Field(le=0)  # under excited: threshold for P.
     p_threshold_oe: float = pydantic.Field(le=0)  # over excited: threshold for P.
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.COSPHI_P
+    control_strategy: ControlStrategy = ControlStrategy.COSPHI_P
 
 
-class ControlCosphiU(ControlType):
+class ControlCosphiU(Base):
     # cos(phi(U)) control mode
     cosphi_ue: float = pydantic.Field(
         ...,
@@ -103,10 +98,10 @@ class ControlCosphiU(ControlType):
     u_threshold_ue: float = pydantic.Field(..., ge=0)  # under excited: threshold for U.
     u_threshold_oe: float = pydantic.Field(..., ge=0)  # over excited: threshold for U.
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.COSPHI_U
+    control_strategy: ControlStrategy = ControlStrategy.COSPHI_U
 
 
-class ControlQU(ControlType):
+class ControlQU(Base):
     # Q(U) characteristic control mode
     m_tg_2015: float = pydantic.Field(
         ...,
@@ -128,7 +123,7 @@ class ControlQU(ControlType):
     q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value
     q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.Q_U
+    control_strategy: ControlStrategy = ControlStrategy.Q_U
 
 
 def validate_pos(value: float | None) -> float | None:
@@ -138,13 +133,13 @@ def validate_pos(value: float | None) -> float | None:
     return value
 
 
-class ControlQP(ControlType):
+class ControlQP(Base):
     # Q(P) characteristic control mode
     q_p_characteristic_name: str
     q_max_ue: float | None = None  # Under excited limit of Q: absolut value
     q_max_oe: float | None = None  # Over excited limit of Q: absolut value
 
-    control_strategy: t.ClassVar[ControlStrategy] = ControlStrategy.Q_P
+    control_strategy: ControlStrategy = ControlStrategy.Q_P
 
     @pydantic.field_validator("q_max_ue", mode="before")
     def validate_q_max_ue(cls, v: float | None) -> float | None:
@@ -155,7 +150,19 @@ class ControlQP(ControlType):
         return validate_pos(v)
 
 
-class Controller(ControlType):
+ControlTypeType = (
+    ControlQConst
+    | ControlUConst
+    | ControlTanphiConst
+    | ControlCosphiConst
+    | ControlCosphiP
+    | ControlCosphiU
+    | ControlQU
+    | ControlQP
+)
+
+
+class Controller(Base):
     node_target: str  # the controlled node (which can be differ from node the load is connected to)
-    control_type: ControlType | None = None
+    control_type: ControlTypeType | None = None
     external_controller_name: str | None = None  # if external controller is specified --> name
