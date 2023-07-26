@@ -18,6 +18,7 @@ VERSION = "1.5.1"
 class Meta(Base):
     version: t.ClassVar[str] = VERSION
     name: str
-    date: datetime.date  # date of export
+    date: datetime.date
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
-    project: str | None = None  # project the export is related to
+    project: str | None = None
+    case: str | None = None
