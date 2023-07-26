@@ -29,6 +29,7 @@ class VectorGroup(enum.Enum):
     YNy0 = "YNy0"
     Yyn0 = "Yyn0"
     YNyn0 = "YNyn0"
+    YNyn5 = "YNyn5"
     Dz0 = "Dz0"
     Dzn0 = "Dzn0"
     Zd0 = "Zd0"
