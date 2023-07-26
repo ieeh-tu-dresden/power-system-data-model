@@ -70,6 +70,11 @@ class Transformer(Base):
     vector_group: VectorGroup  # specifier for connection of wiring e.g. DYn5
     i_0: float  # no-load current in %
     p_fe: float  # no-load losses (Iron losses)
+    z_0: float  # zero sequence values of PI-representation
+    r_0: float  # zero sequence values of PI-representation
+    x_0: float  # zero sequence values of PI-representation
+    i_00: float  # zero sequence values of PI-representation
+    p_fe0: float  # zero sequence values of PI-representation
     windings: list[Winding]  # winding object for each voltage level
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
