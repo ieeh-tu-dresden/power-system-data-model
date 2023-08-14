@@ -56,8 +56,8 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           fetch-depth: 0
 
-      - name: Set up PDM
-        uses: pdm-project/setup-pdm@v3.2
+      - name: Set up PDM @ ${{ matrix.python-version }}
+        uses: pdm-project/setup-pdm@v3.3
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: true
