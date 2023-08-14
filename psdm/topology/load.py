@@ -19,6 +19,7 @@ class LoadType(enum.Enum):
     CONSUMER = "CONSUMER"
     PRODUCER = "PRODUCER"
     STORAGE = "STORAGE"
+    PROSUMER = "PROSUMER"
 
 
 class SystemType(enum.Enum):
@@ -45,6 +46,9 @@ class SystemType(enum.Enum):
     NIGHT_STORAGE = "NIGHT_STORAGE"
     FIXED_CONSUMPTION = "FIXED_CONSUMPTION"
     VARIABLE_CONSUMPTION = "VARIABLE_CONSUMPTION"
+    HEAT_PUMP = "HEAT_PUMP"
+    CHARGING_POINT = "CHARGING_POINT"
+    HVAC = "HVAC"
 
 
 class PhaseConnectionType(enum.Enum):
