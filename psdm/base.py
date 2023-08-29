@@ -35,7 +35,7 @@ def _validate_unique_list(v: tuple[U]) -> tuple[U]:
 
 
 UniqueTuple = t.Annotated[
-    tuple[U],
+    tuple[U, ...],
     pydantic.AfterValidator(_validate_unique_list),
     pydantic.Field(json_schema_extra={"uniqueItems": True}),
 ]
