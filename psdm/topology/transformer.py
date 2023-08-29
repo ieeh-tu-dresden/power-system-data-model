@@ -8,6 +8,7 @@ from __future__ import annotations
 import enum
 
 from psdm.base import Base
+from psdm.base import UniqueList
 from psdm.topology.windings import Winding
 
 
@@ -73,7 +74,7 @@ class Transformer(Base):
     p_fe: float  # no-load losses (Iron losses)
     i_00: float  # zero sequence values of PI-representation
     p_fe0: float  # zero sequence values of PI-representation
-    windings: list[Winding]  # winding object for each voltage level
+    windings: UniqueList[Winding]  # winding object for each voltage level
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
     tap_u_abs: float | None = None  # voltage deviation per tap position change in %
