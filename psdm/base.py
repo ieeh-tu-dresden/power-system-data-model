@@ -10,8 +10,10 @@ import pathlib
 import typing as t
 
 import pydantic
+from pydantic_core import PydanticCustomError
 
 T = t.TypeVar("T")
+U = t.TypeVar("U", bound=t.Hashable)
 
 
 class VoltageSystemType(enum.Enum):
@@ -22,6 +24,21 @@ class VoltageSystemType(enum.Enum):
 class CosphiDir(enum.Enum):
     UE = "UE"
     OE = "OE"
+
+
+def _validate_unique_list(v: list[U]) -> list[U]:
+    if len(v) != len(set(v)):
+        error_type = "unique_list"
+        message_template = "List must be unique"
+        raise PydanticCustomError(error_type=error_type, message_template=message_template)
+    return v
+
+
+UniqueList = t.Annotated[
+    list[U],
+    pydantic.AfterValidator(_validate_unique_list),
+    pydantic.Field(json_schema_extra={"uniqueItems": True}),
+]
 
 
 class Base(pydantic.BaseModel):

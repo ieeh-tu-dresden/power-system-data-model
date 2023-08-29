@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 from psdm.base import Base
+from psdm.base import UniqueList
 from psdm.meta import Meta
 from psdm.steadystate_case.external_grid import ExternalGrid
 from psdm.steadystate_case.load import Load
@@ -20,9 +21,9 @@ if TYPE_CHECKING:
 
 class Case(Base):
     meta: Meta
-    loads: list[Load]
-    transformers: list[Transformer]
-    external_grids: list[ExternalGrid]
+    loads: UniqueList[Load]
+    transformers: UniqueList[Transformer]
+    external_grids: UniqueList[ExternalGrid]
 
     def is_valid_topology(self, topology: Topology) -> bool:
         logger.info("Verifying steadystate case ...")

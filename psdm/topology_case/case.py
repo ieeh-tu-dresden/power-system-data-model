@@ -5,10 +5,11 @@
 from __future__ import annotations
 
 from psdm.base import Base
+from psdm.base import UniqueList
 from psdm.meta import Meta
 from psdm.topology_case.element_state import ElementState
 
 
 class Case(Base):
     meta: Meta
-    elements: list[ElementState]
+    elements: UniqueList[ElementState]
