@@ -1,7 +1,7 @@
 {
   "description": "IEEH Power System Data Model provides a schema to describe the elements of an electrical power system. It provides a hierarchical structure/schema to describe unique entity relations as well as parameter sets.",
   "title": "Power System Data Model - A data model for the description of electrical power systems",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "upload_type": "software",
   "keywords": [
     "Power System Modeling",
@@ -9,7 +9,7 @@
     "Python",
     "Data Model"
   ],
-  "publication_date": "2023-07-25",
+  "publication_date": "2023-08-29",
   "creators": [
     {
       "name": "Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden"
@@ -21,7 +21,7 @@
   "related_identifiers": [
     {
       "scheme": "url",
-      "identifier": "https://github.com/ieeh-tu-dresden/power-system-data-model/tree/1.5.1",
+      "identifier": "https://github.com/ieeh-tu-dresden/power-system-data-model/tree/1.6.0",
       "relation": "isSupplementTo"
     }
   ]

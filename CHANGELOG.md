@@ -1,3 +1,17 @@
+## 1.6.0 (2023-08-29)
+
+### Feat
+
+- add more load and system types
+- add case field to meta information
+
+### Fix
+
+- reenable unique constraints on object lists
+- allow only technically possible transformer vector groups
+- add zero sequence magnetisation information
+- add vectorgroup "YNyn5"
+
 ## 1.5.1 (2023-07-25)
 
 ### Fix
