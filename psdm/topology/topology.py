@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from psdm.base import Base
-from psdm.base import UniqueList
+from psdm.base import UniqueTuple
 from psdm.meta import Meta
 from psdm.topology.branch import Branch
 from psdm.topology.external_grid import ExternalGrid
@@ -16,8 +16,8 @@ from psdm.topology.transformer import Transformer
 
 class Topology(Base):
     meta: Meta
-    branches: UniqueList[Branch]
-    nodes: UniqueList[Node]
-    loads: UniqueList[Load]
-    transformers: UniqueList[Transformer]
-    external_grids: UniqueList[ExternalGrid]
+    branches: UniqueTuple[Branch]
+    nodes: UniqueTuple[Node]
+    loads: UniqueTuple[Load]
+    transformers: UniqueTuple[Transformer]
+    external_grids: UniqueTuple[ExternalGrid]

@@ -26,7 +26,7 @@ class CosphiDir(enum.Enum):
     OE = "OE"
 
 
-def _validate_unique_list(v: list[U]) -> list[U]:
+def _validate_unique_list(v: tuple[U]) -> tuple[U]:
     if len(v) != len(set(v)):
         error_type = "unique_list"
         message_template = "List must be unique"
@@ -34,8 +34,8 @@ def _validate_unique_list(v: list[U]) -> list[U]:
     return v
 
 
-UniqueList = t.Annotated[
-    list[U],
+UniqueTuple = t.Annotated[
+    tuple[U],
     pydantic.AfterValidator(_validate_unique_list),
     pydantic.Field(json_schema_extra={"uniqueItems": True}),
 ]
