@@ -20,6 +20,7 @@ class LoadType(enum.Enum):
     PRODUCER = "PRODUCER"
     STORAGE = "STORAGE"
     PROSUMER = "PROSUMER"
+    SHUNT = "SHUNT"
 
 
 class SystemType(enum.Enum):
@@ -77,6 +78,8 @@ class PowerType(enum.Enum):
     THERMAL = "THERMAL"
     GAS = "GAS"
     MECHANICAL = "MECHANICAL"
+    IMPEDANCE = "IMPEDANCE"
+    CURRENT = "CURRENT"
 
 
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
