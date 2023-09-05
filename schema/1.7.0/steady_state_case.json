@@ -1,0 +1,660 @@
+{
+  "$defs": {
+    "ActivePower": {
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "value_a": {
+          "title": "Value A",
+          "type": "number"
+        },
+        "value_b": {
+          "title": "Value B",
+          "type": "number"
+        },
+        "value_c": {
+          "title": "Value C",
+          "type": "number"
+        },
+        "is_symmetrical": {
+          "title": "Is Symmetrical",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "value",
+        "value_a",
+        "value_b",
+        "value_c",
+        "is_symmetrical"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "ControlCosphiConst": {
+      "properties": {
+        "cosphi_dir": {
+          "$ref": "#/$defs/CosphiDir"
+        },
+        "cosphi": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cosphi",
+          "type": "number"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "COSPHI_CONST"
+        }
+      },
+      "required": [
+        "cosphi_dir",
+        "cosphi"
+      ],
+      "title": "ControlCosphiConst",
+      "type": "object"
+    },
+    "ControlCosphiP": {
+      "properties": {
+        "cosphi_ue": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cosphi Ue",
+          "type": "number"
+        },
+        "cosphi_oe": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cosphi Oe",
+          "type": "number"
+        },
+        "p_threshold_ue": {
+          "maximum": 0,
+          "title": "P Threshold Ue",
+          "type": "number"
+        },
+        "p_threshold_oe": {
+          "maximum": 0,
+          "title": "P Threshold Oe",
+          "type": "number"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "COSPHI_P"
+        }
+      },
+      "required": [
+        "cosphi_ue",
+        "cosphi_oe",
+        "p_threshold_ue",
+        "p_threshold_oe"
+      ],
+      "title": "ControlCosphiP",
+      "type": "object"
+    },
+    "ControlCosphiU": {
+      "properties": {
+        "cosphi_ue": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cosphi Ue",
+          "type": "number"
+        },
+        "cosphi_oe": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cosphi Oe",
+          "type": "number"
+        },
+        "u_threshold_ue": {
+          "minimum": 0,
+          "title": "U Threshold Ue",
+          "type": "number"
+        },
+        "u_threshold_oe": {
+          "minimum": 0,
+          "title": "U Threshold Oe",
+          "type": "number"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "COSPHI_U"
+        }
+      },
+      "required": [
+        "cosphi_ue",
+        "cosphi_oe",
+        "u_threshold_ue",
+        "u_threshold_oe"
+      ],
+      "title": "ControlCosphiU",
+      "type": "object"
+    },
+    "ControlQConst": {
+      "properties": {
+        "q_set": {
+          "title": "Q Set",
+          "type": "number"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "Q_CONST"
+        }
+      },
+      "required": [
+        "q_set"
+      ],
+      "title": "ControlQConst",
+      "type": "object"
+    },
+    "ControlQP": {
+      "properties": {
+        "q_p_characteristic_name": {
+          "title": "Q P Characteristic Name",
+          "type": "string"
+        },
+        "q_max_ue": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Q Max Ue"
+        },
+        "q_max_oe": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Q Max Oe"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "Q_P"
+        }
+      },
+      "required": [
+        "q_p_characteristic_name"
+      ],
+      "title": "ControlQP",
+      "type": "object"
+    },
+    "ControlQU": {
+      "properties": {
+        "m_tg_2015": {
+          "minimum": 0,
+          "title": "M Tg 2015",
+          "type": "number"
+        },
+        "m_tg_2018": {
+          "minimum": 0,
+          "title": "M Tg 2018",
+          "type": "number"
+        },
+        "u_q0": {
+          "minimum": 0,
+          "title": "U Q0",
+          "type": "number"
+        },
+        "u_deadband_up": {
+          "minimum": 0,
+          "title": "U Deadband Up",
+          "type": "number"
+        },
+        "u_deadband_low": {
+          "minimum": 0,
+          "title": "U Deadband Low",
+          "type": "number"
+        },
+        "q_max_ue": {
+          "minimum": 0,
+          "title": "Q Max Ue",
+          "type": "number"
+        },
+        "q_max_oe": {
+          "minimum": 0,
+          "title": "Q Max Oe",
+          "type": "number"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "Q_U"
+        }
+      },
+      "required": [
+        "m_tg_2015",
+        "m_tg_2018",
+        "u_q0",
+        "u_deadband_up",
+        "u_deadband_low",
+        "q_max_ue",
+        "q_max_oe"
+      ],
+      "title": "ControlQU",
+      "type": "object"
+    },
+    "ControlStrategy": {
+      "enum": [
+        "U_CONST",
+        "COSPHI_CONST",
+        "Q_CONST",
+        "Q_U",
+        "Q_P",
+        "COSPHI_P",
+        "COSPHI_U",
+        "TANPHI_CONST",
+        "ND"
+      ],
+      "title": "ControlStrategy",
+      "type": "string"
+    },
+    "ControlTanphiConst": {
+      "properties": {
+        "cosphi_dir": {
+          "$ref": "#/$defs/CosphiDir"
+        },
+        "cosphi": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cosphi",
+          "type": "number"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "TANPHI_CONST"
+        }
+      },
+      "required": [
+        "cosphi_dir",
+        "cosphi"
+      ],
+      "title": "ControlTanphiConst",
+      "type": "object"
+    },
+    "ControlUConst": {
+      "properties": {
+        "u_set": {
+          "minimum": 0,
+          "title": "U Set",
+          "type": "number"
+        },
+        "u_meas_ref": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlledVoltageRef"
+            }
+          ],
+          "default": "POS_SEQ"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlStrategy"
+            }
+          ],
+          "default": "U_CONST"
+        }
+      },
+      "required": [
+        "u_set"
+      ],
+      "title": "ControlUConst",
+      "type": "object"
+    },
+    "ControlledVoltageRef": {
+      "enum": [
+        "POS_SEQ",
+        "AVG",
+        "A",
+        "B",
+        "C",
+        "AB",
+        "BC",
+        "CA"
+      ],
+      "title": "ControlledVoltageRef",
+      "type": "string"
+    },
+    "Controller": {
+      "properties": {
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "control_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlQConst"
+            },
+            {
+              "$ref": "#/$defs/ControlUConst"
+            },
+            {
+              "$ref": "#/$defs/ControlTanphiConst"
+            },
+            {
+              "$ref": "#/$defs/ControlCosphiConst"
+            },
+            {
+              "$ref": "#/$defs/ControlCosphiP"
+            },
+            {
+              "$ref": "#/$defs/ControlCosphiU"
+            },
+            {
+              "$ref": "#/$defs/ControlQU"
+            },
+            {
+              "$ref": "#/$defs/ControlQP"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Control Type"
+        },
+        "external_controller_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Controller Name"
+        }
+      },
+      "required": [
+        "node_target"
+      ],
+      "title": "Controller",
+      "type": "object"
+    },
+    "CosphiDir": {
+      "enum": [
+        "UE",
+        "OE"
+      ],
+      "title": "CosphiDir",
+      "type": "string"
+    },
+    "ExternalGrid": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "U 0"
+        },
+        "phi_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phi 0"
+        },
+        "p_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P 0"
+        },
+        "q_0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Q 0"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ExternalGrid",
+      "type": "object"
+    },
+    "Load": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "active_power": {
+          "$ref": "#/$defs/ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/$defs/ReactivePower"
+        }
+      },
+      "required": [
+        "name",
+        "active_power",
+        "reactive_power"
+      ],
+      "title": "Load",
+      "type": "object"
+    },
+    "Meta": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        }
+      },
+      "required": [
+        "name",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "ReactivePower": {
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "value_a": {
+          "title": "Value A",
+          "type": "number"
+        },
+        "value_b": {
+          "title": "Value B",
+          "type": "number"
+        },
+        "value_c": {
+          "title": "Value C",
+          "type": "number"
+        },
+        "is_symmetrical": {
+          "title": "Is Symmetrical",
+          "type": "boolean"
+        },
+        "controller": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Controller"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "value",
+        "value_a",
+        "value_b",
+        "value_c",
+        "is_symmetrical"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    },
+    "Transformer": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "tap_pos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Pos"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Transformer",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/Load"
+      },
+      "title": "Loads",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transformers": {
+      "items": {
+        "$ref": "#/$defs/Transformer"
+      },
+      "title": "Transformers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "external_grids": {
+      "items": {
+        "$ref": "#/$defs/ExternalGrid"
+      },
+      "title": "External Grids",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "title": "Case",
+  "type": "object"
+}

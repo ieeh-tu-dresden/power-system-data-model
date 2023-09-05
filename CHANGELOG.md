@@ -1,3 +1,13 @@
+## 1.7.0 (2023-09-05)
+
+### Feat
+
+- add support for constant-impedance and -current loads (contributors: @sasanjac)
+
+### Fix
+
+- make all zero sequence attributes of transformer optional (contributors: @SebastianDD)
+
 ## 1.6.0 (2023-08-29)
 
 ### Feat
