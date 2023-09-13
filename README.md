@@ -6,6 +6,7 @@ A data model for the description of electrical power systems.
 
 - [IEEH Power System Data Model](#ieeh-power-system-data-model)
   - [ Field of Application](#-field-of-application)
+  - [ General Remarks](#-remarks)
   - [ Installation](#-installation)
   - [ Development](#-development)
   - [ Attribution](#-attribution)
@@ -22,6 +23,15 @@ The data model is structured as the following schema:
   - information about disabled elements to represent a specific operational case based on the base topology
 - steadystate case
   - information about power draw/infeed for a specific operational case
+
+## <div id="remarks" /> General Remarks
+
+Please find below some important general remarks and assumptions to consider for the usage in other applications:
+- The load centered counting system should be used for all types of loads.
+- Topology
+  - The `Rated Power` should always be defined positive (absolute value).
+- SteadyState
+  - If a the active or reactive power of a `Load` doesn't contains a `Controller`, the type of `const. power` is assumed by default.
 
 ## <div id="installation" /> Installation
 
@@ -79,7 +89,7 @@ pdm install
 
 For development in [Visual Studio Code](https://github.com/microsoft/vscode), all configurations are already provided:
 
-- [flake8](https://github.com/PyCQA/flake8)
+- [ruff](https://github.com/astral-sh/ruff)
 - [black](https://github.com/psf/black)
 - [mypy](https://github.com/python/mypy)
 
