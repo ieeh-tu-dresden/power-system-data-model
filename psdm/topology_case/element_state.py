@@ -8,6 +8,8 @@ from psdm.base import Base
 
 
 class ElementState(Base):
+    """This class represents the state of an element which is (partly) disconnected or out of service."""
+
     name: str
     disabled: bool = False
     open_switches: tuple[str, ...] = Field(default_factory=tuple)

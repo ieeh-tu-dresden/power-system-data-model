@@ -8,6 +8,8 @@ from psdm.base import Base
 
 
 class ExternalGrid(Base):
+    """This class represents the operating point of an external grid or a grid subsitute equivalent respectively."""
+
     name: str
     u_0: float | None = None
     phi_0: float | None = None

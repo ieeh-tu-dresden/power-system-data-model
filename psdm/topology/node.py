@@ -6,6 +6,8 @@ from psdm.base import Base
 
 
 class Node(Base):
+    """This class represents a terminal within the grid."""
+
     name: str
     u_n: float
     description: str | None = None

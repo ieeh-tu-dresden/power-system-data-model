@@ -11,5 +11,10 @@ from psdm.topology_case.element_state import ElementState
 
 
 class Case(Base):
+    """This class represents a unique topology case of the grid.
+
+    It is characterized by a list of element which are out of service.
+    """
+
     meta: Meta
     elements: UniqueTuple[ElementState]

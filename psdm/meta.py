@@ -16,6 +16,8 @@ VERSION = "1.7.0"
 
 
 class Meta(Base):
+    """This class represents the meta data related to the grid export."""
+
     version: t.ClassVar[str] = VERSION
     name: str
     date: datetime.date

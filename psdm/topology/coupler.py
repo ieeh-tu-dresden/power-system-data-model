@@ -8,6 +8,8 @@ from psdm.base import Base
 
 
 class Coupler(Base):
+    """This class represents physically existing switching element, e.g. a circuit breaker or a disconnector."""
+
     element: str
     node: str
     state: bool  # 0:opened; 1:closed

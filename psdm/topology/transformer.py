@@ -64,6 +64,11 @@ class VectorGroup(enum.Enum):
 
 
 class Transformer(Base):
+    """This class represents a transformer and consists of winding elements.
+
+    It is characterized by windings elements (2w or 3w), the vector group as well as the transformer tap control.
+    """
+
     node_1: str
     node_2: str
     name: str
