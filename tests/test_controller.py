@@ -8,6 +8,7 @@ import pydantic
 import pytest
 
 from psdm.base import CosphiDir
+from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import (
     ControlCosphiConst,
     ControlCosphiP,
@@ -24,25 +25,42 @@ from psdm.steadystate_case.controller import (
 class TestControlQConst:
     @pytest.mark.parametrize(
         (
-            "q_set",
+            "value",
+            "value_a",
+            "value_b",
+            "value_c",
+            "is_symmetrical",
             "expectation",
         ),
         [
-            (-1500, does_not_raise()),
-            (1500, does_not_raise()),
-            (0, does_not_raise()),
-            (None, pytest.raises(pydantic.ValidationError)),
+            (-1500, -500, -500, -500, True, does_not_raise()),
+            (-1500, -500, -500, -500, False, pytest.raises(pydantic.ValidationError)),
+            (1500, 500, 500, 500, True, does_not_raise()),
+            (1500, 600, 500, 500, True, pytest.raises(pydantic.ValidationError)),
+            (1500, 500, 1000, 0, False, does_not_raise()),
+            (1700, 500, 1000, 200, True, pytest.raises(pydantic.ValidationError)),
+            (1700, 500, 1000, 100, False, pytest.raises(pydantic.ValidationError)),
+            (0, 0, 0, 0, True, does_not_raise()),
+            (None, None, None, None, None, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
         self,
-        q_set,
+        value,
+        value_a,
+        value_b,
+        value_c,
+        is_symmetrical,
         expectation,
     ) -> None:
         with expectation:
             ControlQConst(
                 node_target="A",
-                q_set=q_set,
+                value=value,
+                value_a=value_a,
+                value_b=value_b,
+                value_c=value_c,
+                is_symmetrical=is_symmetrical,
             )
 
 
@@ -220,8 +238,8 @@ class TestControlCosphiU:
 class TestControlQU:
     @pytest.mark.parametrize(
         (
-            "m_tg_2015",
-            "m_tg_2018",
+            "droop_tg_2015",
+            "droop_tg_2018",
             "u_q0",
             "u_deadband_up",
             "u_deadband_low",
@@ -243,8 +261,8 @@ class TestControlQU:
     )
     def test_init(  # noqa: PLR0913
         self,
-        m_tg_2015,
-        m_tg_2018,
+        droop_tg_2015,
+        droop_tg_2018,
         u_q0,
         u_deadband_up,
         u_deadband_low,
@@ -255,8 +273,8 @@ class TestControlQU:
         with expectation:
             ControlQU(
                 node_target="A",
-                m_tg_2015=m_tg_2015,
-                m_tg_2018=m_tg_2018,
+                droop_tg_2015=droop_tg_2015,
+                droop_tg_2018=droop_tg_2018,
                 u_q0=u_q0,
                 u_deadband_up=u_deadband_up,
                 u_deadband_low=u_deadband_low,
@@ -268,22 +286,22 @@ class TestControlQU:
 class TestControlQP:
     @pytest.mark.parametrize(
         (
-            "q_p_characteristic_name",
+            "q_p_characteristic",
             "q_max_ue",
             "q_max_oe",
             "expectation",
         ),
         [
-            ("Q(P)-char", 10000, 10000, does_not_raise()),
-            ("Q(P)-char", 10000, 20000, does_not_raise()),
+            (Characteristic(name="Q_P_Char"), 10000, 10000, does_not_raise()),
+            (Characteristic(name="Q_P_Char"), 10000, 20000, does_not_raise()),
             (None, 10000, 10000, pytest.raises(pydantic.ValidationError)),
-            ("Q(P)-char", -10000, 10000, pytest.raises(pydantic.ValidationError)),
-            ("Q(P)-char", 10000, -10000, pytest.raises(pydantic.ValidationError)),
+            (Characteristic(name="Q_P_Char"), -10000, 10000, pytest.raises(pydantic.ValidationError)),
+            (Characteristic(name="Q_P_Char"), 10000, -10000, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(  # noqa: PLR0913
         self,
-        q_p_characteristic_name,
+        q_p_characteristic,
         q_max_ue,
         q_max_oe,
         expectation,
@@ -291,7 +309,7 @@ class TestControlQP:
         with expectation:
             ControlQP(
                 node_target="A",
-                q_p_characteristic_name=q_p_characteristic_name,
+                q_p_characteristic=q_p_characteristic,
                 q_max_ue=q_max_ue,
                 q_max_oe=q_max_oe,
             )
