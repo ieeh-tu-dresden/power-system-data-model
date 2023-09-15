@@ -93,10 +93,10 @@ THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation 
 
 
 class PowerBase(Base):
-    value: float
-    value_a: float
-    value_b: float
-    value_c: float
+    value: float  # power (three-phase)
+    value_a: float  # power (phase a)
+    value_b: float  # power (phase b)
+    value_c: float  # power (phase c)
     is_symmetrical: bool
 
 
@@ -128,7 +128,7 @@ def validate_symmetry(power: T) -> T:
 
 
 class RatedPower(PowerBase):
-    value: float = pydantic.Field(..., ge=0)  # rated power; base for p.u. calculation
+    value: float = pydantic.Field(..., ge=0)  # rated power (three phase); base for p.u. calculation
     value_a: float = pydantic.Field(..., ge=0)  # rated power (phase a)
     value_b: float = pydantic.Field(..., ge=0)  # rated power (phase b)
     value_c: float = pydantic.Field(..., ge=0)  # rated power (phase c)

@@ -13,12 +13,6 @@ from psdm.topology.load import validate_total
 
 
 class ActivePower(PowerBase):
-    value: float  # actual active power (three-phase)
-    value_a: float  # actual active power (phase a)
-    value_b: float  # actual active power (phase b)
-    value_c: float  # actual active power (phase c)
-    is_symmetrical: bool
-
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
     def _validate_symmetry(cls, power: ActivePower) -> ActivePower:
         return validate_symmetry(power)

@@ -11,6 +11,7 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import CosphiDir
+from psdm.steadystate_case.characteristic import Characteristic
 
 
 class ControlStrategy(enum.Enum):
@@ -135,7 +136,7 @@ def validate_pos(value: float | None) -> float | None:
 
 class ControlQP(Base):
     # Q(P) characteristic control mode
-    q_p_characteristic_name: str
+    q_p_characteristic: Characteristic
     q_max_ue: float | None = None  # Under excited limit of Q: absolut value
     q_max_oe: float | None = None  # Over excited limit of Q: absolut value
 
