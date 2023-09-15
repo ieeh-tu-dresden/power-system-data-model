@@ -26,8 +26,9 @@ The data model is structured as the following schema:
 
 ## <div id="remarks" /> General Remarks
 
-Please find below some important general remarks and assumptions to consider for the usage in other applications:
-- The load centered counting system should be used for all types of loads.
+Please find below some important general remarks and assumptions to consider for consistent usage across different applications:
+- The passive sign convention should be used for all types of loads (consumer as well as producer).
+- Numeric values should be set using the SI unit convention.
 - Topology
   - The `Rated Power` should always be defined positive (absolute value).
 - SteadyState
