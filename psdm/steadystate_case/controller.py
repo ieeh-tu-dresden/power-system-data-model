@@ -23,6 +23,7 @@ class ControlStrategy(enum.Enum):
     COSPHI_P = "COSPHI_P"
     COSPHI_U = "COSPHI_U"
     TANPHI_CONST = "TANPHI_CONST"
+    P_F = "P_F"
     ND = "ND"
 
 
@@ -151,7 +152,30 @@ class ControlQP(Base):
         return validate_pos(v)
 
 
-ControlTypeType = (
+class ControlPF(Base):
+    # P(f) characteristic control mode
+    droop_over_freq: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Droop/Slope of power infeed reduction if freqeuncy is above f_deadband_up: '%/Hz'
+    droop_under_freq: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Droop/Slope of power infeed increase if freqeuncy is below f_deadband_low: '%/Hz'
+    f_p0: float = pydantic.Field(..., ge=0)  # Nominal freqeuncy value: absolut value in Hz
+    f_deadband_up: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Width of upper deadband (f_up - f_P0): absolut value in Hz
+    f_deadband_low: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
+
+    control_strategy: ControlStrategy = ControlStrategy.P_F
+
+
+ControlType = (
     ControlQConst
     | ControlUConst
     | ControlTanphiConst
@@ -160,10 +184,11 @@ ControlTypeType = (
     | ControlCosphiU
     | ControlQU
     | ControlQP
+    | ControlPF
 )
 
 
 class Controller(Base):
     node_target: str  # the controlled node (which can be differ from node the load is connected to)
-    control_type: ControlTypeType | None = None
+    control_type: ControlType | None = None
     external_controller_name: str | None = None  # if external controller is specified --> name
