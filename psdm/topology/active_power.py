@@ -5,10 +5,8 @@
 from __future__ import annotations
 
 from psdm.base import Base
-from psdm.topology.characteristic import Characteristic
 from psdm.topology.load_model import LoadModel
 
 
 class ActivePower(Base):
     load_model: LoadModel | None = None
-    characteristic: Characteristic | None = None
