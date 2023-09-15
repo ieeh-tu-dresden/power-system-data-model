@@ -10,11 +10,15 @@ import pydantic
 
 from psdm.base import Base
 
+variabel_dimension = 2
+
 
 def validate_dimension(
     value: Sequence[Sequence[float]] | None,
 ) -> Sequence[Sequence[float]] | None:
     if value is not None and len(value[0]) is not len(value[1]):
+        raise ValueError
+    if value is not None and len(value) > variabel_dimension:
         raise ValueError
 
     return value
@@ -25,7 +29,7 @@ class Characteristic(Base):
 
     name: str
     description: str | None = None
-    data: Sequence[Sequence[float]] | None = None
+    data: Sequence[Sequence[float]] | None = None  # intended to be a sequence of two lists, e.g. Q(P)-characteristic
 
     @pydantic.field_validator("data", mode="before")
     def validate_characteristic_dimension(
