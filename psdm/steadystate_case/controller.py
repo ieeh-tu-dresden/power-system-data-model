@@ -12,6 +12,9 @@ import pydantic
 from psdm.base import Base
 from psdm.base import CosphiDir
 from psdm.steadystate_case.characteristic import Characteristic
+from psdm.topology.load import PowerBase
+from psdm.topology.load import validate_symmetry
+from psdm.topology.load import validate_total
 
 
 class ControlStrategy(enum.Enum):
@@ -40,9 +43,35 @@ class ControlledVoltageRef(enum.Enum):
 
 class ControlQConst(Base):
     # q-setpoint control mode
-    q_set: float  # Setpoint of reactive power. Counted demand based.
+    value: float  # set point of reactive power (three-phase)
+    value_a: float  # set point of reactive power (phase a)
+    value_b: float  # set point of reactive power (phase b)
+    value_c: float  # pset point of reactive ower (phase c)
+    is_symmetrical: bool
 
     control_strategy: ControlStrategy = ControlStrategy.Q_CONST
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_symmetry(cls, controller: ControlQConst) -> PowerBase:
+        power = PowerBase(
+            value=controller.value,
+            value_a=controller.value_a,
+            value_b=controller.value_b,
+            value_c=controller.value_c,
+            is_symmetrical=controller.is_symmetrical,
+        )
+        return validate_symmetry(power)
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_total(cls, controller: ControlQConst) -> PowerBase:
+        power = PowerBase(
+            value=controller.value,
+            value_a=controller.value_a,
+            value_b=controller.value_b,
+            value_c=controller.value_c,
+            is_symmetrical=controller.is_symmetrical,
+        )
+        return validate_total(power)
 
 
 class ControlUConst(Base):

@@ -12,9 +12,9 @@ from psdm.base import Base
 
 
 def validate_dimension(
-    value: Sequence[Sequence[float], Sequence[float]] | None,
-) -> Sequence[Sequence[float], Sequence[float]] | None:
-    if len(value[0]) is not len(value[1]):
+    value: Sequence[Sequence[float]] | None,
+) -> Sequence[Sequence[float]] | None:
+    if value is not None and len(value[0]) is not len(value[1]):
         raise ValueError
 
     return value
@@ -25,11 +25,11 @@ class Characteristic(Base):
 
     name: str
     description: str | None = None
-    data: Sequence[Sequence[float], Sequence[float]] | None = None
+    data: Sequence[Sequence[float]] | None = None
 
     @pydantic.field_validator("data", mode="before")
     def validate_characteristic_dimension(
         cls,
-        v: Sequence[Sequence[float], Sequence[float]] | None,
-    ) -> Sequence[Sequence[float], Sequence[float]] | None:
+        v: Sequence[Sequence[float]] | None,
+    ) -> Sequence[Sequence[float]] | None:
         return validate_dimension(v)

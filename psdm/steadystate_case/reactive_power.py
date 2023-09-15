@@ -4,21 +4,9 @@
 
 from __future__ import annotations
 
-import pydantic
-
+from psdm.base import Base
 from psdm.steadystate_case.controller import Controller
-from psdm.topology.load import PowerBase
-from psdm.topology.load import validate_symmetry
-from psdm.topology.load import validate_total
 
 
-class ReactivePower(PowerBase):
-    controller: Controller | None = None
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, power: ReactivePower) -> ReactivePower:
-        return validate_symmetry(power)
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, power: ReactivePower) -> ReactivePower:
-        return validate_total(power)
+class ReactivePower(Base):
+    controller: Controller
