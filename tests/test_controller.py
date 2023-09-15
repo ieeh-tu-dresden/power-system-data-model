@@ -13,6 +13,7 @@ from psdm.steadystate_case.controller import (
     ControlCosphiConst,
     ControlCosphiP,
     ControlCosphiU,
+    ControlPF,
     ControlledVoltageRef,
     ControlQConst,
     ControlQP,
@@ -312,4 +313,43 @@ class TestControlQP:
                 q_p_characteristic=q_p_characteristic,
                 q_max_ue=q_max_ue,
                 q_max_oe=q_max_oe,
+            )
+
+
+class TestControlPF:
+    @pytest.mark.parametrize(
+        (
+            "droop_over_freq",
+            "droop_under_freq",
+            "f_p0",
+            "f_deadband_up",
+            "f_deadband_low",
+            "expectation",
+        ),
+        [
+            (40, 40, 50, 0.2, 0.2, does_not_raise()),
+            (-40, 40, 50, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
+            (40, -40, 50, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
+            (40, 40, -50, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, -0.2, 0.2, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, 0.2, -0.2, pytest.raises(pydantic.ValidationError)),
+        ],
+    )
+    def test_init(  # noqa: PLR0913
+        self,
+        droop_over_freq,
+        droop_under_freq,
+        f_p0,
+        f_deadband_up,
+        f_deadband_low,
+        expectation,
+    ) -> None:
+        with expectation:
+            ControlPF(
+                node_target="A",
+                droop_over_freq=droop_over_freq,
+                droop_under_freq=droop_under_freq,
+                f_p0=f_p0,
+                f_deadband_up=f_deadband_up,
+                f_deadband_low=f_deadband_low,
             )
