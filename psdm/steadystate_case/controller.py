@@ -105,25 +105,25 @@ class ControlCosphiU(Base):
 
 class ControlQU(Base):
     # Q(U) characteristic control mode
-    m_tg_2015: float = pydantic.Field(
+    droop_tg_2015: float = pydantic.Field(
         ...,
         ge=0,
     )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2015: '%/kV'-value --> Q = m_% * Pr * dU_kV
-    m_tg_2018: float = pydantic.Field(
+    droop_tg_2018: float = pydantic.Field(
         ...,
         ge=0,
     )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2018: '%/pu'-value --> Q = m_% * Pr * dU_(% of Un)
-    u_q0: float = pydantic.Field(..., ge=0)  # Voltage value, where Q=0: per unit value related to Un
+    u_q0: float = pydantic.Field(..., ge=0)  # Voltage value, where Q=0: absolut value in V
     u_deadband_up: float = pydantic.Field(
         ...,
         ge=0,
-    )  # Width of upper deadband (U_1_up - U_Q0): per unit value related to Un
+    )  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
     u_deadband_low: float = pydantic.Field(
         ...,
         ge=0,
-    )  # Width of lower deadband (U_Q0 - U_1_low): per unit value related to Un
-    q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value
-    q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value
+    )  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
+    q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value in var
+    q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value in var
 
     control_strategy: ControlStrategy = ControlStrategy.Q_U
 
