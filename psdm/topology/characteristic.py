@@ -8,4 +8,6 @@ from psdm.base import Base
 
 
 class Characteristic(Base):
+    """This class represents a characteristic of a load."""
+
     description: str | None = None

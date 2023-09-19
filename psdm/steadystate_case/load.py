@@ -10,6 +10,11 @@ from psdm.steadystate_case.reactive_power import ReactivePower
 
 
 class Load(Base):  # including assets of type load and generator
+    """This class represents the operating point of a load.
+
+    It is characterized by the active and reactive power.
+    """
+
     name: str
     active_power: ActivePower
     reactive_power: ReactivePower

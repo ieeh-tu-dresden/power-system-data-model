@@ -8,6 +8,8 @@ from psdm.base import Base
 
 
 class Switch(Base):
+    """This class represents an imaginary switching element."""
+
     element: str
     node: str
     state: bool  # 0:opened; 1:closed

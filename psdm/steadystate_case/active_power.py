@@ -13,6 +13,8 @@ from psdm.topology.load import validate_total
 
 
 class ActivePower(PowerBase):
+    """This class represents the three phase active power operating point of a load."""
+
     value: float  # actual active power (three-phase)
     value_a: float  # actual active power (phase a)
     value_b: float  # actual active power (phase b)

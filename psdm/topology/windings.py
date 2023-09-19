@@ -18,6 +18,12 @@ class VectorGroup(enum.Enum):
 
 
 class Winding(Base):
+    """This class represents a winding of a transformer.
+
+    For example, a 2-winding transformer has a high and low voltage level winding.
+    Each windings is characterized by vector group, which defines the interconnection of the three phases.
+    """
+
     node: str
     s_r: float
     u_n: float  # Nominal Voltage of connected nodes (CIM: BaseVoltage)

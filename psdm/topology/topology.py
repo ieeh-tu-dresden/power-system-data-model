@@ -15,6 +15,11 @@ from psdm.topology.transformer import Transformer
 
 
 class Topology(Base):
+    """This class represents operating point independent topology of a grid.
+
+    It is characterized by list of branches, nodes, loads, transformers and external grids.
+    """
+
     meta: Meta
     branches: UniqueTuple[Branch]
     nodes: UniqueTuple[Node]

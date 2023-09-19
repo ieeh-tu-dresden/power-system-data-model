@@ -13,6 +13,11 @@ from psdm.topology.load import validate_total
 
 
 class ReactivePower(PowerBase):
+    """This class represents the three phase reactive power operating point of a load.
+
+    It can be characterized by a controller.
+    """
+
     controller: Controller | None = None
 
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]

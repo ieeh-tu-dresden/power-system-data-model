@@ -160,6 +160,11 @@ class ConnectedPhases(Base):
 
 
 class Load(Base):  # including assets of type load and generator
+    """This class represents a load.
+
+    It is mainly characterized by the load type (Producer, Consumer, Storage or passive shunt).
+    """
+
     name: str
     node: str
     u_n: float  # nominal voltage of the connected node
