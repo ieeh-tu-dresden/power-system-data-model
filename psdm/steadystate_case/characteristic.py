@@ -11,7 +11,7 @@ import pydantic
 
 from psdm.base import Base
 
-variabel_dimension = 2
+variable_dimension = 2
 
 
 def validate_dimension(
@@ -19,7 +19,7 @@ def validate_dimension(
 ) -> Sequence[Sequence[float]] | None:
     if value is not None and len(value[0]) is not len(value[1]):
         raise ValueError
-    if value is not None and len(value) > variabel_dimension:
+    if value is not None and len(value) > variable_dimension:
         raise ValueError
 
     return value

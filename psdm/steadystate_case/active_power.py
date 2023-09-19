@@ -10,6 +10,9 @@ from psdm.steadystate_case.controller import PController
 
 
 class ActivePower(Base):
-    """This class represents the three phase active power operating point of a load."""
+    """This class represents the three phase active power operating point of a load.
+
+    It must be characterized by a controller.
+    """
 
     controller: PController

@@ -12,7 +12,7 @@ from psdm.steadystate_case.controller import QController
 class ReactivePower(Base):
     """This class represents the three phase reactive power operating point of a load.
 
-    It can be characterized by a controller.
+    It must be characterized by a controller.
     """
 
     controller: QController

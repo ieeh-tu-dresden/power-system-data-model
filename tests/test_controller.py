@@ -13,6 +13,7 @@ from psdm.steadystate_case.controller import (
     ControlCosphiConst,
     ControlCosphiP,
     ControlCosphiU,
+    ControlPConst,
     ControlPF,
     ControlledVoltageRef,
     ControlQConst,
@@ -352,4 +353,46 @@ class TestControlPF:
                 f_p0=f_p0,
                 f_deadband_up=f_deadband_up,
                 f_deadband_low=f_deadband_low,
+            )
+
+
+class TestControlPConst:
+    @pytest.mark.parametrize(
+        (
+            "value",
+            "value_a",
+            "value_b",
+            "value_c",
+            "is_symmetrical",
+            "expectation",
+        ),
+        [
+            (-1500, -500, -500, -500, True, does_not_raise()),
+            (-1500, -500, -500, -500, False, pytest.raises(pydantic.ValidationError)),
+            (1500, 500, 500, 500, True, does_not_raise()),
+            (1500, 600, 500, 500, True, pytest.raises(pydantic.ValidationError)),
+            (1500, 500, 1000, 0, False, does_not_raise()),
+            (1700, 500, 1000, 200, True, pytest.raises(pydantic.ValidationError)),
+            (1700, 500, 1000, 100, False, pytest.raises(pydantic.ValidationError)),
+            (0, 0, 0, 0, True, does_not_raise()),
+            (None, None, None, None, None, pytest.raises(pydantic.ValidationError)),
+        ],
+    )
+    def test_init(
+        self,
+        value,
+        value_a,
+        value_b,
+        value_c,
+        is_symmetrical,
+        expectation,
+    ) -> None:
+        with expectation:
+            ControlPConst(
+                node_target="A",
+                value=value,
+                value_a=value_a,
+                value_b=value_b,
+                value_c=value_c,
+                is_symmetrical=is_symmetrical,
             )

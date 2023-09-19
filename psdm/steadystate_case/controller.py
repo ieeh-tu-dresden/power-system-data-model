@@ -257,11 +257,6 @@ PControlType = ControlPConst | ControlPF
 
 
 class Controller(Base):
-    """This class represents a controller of active or reactive power of a load.
-
-    It is characterized by the control type, which comes with different controller parameters.
-    """
-
     node_target: str  # the controlled node (which can be differ from node the load is connected to)
     external_controller_name: str | None = None  # if external controller is specified --> name
 
