@@ -11,7 +11,7 @@ from psdm.base import Base
 
 
 class LoadModel(Base):
-    """Load Representation Based on Polynomial Model.
+    """Load representation based on polynomial model.
 
     load = load_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)
     c_z = 1 - c_p - c_i

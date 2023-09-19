@@ -8,5 +8,7 @@ from psdm.base import Base
 
 
 class Transformer(Base):
+    """This class represents the operationg point of a transformer."""
+
     name: str
     tap_pos: int | None = None  # actual tap position

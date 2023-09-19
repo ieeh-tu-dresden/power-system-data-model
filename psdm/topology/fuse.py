@@ -8,6 +8,8 @@ from psdm.base import Base
 
 
 class Fuse(Base):
+    """This class represents a fuse, either located between two nodes or related to a load."""
+
     element: str
     node: str
     state: bool  # 0:opened; 1:closed

@@ -2,12 +2,12 @@
 # :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2023.
 # :license: BSD 3-Clause
 
+from __future__ import annotations
+
 from psdm.base import Base
 
 
-class Node(Base):
-    """This class represents a terminal within the grid."""
+class Characteristic(Base):
+    """This class represents a characteristic of a load."""
 
-    name: str
-    u_n: float
     description: str | None = None

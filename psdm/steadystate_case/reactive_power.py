@@ -6,8 +6,13 @@
 from __future__ import annotations
 
 from psdm.base import Base
-from psdm.steadystate_case.controller import Controller
+from psdm.steadystate_case.controller import QController
 
 
 class ReactivePower(Base):
-    controller: Controller
+    """This class represents the three phase reactive power operating point of a load.
+
+    It can be characterized by a controller.
+    """
+
+    controller: QController

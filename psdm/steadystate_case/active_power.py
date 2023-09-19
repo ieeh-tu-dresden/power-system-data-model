@@ -5,21 +5,11 @@
 
 from __future__ import annotations
 
-import pydantic
-
-from psdm.steadystate_case.controller import Controller
+from psdm.steadystate_case.controller import PController
 from psdm.topology.load import PowerBase
-from psdm.topology.load import validate_symmetry
-from psdm.topology.load import validate_total
 
 
 class ActivePower(PowerBase):
-    controller: Controller | None = None
+    """This class represents the three phase active power operating point of a load."""
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, power: ActivePower) -> ActivePower:
-        return validate_symmetry(power)
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, power: ActivePower) -> ActivePower:
-        return validate_total(power)
+    controller: PController

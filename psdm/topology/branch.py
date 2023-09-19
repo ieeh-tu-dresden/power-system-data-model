@@ -17,6 +17,11 @@ class BranchType(Enum):
 
 
 class Branch(Base):
+    """This class represents a branch adn therefore includes lines, cables or branch fuses.
+
+    It is characterized by a branch type (line, cable or fuse).
+    """
+
     node_1: str
     node_2: str
     name: str

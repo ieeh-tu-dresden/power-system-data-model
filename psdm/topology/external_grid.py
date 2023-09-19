@@ -16,6 +16,11 @@ class GridType(Enum):
 
 
 class ExternalGrid(Base):
+    """This class represents an external grid or a grid subsitute equivalent respectively.
+
+    It is characterized by a grid type (slack, P-V-node, P-Q-node).
+    """
+
     name: str
     description: str | None
     node: str

@@ -20,6 +20,11 @@ if TYPE_CHECKING:
 
 
 class Case(Base):
+    """This class represents a steady state case / an operation point of a grid.
+
+    It is characterized by the operating points of all loads, transformers and external grids in operation.
+    """
+
     meta: Meta
     loads: UniqueTuple[Load]
     transformers: UniqueTuple[Transformer]
