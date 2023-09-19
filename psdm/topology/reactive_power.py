@@ -5,8 +5,9 @@
 from __future__ import annotations
 
 from psdm.base import Base
+from psdm.topology.load_model import CONSTANT_POWER_LM
 from psdm.topology.load_model import LoadModel
 
 
 class ReactivePower(Base):
-    load_model: LoadModel | None = None
+    load_model: LoadModel = CONSTANT_POWER_LM

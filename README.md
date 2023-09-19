@@ -23,6 +23,9 @@ The data model is structured as the following schema:
 - steadystate case
   - information about power draw/infeed for a specific operational case
 
+The interaction between load models and controllers are depicted in the following schematic:
+![active/reactive power schematics](./docs/power_schematics.png)
+
 ## <div id="installation" /> Installation
 
 Just install via pip:
