@@ -5,11 +5,11 @@
 
 from __future__ import annotations
 
+from psdm.base import Base
 from psdm.steadystate_case.controller import PController
-from psdm.topology.load import PowerBase
 
 
-class ActivePower(PowerBase):
+class ActivePower(Base):
     """This class represents the three phase active power operating point of a load."""
 
     controller: PController

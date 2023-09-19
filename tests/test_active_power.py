@@ -8,6 +8,7 @@ import pydantic
 import pytest
 
 from psdm.steadystate_case.active_power import ActivePower
+from psdm.steadystate_case.controller import ControlPConst, PController
 
 
 class TestActivePower:
@@ -40,10 +41,14 @@ class TestActivePower:
         expectation,
     ) -> None:
         with expectation:
-            ActivePower(
-                value=value,
-                value_a=value_a,
-                value_b=value_b,
-                value_c=value_c,
-                is_symmetrical=is_symmetrical,
+            controller = PController(
+                node_target="Node_A",
+                control_type=ControlPConst(
+                    value=value,
+                    value_a=value_a,
+                    value_b=value_b,
+                    value_c=value_c,
+                    is_symmetrical=is_symmetrical,
+                ),
             )
+            ActivePower(controller=controller)

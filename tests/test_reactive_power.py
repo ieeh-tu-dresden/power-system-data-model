@@ -6,7 +6,7 @@ from contextlib import nullcontext as does_not_raise
 
 import pydantic
 import pytest
-from psdm.steadystate_case.controller import Controller
+from psdm.steadystate_case.controller import QController
 from psdm.steadystate_case.controller import ControlQConst
 
 from psdm.steadystate_case.reactive_power import ReactivePower
@@ -20,7 +20,7 @@ class TestReactivePower:
         ),
         [
             (
-                Controller(
+                QController(
                     node_target="Node_A",
                     control_type=ControlQConst(
                         value=0,
