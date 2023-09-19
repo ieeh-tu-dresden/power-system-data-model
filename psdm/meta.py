@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import datetime
+import enum
 import typing as t
 import uuid
 
@@ -15,6 +16,11 @@ from psdm.base import Base
 VERSION = "1.7.0"
 
 
+class SignConvention(enum.Enum):
+    PASSIVE = "PASSIVE"  # consumer load centered
+    ACTIVE = "ACTIVE"  # producer load centered
+
+
 class Meta(Base):
     """This class represents the meta data related to the grid export."""
 
@@ -22,5 +28,6 @@ class Meta(Base):
     name: str
     date: datetime.date
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
+    sign_convention: SignConvention | None = None
     project: str | None = None
     case: str | None = None
