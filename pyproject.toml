@@ -12,7 +12,7 @@
   name = "ieeh-power-system-data-model"
   readme = "README.md"
   requires-python = ">=3.10"
-  version = "1.7.0"
+  version = "1.8.0"
 
   [project.urls]
     Source = "https://github.com/ieeh-tu-dresden/power-system-data-model"
@@ -86,7 +86,7 @@
 [tool.commitizen]
   name = "cz_conventional_commits"
   tag_format = "$version"
-  version = "1.7.0"
+  version = "1.8.0"
   version_files = [
     ".zenodo.json:version",
     "CITATION.cff:cff-version",

@@ -1,3 +1,10 @@
+## 1.8.0 (2023-09-19)
+
+### Feat
+
+- rework power calculation in steadystate case (contributors: @SebastianDD, @sasanjac)
+- add meta attr sign convention (contributors: @SebastianDD)
+
 ## 1.7.0 (2023-09-05)
 
 ### Feat
