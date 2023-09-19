@@ -6,7 +6,7 @@ A data model for the description of electrical power systems.
 
 - [IEEH Power System Data Model](#ieeh-power-system-data-model)
   - [ Field of Application](#-field-of-application)
-  - [ General Remarks](#-remarks)
+  - [ General Remarks](#-general-remarks)
   - [ Installation](#-installation)
   - [ Development](#-development)
   - [ Attribution](#-attribution)
@@ -23,7 +23,6 @@ The data model is structured as the following schema:
   - information about disabled elements to represent a specific operational case based on the base topology
 - steadystate case
   - information about power draw/infeed for a specific operational case
-
 ## <div id="remarks" /> General Remarks
 
 Please find below some important general remarks and assumptions to consider for consistent usage across different applications:
@@ -32,7 +31,8 @@ Please find below some important general remarks and assumptions to consider for
 - Topology
   - The `Rated Power` should always be defined positive (absolute value).
 - SteadyState
-  - If a the active or reactive power of a `Load` doesn't contains a `Controller`, the type of `const. power` is assumed by default.
+  -The interaction between load models and controllers are depicted in the following schematic:
+  ![active/reactive power schematics](./docs/power_schematics.png)
 
 ## <div id="installation" /> Installation
 

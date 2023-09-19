@@ -11,36 +11,72 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import CosphiDir
+from psdm.steadystate_case.characteristic import Characteristic
+from psdm.topology.load import PowerBase
+from psdm.topology.load import validate_symmetry
+from psdm.topology.load import validate_total
 
 
-class ControlStrategy(enum.Enum):
-    U_CONST = "U_CONST"
+class QControlStrategy(enum.Enum):
     COSPHI_CONST = "COSPHI_CONST"
-    Q_CONST = "Q_CONST"
-    Q_U = "Q_U"
-    Q_P = "Q_P"
     COSPHI_P = "COSPHI_P"
     COSPHI_U = "COSPHI_U"
-    TANPHI_CONST = "TANPHI_CONST"
     ND = "ND"
+    Q_CONST = "Q_CONST"
+    Q_P = "Q_P"
+    Q_U = "Q_U"
+    TANPHI_CONST = "TANPHI_CONST"
+    U_CONST = "U_CONST"
+
+
+class PControlStrategy(enum.Enum):
+    ND = "ND"
+    P_CONST = "P_CONST"
+    P_F = "P_F"
 
 
 class ControlledVoltageRef(enum.Enum):
-    POS_SEQ = "POS_SEQ"
-    AVG = "AVG"
     A = "A"
-    B = "B"
-    C = "C"
     AB = "AB"
+    AVG = "AVG"
+    B = "B"
     BC = "BC"
+    C = "C"
     CA = "CA"
+    POS_SEQ = "POS_SEQ"
 
 
 class ControlQConst(Base):
     # q-setpoint control mode
-    q_set: float  # Setpoint of reactive power. Counted demand based.
+    value: float  # set point of reactive power (three-phase)
+    value_a: float  # set point of reactive power (phase a)
+    value_b: float  # set point of reactive power (phase b)
+    value_c: float  # pset point of reactive ower (phase c)
+    is_symmetrical: bool
 
-    control_strategy: ControlStrategy = ControlStrategy.Q_CONST
+    control_strategy: QControlStrategy = QControlStrategy.Q_CONST
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_symmetry(cls, controller: ControlQConst) -> PowerBase:
+        power = PowerBase(
+            value=controller.value,
+            value_a=controller.value_a,
+            value_b=controller.value_b,
+            value_c=controller.value_c,
+            is_symmetrical=controller.is_symmetrical,
+        )
+        return validate_symmetry(power)
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_total(cls, controller: ControlQConst) -> PowerBase:
+        power = PowerBase(
+            value=controller.value,
+            value_a=controller.value_a,
+            value_b=controller.value_b,
+            value_c=controller.value_c,
+            is_symmetrical=controller.is_symmetrical,
+        )
+        return validate_total(power)
 
 
 class ControlUConst(Base):
@@ -48,7 +84,7 @@ class ControlUConst(Base):
     u_set: float = pydantic.Field(ge=0)  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
 
-    control_strategy: ControlStrategy = ControlStrategy.U_CONST
+    control_strategy: QControlStrategy = QControlStrategy.U_CONST
 
 
 class ControlTanphiConst(Base):
@@ -56,7 +92,7 @@ class ControlTanphiConst(Base):
     cosphi_dir: CosphiDir
     cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
 
-    control_strategy: ControlStrategy = ControlStrategy.TANPHI_CONST
+    control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
 
 
 class ControlCosphiConst(Base):
@@ -64,7 +100,7 @@ class ControlCosphiConst(Base):
     cosphi_dir: CosphiDir
     cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
 
-    control_strategy: ControlStrategy = ControlStrategy.COSPHI_CONST
+    control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
 
 
 class ControlCosphiP(Base):
@@ -80,7 +116,7 @@ class ControlCosphiP(Base):
     p_threshold_ue: float = pydantic.Field(le=0)  # under excited: threshold for P.
     p_threshold_oe: float = pydantic.Field(le=0)  # over excited: threshold for P.
 
-    control_strategy: ControlStrategy = ControlStrategy.COSPHI_P
+    control_strategy: QControlStrategy = QControlStrategy.COSPHI_P
 
 
 class ControlCosphiU(Base):
@@ -98,32 +134,32 @@ class ControlCosphiU(Base):
     u_threshold_ue: float = pydantic.Field(..., ge=0)  # under excited: threshold for U.
     u_threshold_oe: float = pydantic.Field(..., ge=0)  # over excited: threshold for U.
 
-    control_strategy: ControlStrategy = ControlStrategy.COSPHI_U
+    control_strategy: QControlStrategy = QControlStrategy.COSPHI_U
 
 
 class ControlQU(Base):
     # Q(U) characteristic control mode
-    m_tg_2015: float = pydantic.Field(
+    droop_tg_2015: float = pydantic.Field(
         ...,
         ge=0,
     )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2015: '%/kV'-value --> Q = m_% * Pr * dU_kV
-    m_tg_2018: float = pydantic.Field(
+    droop_tg_2018: float = pydantic.Field(
         ...,
         ge=0,
     )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2018: '%/pu'-value --> Q = m_% * Pr * dU_(% of Un)
-    u_q0: float = pydantic.Field(..., ge=0)  # Voltage value, where Q=0: per unit value related to Un
+    u_q0: float = pydantic.Field(..., ge=0)  # Voltage value, where Q=0: absolut value in V
     u_deadband_up: float = pydantic.Field(
         ...,
         ge=0,
-    )  # Width of upper deadband (U_1_up - U_Q0): per unit value related to Un
+    )  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
     u_deadband_low: float = pydantic.Field(
         ...,
         ge=0,
-    )  # Width of lower deadband (U_Q0 - U_1_low): per unit value related to Un
-    q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value
-    q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value
+    )  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
+    q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value in var
+    q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value in var
 
-    control_strategy: ControlStrategy = ControlStrategy.Q_U
+    control_strategy: QControlStrategy = QControlStrategy.Q_U
 
 
 def validate_pos(value: float | None) -> float | None:
@@ -135,11 +171,11 @@ def validate_pos(value: float | None) -> float | None:
 
 class ControlQP(Base):
     # Q(P) characteristic control mode
-    q_p_characteristic_name: str
+    q_p_characteristic: Characteristic
     q_max_ue: float | None = None  # Under excited limit of Q: absolut value
     q_max_oe: float | None = None  # Over excited limit of Q: absolut value
 
-    control_strategy: ControlStrategy = ControlStrategy.Q_P
+    control_strategy: QControlStrategy = QControlStrategy.Q_P
 
     @pydantic.field_validator("q_max_ue", mode="before")
     def validate_q_max_ue(cls, v: float | None) -> float | None:
@@ -150,7 +186,63 @@ class ControlQP(Base):
         return validate_pos(v)
 
 
-ControlTypeType = (
+class ControlPConst(Base):
+    # p-setpoint control mode
+    value: float  # set point of active power (three-phase)
+    value_a: float  # set point of active power (phase a)
+    value_b: float  # set point of active power (phase b)
+    value_c: float  # pset point of active ower (phase c)
+    is_symmetrical: bool
+
+    control_strategy: PControlStrategy = PControlStrategy.P_CONST
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_symmetry(cls, controller: ControlPConst) -> PowerBase:
+        power = PowerBase(
+            value=controller.value,
+            value_a=controller.value_a,
+            value_b=controller.value_b,
+            value_c=controller.value_c,
+            is_symmetrical=controller.is_symmetrical,
+        )
+        return validate_symmetry(power)
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_total(cls, controller: ControlPConst) -> PowerBase:
+        power = PowerBase(
+            value=controller.value,
+            value_a=controller.value_a,
+            value_b=controller.value_b,
+            value_c=controller.value_c,
+            is_symmetrical=controller.is_symmetrical,
+        )
+        return validate_total(power)
+
+
+class ControlPF(Base):
+    # P(f) characteristic control mode
+    droop_over_freq: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Droop/Slope of power infeed reduction if freqeuncy is above f_deadband_up: '%/Hz'
+    droop_under_freq: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Droop/Slope of power infeed increase if freqeuncy is below f_deadband_low: '%/Hz'
+    f_p0: float = pydantic.Field(..., ge=0)  # Nominal freqeuncy value: absolut value in Hz
+    f_deadband_up: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Width of upper deadband (f_up - f_P0): absolut value in Hz
+    f_deadband_low: float = pydantic.Field(
+        ...,
+        ge=0,
+    )  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
+
+    control_strategy: PControlStrategy = PControlStrategy.P_F
+
+
+QControlType = (
     ControlQConst
     | ControlUConst
     | ControlTanphiConst
@@ -161,13 +253,27 @@ ControlTypeType = (
     | ControlQP
 )
 
+PControlType = ControlPConst | ControlPF
+
 
 class Controller(Base):
-    """This class represents a controller of active or reactive power of a load.
+    node_target: str  # the controlled node (which can be differ from node the load is connected to)
+    external_controller_name: str | None = None  # if external controller is specified --> name
+
+
+class PController(Controller):
+    """This class represents a controller of active power of a load.
 
     It is characterized by the control type, which comes with different controller parameters.
     """
 
-    node_target: str  # the controlled node (which can be differ from node the load is connected to)
-    control_type: ControlTypeType | None = None
-    external_controller_name: str | None = None  # if external controller is specified --> name
+    control_type: PControlType
+
+
+class QController(Controller):
+    """This class represents a controller of reactive power of a load.
+
+    It is characterized by the control type, which comes with different controller parameters.
+    """
+
+    control_type: QControlType

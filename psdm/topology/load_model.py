@@ -39,3 +39,6 @@ class LoadModel(Base):
     @property
     def c_z(self) -> float:
         return 1 - self.c_p - self.c_i
+
+
+CONSTANT_POWER_LM = LoadModel(name="constant_power")
