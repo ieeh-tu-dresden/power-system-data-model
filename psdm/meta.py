@@ -30,7 +30,7 @@ class Meta(Base):
     project: str | None = None
     case: str | None = None
 
-    @pydantic.computed_field
+    @pydantic.computed_field  # type: ignore[misc]
     @property
     def version(self) -> str:
         return VERSION
