@@ -1,3 +1,9 @@
+## 1.8.1 (2023-09-20)
+
+### Fix
+
+- export version attribute in metadata using pydantic v2 (contributors: @sasanjac)
+
 ## 1.8.0 (2023-09-19)
 
 ### Feat
