@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import datetime
 import enum
-import typing as t
 import uuid
 
 import pydantic
@@ -24,10 +23,14 @@ class SignConvention(enum.Enum):
 class Meta(Base):
     """This class represents the meta data related to the grid export."""
 
-    version: t.ClassVar[str] = VERSION
     name: str
     date: datetime.date
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
     sign_convention: SignConvention | None = None
     project: str | None = None
     case: str | None = None
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def version(self) -> str:
+        return VERSION
