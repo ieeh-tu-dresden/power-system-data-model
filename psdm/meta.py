@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import datetime
 import enum
-import typing as t
 import uuid
 
 import pydantic
