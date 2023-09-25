@@ -162,18 +162,17 @@ class ConnectedPhases(Base):
 class Load(Base):  # including assets of type load and generator
     """This class represents a load.
 
-    It is mainly characterized by the load type (Producer, Consumer, Storage or passive shunt).
+    It is mainly characterized by the load model of active and reactive power, the  connected phases and the load type itself (Producer, Consumer, Storage or passive shunt).
     """
 
     name: str
     node: str
-    u_n: float  # nominal voltage of the connected node
     rated_power: RatedPower
     active_power: ActivePower
     reactive_power: ReactivePower
-    type: LoadType  # noqa: A003
     connected_phases: ConnectedPhases
-    system_type: SystemType
     phase_connection_type: PhaseConnectionType
+    type: LoadType  # noqa: A003
+    system_type: SystemType
     voltage_system_type: VoltageSystemType
     description: str | None = None
