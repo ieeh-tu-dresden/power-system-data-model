@@ -5,7 +5,6 @@
 from __future__ import annotations
 
 from psdm.base import Base
-from psdm.topology.load_model import CONSTANT_POWER_LM
 from psdm.topology.load_model import LoadModel
 
 
@@ -15,4 +14,4 @@ class ActivePower(Base):
     If no load model is explicitly specified by the user, a constant power characteristic is assumed.
     """
 
-    load_model: LoadModel = CONSTANT_POWER_LM
+    load_model: LoadModel

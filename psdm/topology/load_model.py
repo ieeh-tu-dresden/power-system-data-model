@@ -13,10 +13,11 @@ from psdm.base import Base
 class LoadModel(Base):
     """Load representation based on polynomial model.
 
-    load = load_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)
+    power = power_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)
     c_z = 1 - c_p - c_i
     """
 
+    u_0: float
     name: str | None = None
     c_p: pydantic.confloat(ge=0, le=1) = 1.0  # type: ignore[valid-type]
     c_i: pydantic.confloat(ge=0, le=1) = 0.0  # type: ignore[valid-type]
@@ -40,5 +41,9 @@ class LoadModel(Base):
     def c_z(self) -> float:
         return 1 - self.c_p - self.c_i
 
-
-CONSTANT_POWER_LM = LoadModel(name="constant_power")
+    def calc_power(self, u: float, power: float) -> float:
+        return power * (
+            self.c_p * (u / self.u_0) ** self.exp_p
+            + self.c_i * (u / self.u_0) ** self.exp_i
+            + self.c_z * (u / self.u_0) ** self.exp_z
+        )
