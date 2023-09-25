@@ -51,13 +51,11 @@ class ControlQConst(Base):
     value: float  # set point of reactive power (three-phase)
     value_a: float  # set point of reactive power (phase a)
     value_b: float  # set point of reactive power (phase b)
-    value_c: float  # pset point of reactive ower (phase c)
+    value_c: float  # set point of reactive power (phase c)
     is_symmetrical: bool
 
-    control_strategy: QControlStrategy = QControlStrategy.Q_CONST
-
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlQConst) -> PowerBase:
+    def _validate_symmetry(cls, controller: ControlQConst) -> ControlQConst:
         power = PowerBase(
             value=controller.value,
             value_a=controller.value_a,
@@ -65,10 +63,11 @@ class ControlQConst(Base):
             value_c=controller.value_c,
             is_symmetrical=controller.is_symmetrical,
         )
-        return validate_symmetry(power)
+        validate_symmetry(power)
+        return controller
 
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, controller: ControlQConst) -> PowerBase:
+    def _validate_total(cls, controller: ControlQConst) -> ControlQConst:
         power = PowerBase(
             value=controller.value,
             value_a=controller.value_a,
@@ -76,7 +75,13 @@ class ControlQConst(Base):
             value_c=controller.value_c,
             is_symmetrical=controller.is_symmetrical,
         )
-        return validate_total(power)
+        validate_total(power)
+        return controller
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.Q_CONST
 
 
 class ControlUConst(Base):
@@ -84,23 +89,38 @@ class ControlUConst(Base):
     u_set: float = pydantic.Field(ge=0)  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
 
-    control_strategy: QControlStrategy = QControlStrategy.U_CONST
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.U_CONST
 
 
 class ControlTanphiConst(Base):
-    # cos(phi) control mode
+    # tan(phi) control mode
     cosphi_dir: CosphiDir
-    cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
+    value_a: float = pydantic.Field(ge=0, le=1)  # phase a tan(phi) for calculation of Q in relation to P.
+    value_b: float = pydantic.Field(ge=0, le=1)  # phase b tan(phi) for calculation of Q in relation to P.
+    value_c: float = pydantic.Field(ge=0, le=1)  # phase c tan(phi) for calculation of Q in relation to P.
+    is_symmetrical: bool
 
-    control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.TANPHI_CONST
 
 
 class ControlCosphiConst(Base):
     # cos(phi) control mode
     cosphi_dir: CosphiDir
-    cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
+    value_a: float = pydantic.Field(ge=0, le=1)  # phase a cos(phi) for calculation of Q in relation to P.
+    value_b: float = pydantic.Field(ge=0, le=1)  # phase b cos(phi) for calculation of Q in relation to P.
+    value_c: float = pydantic.Field(ge=0, le=1)  # phase c cos(phi) for calculation of Q in relation to P.
+    is_symmetrical: bool
 
-    control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.COSPHI_CONST
 
 
 class ControlCosphiP(Base):
@@ -116,7 +136,10 @@ class ControlCosphiP(Base):
     p_threshold_ue: float = pydantic.Field(le=0)  # under excited: threshold for P.
     p_threshold_oe: float = pydantic.Field(le=0)  # over excited: threshold for P.
 
-    control_strategy: QControlStrategy = QControlStrategy.COSPHI_P
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.COSPHI_P
 
 
 class ControlCosphiU(Base):
@@ -134,7 +157,10 @@ class ControlCosphiU(Base):
     u_threshold_ue: float = pydantic.Field(..., ge=0)  # under excited: threshold for U.
     u_threshold_oe: float = pydantic.Field(..., ge=0)  # over excited: threshold for U.
 
-    control_strategy: QControlStrategy = QControlStrategy.COSPHI_U
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.COSPHI_U
 
 
 class ControlQU(Base):
@@ -159,7 +185,10 @@ class ControlQU(Base):
     q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value in var
     q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value in var
 
-    control_strategy: QControlStrategy = QControlStrategy.Q_U
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.Q_U
 
 
 def validate_pos(value: float | None) -> float | None:
@@ -175,8 +204,6 @@ class ControlQP(Base):
     q_max_ue: float | None = None  # Under excited limit of Q: absolut value
     q_max_oe: float | None = None  # Over excited limit of Q: absolut value
 
-    control_strategy: QControlStrategy = QControlStrategy.Q_P
-
     @pydantic.field_validator("q_max_ue", mode="before")
     def validate_q_max_ue(cls, v: float | None) -> float | None:
         return validate_pos(v)
@@ -185,19 +212,22 @@ class ControlQP(Base):
     def validate_q_max_oe(cls, v: float | None) -> float | None:
         return validate_pos(v)
 
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> QControlStrategy:
+        return QControlStrategy.Q_P
+
 
 class ControlPConst(Base):
     # p-setpoint control mode
     value: float  # set point of active power (three-phase)
     value_a: float  # set point of active power (phase a)
     value_b: float  # set point of active power (phase b)
-    value_c: float  # pset point of active ower (phase c)
+    value_c: float  # set point of active power (phase c)
     is_symmetrical: bool
 
-    control_strategy: PControlStrategy = PControlStrategy.P_CONST
-
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlPConst) -> PowerBase:
+    def _validate_symmetry(cls, controller: ControlPConst) -> ControlPConst:
         power = PowerBase(
             value=controller.value,
             value_a=controller.value_a,
@@ -205,10 +235,11 @@ class ControlPConst(Base):
             value_c=controller.value_c,
             is_symmetrical=controller.is_symmetrical,
         )
-        return validate_symmetry(power)
+        validate_symmetry(power)
+        return controller
 
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, controller: ControlPConst) -> PowerBase:
+    def _validate_total(cls, controller: ControlPConst) -> ControlPConst:
         power = PowerBase(
             value=controller.value,
             value_a=controller.value_a,
@@ -216,7 +247,13 @@ class ControlPConst(Base):
             value_c=controller.value_c,
             is_symmetrical=controller.is_symmetrical,
         )
-        return validate_total(power)
+        validate_total(power)
+        return controller
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> PControlStrategy:
+        return PControlStrategy.P_CONST
 
 
 class ControlPF(Base):
@@ -239,7 +276,10 @@ class ControlPF(Base):
         ge=0,
     )  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
 
-    control_strategy: PControlStrategy = PControlStrategy.P_F
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def control_strategy(self) -> PControlStrategy:
+        return PControlStrategy.P_F
 
 
 QControlType = (
