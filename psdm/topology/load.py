@@ -100,10 +100,19 @@ class PowerBase(Base):
     is_symmetrical: bool
 
 
-T = t.TypeVar("T", bound=PowerBase)
+class PowerfactorBase(Base):
+    cosphi: float  # cos(phi) (three-phase)
+    cosphi_a: float  # cos(phi) (phase a)
+    cosphi_b: float  # cos(phi) (phase b)
+    cosphi_c: float  # cos(phi) (phase c)
+    is_symmetrical: bool
 
 
-def validate_total(power: T) -> T:
+P = t.TypeVar("P", bound=PowerBase)
+F = t.TypeVar("F", bound=PowerfactorBase)
+
+
+def validate_power_total(power: P) -> P:
     pow_total = power.value_a + power.value_b + power.value_c
     diff = abs(power.value - pow_total)
     if diff > THRESHOLD:
@@ -113,7 +122,7 @@ def validate_total(power: T) -> T:
     return power
 
 
-def validate_symmetry(power: T) -> T:
+def validate_power_symmetry(power: P) -> P:
     if power.value != 0:
         if power.is_symmetrical:
             if not (power.value_a == power.value_b == power.value_c):
@@ -127,7 +136,39 @@ def validate_symmetry(power: T) -> T:
     return power
 
 
-class RatedPower(PowerBase):
+def validate_powerfactor_symmetry(powerfactor: F) -> F:
+    if powerfactor.is_symmetrical:
+        if not (powerfactor.cosphi_a == powerfactor.cosphi_b == powerfactor.cosphi_c):
+            msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
+            raise ValueError(msg)
+
+    elif powerfactor.cosphi_a == powerfactor.cosphi_b == powerfactor.cosphi_c:
+        msg = "Power factor mismatch: Three-phase power factor of load is symmetrical."
+        raise ValueError(msg)
+
+    return powerfactor
+
+
+def validate_symmetry(power: RatedPower) -> RatedPower:
+    if power.value != 0:
+        if power.is_symmetrical:
+            if not (power.value_a == power.value_b == power.value_c):
+                if not (power.cosphi_a == power.cosphi_b == power.cosphi_c):
+                    msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
+                    raise ValueError(msg)
+                msg = "Power mismatch: Three-phase power of load is not symmetrical."
+                raise ValueError(msg)
+
+        elif power.value_a == power.value_b == power.value_c and power.cosphi_a == power.cosphi_b == power.cosphi_c:
+            msg = "Power mismatch: Three-phase power of load is symmetrical."
+            raise ValueError(msg)
+    else:
+        validate_powerfactor_symmetry(power)
+
+    return power
+
+
+class RatedPower(PowerBase, PowerfactorBase):
     value: float = pydantic.Field(..., ge=0)  # rated power (three phase); base for p.u. calculation
     value_a: float = pydantic.Field(..., ge=0)  # rated power (phase a)
     value_b: float = pydantic.Field(..., ge=0)  # rated power (phase b)
@@ -144,8 +185,8 @@ class RatedPower(PowerBase):
         return validate_symmetry(power)
 
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, power: RatedPower) -> RatedPower:
-        return validate_total(power)
+    def _validate_power_total(cls, power: RatedPower) -> RatedPower:
+        return validate_power_total(power)
 
 
 class ConnectedPhases(Base):

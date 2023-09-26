@@ -7,7 +7,7 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.base import CosphiDir
+from psdm.base import PowerfactorDirection
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import (
     ControlCosphiConst,
@@ -57,7 +57,6 @@ class TestControlQConst:
     ) -> None:
         with expectation:
             ControlQConst(
-                node_target="A",
                 value=value,
                 value_a=value_a,
                 value_b=value_b,
@@ -93,7 +92,6 @@ class TestControlUConst:
     ) -> None:
         with expectation:
             ControlUConst(
-                node_target="A",
                 u_set=u_set,
                 u_meas_ref=u_meas_ref,
             )
@@ -102,31 +100,45 @@ class TestControlUConst:
 class TestControlTanphiConst:
     @pytest.mark.parametrize(
         (
-            "cosphi_dir",
-            "cosphi",
+            "tanphi_dir",
+            "tanphi",
+            "tanphi_a",
+            "tanphi_b",
+            "tanphi_c",
+            "is_symmetrical",
             "expectation",
         ),
         [
-            (CosphiDir.UE, 1, does_not_raise()),
-            (CosphiDir.UE, 0, does_not_raise()),
-            (CosphiDir.OE, 0.9, does_not_raise()),
-            (None, 0.9, pytest.raises(pydantic.ValidationError)),
-            (CosphiDir.OE, -0.9, pytest.raises(pydantic.ValidationError)),
-            (CosphiDir.OE, 2, pytest.raises(pydantic.ValidationError)),
-            (CosphiDir.OE, None, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.UE, 1, 1, 1, 1, True, does_not_raise()),
+            (PowerfactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
+            (PowerfactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
+            (PowerfactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
+            (PowerfactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, 0.9, -0.6, 0.9, 0.9, False, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, 2, 2, 2, 2, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, None, None, None, None, True, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
         self,
-        cosphi_dir,
-        cosphi,
+        tanphi_dir,
+        tanphi,
+        tanphi_a,
+        tanphi_b,
+        tanphi_c,
+        is_symmetrical,
         expectation,
     ) -> None:
         with expectation:
             ControlTanphiConst(
-                node_target="A",
-                cosphi_dir=cosphi_dir,
-                cosphi=cosphi,
+                tanphi_dir=tanphi_dir,
+                value=tanphi,
+                value_a=tanphi_a,
+                value_b=tanphi_b,
+                value_c=tanphi_c,
+                is_symmetrical=is_symmetrical,
             )
 
 
@@ -135,29 +147,43 @@ class TestControlCosphiConst:
         (
             "cosphi_dir",
             "cosphi",
+            "cosphi_a",
+            "cosphi_b",
+            "cosphi_c",
+            "is_symmetrical",
             "expectation",
         ),
         [
-            (CosphiDir.UE, 1, does_not_raise()),
-            (CosphiDir.UE, 0, does_not_raise()),
-            (CosphiDir.OE, 0.9, does_not_raise()),
-            (None, 0.9, pytest.raises(pydantic.ValidationError)),
-            (CosphiDir.OE, -0.9, pytest.raises(pydantic.ValidationError)),
-            (CosphiDir.OE, 2, pytest.raises(pydantic.ValidationError)),
-            (CosphiDir.OE, None, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.UE, 1, 1, 1, 1, True, does_not_raise()),
+            (PowerfactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
+            (PowerfactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
+            (PowerfactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
+            (PowerfactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, 0.9, -0.6, 0.9, 0.9, False, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, 2, 2, 2, 2, True, pytest.raises(pydantic.ValidationError)),
+            (PowerfactorDirection.OE, None, None, None, None, True, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
         self,
         cosphi_dir,
         cosphi,
+        cosphi_a,
+        cosphi_b,
+        cosphi_c,
+        is_symmetrical,
         expectation,
     ) -> None:
         with expectation:
             ControlCosphiConst(
-                node_target="A",
                 cosphi_dir=cosphi_dir,
-                cosphi=cosphi,
+                value=cosphi,
+                value_a=cosphi_a,
+                value_b=cosphi_b,
+                value_c=cosphi_c,
+                is_symmetrical=is_symmetrical,
             )
 
 
@@ -191,7 +217,6 @@ class TestControlCosphiP:
     ) -> None:
         with expectation:
             ControlCosphiP(
-                node_target="A",
                 cosphi_ue=cosphi_ue,
                 cosphi_oe=cosphi_oe,
                 p_threshold_ue=p_threshold_ue,
@@ -229,7 +254,6 @@ class TestControlCosphiU:
     ) -> None:
         with expectation:
             ControlCosphiU(
-                node_target="A",
                 cosphi_ue=cosphi_ue,
                 cosphi_oe=cosphi_oe,
                 u_threshold_ue=u_threshold_ue,
@@ -274,7 +298,6 @@ class TestControlQU:
     ) -> None:
         with expectation:
             ControlQU(
-                node_target="A",
                 droop_tg_2015=droop_tg_2015,
                 droop_tg_2018=droop_tg_2018,
                 u_q0=u_q0,
@@ -310,7 +333,6 @@ class TestControlQP:
     ) -> None:
         with expectation:
             ControlQP(
-                node_target="A",
                 q_p_characteristic=q_p_characteristic,
                 q_max_ue=q_max_ue,
                 q_max_oe=q_max_oe,
@@ -347,7 +369,6 @@ class TestControlPF:
     ) -> None:
         with expectation:
             ControlPF(
-                node_target="A",
                 droop_over_freq=droop_over_freq,
                 droop_under_freq=droop_under_freq,
                 f_p0=f_p0,
@@ -389,7 +410,6 @@ class TestControlPConst:
     ) -> None:
         with expectation:
             ControlPConst(
-                node_target="A",
                 value=value,
                 value_a=value_a,
                 value_b=value_b,
