@@ -30,6 +30,8 @@ class TestRatedPower:
             (0, 0, 0, 0, 0, 0, 0, 0, PowerType.AC_APPARENT, True, does_not_raise()),
             (3, 1, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, does_not_raise()),
             (4, 2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, does_not_raise()),
+            (3, 1, 1, 1, 1, 0.9, 1, 1, PowerType.AC_APPARENT, False, does_not_raise()),
+            (3, 1, 1, 1, 0.9, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
             (2, 2, 1, 1, 1, 1, 2, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
             (2, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
             (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),

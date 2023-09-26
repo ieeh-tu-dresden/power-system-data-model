@@ -21,7 +21,7 @@ class VoltageSystemType(enum.Enum):
     DC = "DC"
 
 
-class CosphiDir(enum.Enum):
+class PowerfactorDirection(enum.Enum):
     UE = "UE"
     OE = "OE"
 
