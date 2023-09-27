@@ -158,6 +158,7 @@ class TestControlCosphiConst:
             (PowerfactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
             (PowerfactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
             (PowerfactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
+            (PowerfactorDirection.OE, 1, 0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
             (PowerfactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
             (PowerfactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
             (PowerfactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),

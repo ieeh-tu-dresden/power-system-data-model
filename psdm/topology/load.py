@@ -138,7 +138,7 @@ def validate_power_symmetry(power: P) -> P:
 
 def validate_powerfactor_symmetry(powerfactor: F) -> F:
     if powerfactor.is_symmetrical:
-        if not (powerfactor.cosphi_a == powerfactor.cosphi_b == powerfactor.cosphi_c):
+        if not (powerfactor.cosphi == powerfactor.cosphi_a == powerfactor.cosphi_b == powerfactor.cosphi_c):
             msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
             raise ValueError(msg)
 
