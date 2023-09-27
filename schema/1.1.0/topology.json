@@ -239,29 +239,29 @@
           "minimum": 0,
           "type": "number"
         },
-        "cos_phi": {
-          "title": "CosPhi",
+        "cosphi": {
+          "title": "Cosphi",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cos_phi_a": {
-          "title": "CosPhi A",
+        "cosphi_a": {
+          "title": "Cosphi A",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cos_phi_b": {
-          "title": "CosPhi B",
+        "cosphi_b": {
+          "title": "Cosphi B",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cos_phi_c": {
-          "title": "CosPhi C",
+        "cosphi_c": {
+          "title": "Cosphi C",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
@@ -474,7 +474,7 @@
         "voltage_system_type"
       ]
     },
-    "power_factory_tools__schema__topology__transformer__VectorGroup": {
+    "powerfactory_tools__schema__topology__transformer__VectorGroup": {
       "title": "VectorGroup",
       "description": "An enumeration.",
       "enum": [
@@ -514,7 +514,7 @@
         "YNzn11"
       ]
     },
-    "power_factory_tools__schema__topology__windings__VectorGroup": {
+    "powerfactory_tools__schema__topology__windings__VectorGroup": {
       "title": "VectorGroup",
       "description": "An enumeration.",
       "enum": [
@@ -566,7 +566,7 @@
           "type": "integer"
         },
         "vector_group": {
-          "$ref": "#/definitions/power_factory_tools__schema__topology__windings__VectorGroup"
+          "$ref": "#/definitions/powerfactory_tools__schema__topology__windings__VectorGroup"
         }
       },
       "required": [
@@ -617,7 +617,7 @@
           "type": "integer"
         },
         "vector_group": {
-          "$ref": "#/definitions/power_factory_tools__schema__topology__transformer__VectorGroup"
+          "$ref": "#/definitions/powerfactory_tools__schema__topology__transformer__VectorGroup"
         },
         "i_0": {
           "title": "I 0",

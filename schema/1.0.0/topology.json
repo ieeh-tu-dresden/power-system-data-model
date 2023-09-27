@@ -229,20 +229,20 @@
           "title": "S T",
           "type": "number"
         },
-        "cos_phi": {
-          "title": "CosPhi",
+        "cosphi": {
+          "title": "Cosphi",
           "type": "number"
         },
-        "cos_phi_r": {
-          "title": "CosPhi R",
+        "cosphi_r": {
+          "title": "Cosphi R",
           "type": "number"
         },
-        "cos_phi_s": {
-          "title": "CosPhi S",
+        "cosphi_s": {
+          "title": "Cosphi S",
           "type": "number"
         },
-        "cos_phi_t": {
-          "title": "CosPhi T",
+        "cosphi_t": {
+          "title": "Cosphi T",
           "type": "number"
         }
       },
