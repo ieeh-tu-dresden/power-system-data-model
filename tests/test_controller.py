@@ -6,8 +6,9 @@ from contextlib import nullcontext as does_not_raise
 
 import pydantic
 import pytest
+from psdm.topology.load import ActivePower as ActivePowerSet, PowerFactor, ReactivePower
 
-from psdm.base import PowerFactorDirection
+from psdm.topology.load import PowerFactorDirection
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import (
     ControlCosPhiConst,
@@ -57,11 +58,13 @@ class TestControlQConst:
     ) -> None:
         with expectation:
             ControlQConst(
-                value=value,
-                value_a=value_a,
-                value_b=value_b,
-                value_c=value_c,
-                is_symmetrical=is_symmetrical,
+                q_set=ReactivePower(
+                    value=value,
+                    value_a=value_a,
+                    value_b=value_b,
+                    value_c=value_c,
+                    is_symmetrical=is_symmetrical,
+                )
             )
 
 
@@ -133,12 +136,14 @@ class TestControlTanphiConst:
     ) -> None:
         with expectation:
             ControlTanphiConst(
-                tanphi_dir=tanphi_dir,
-                value=tanphi,
-                value_a=tanphi_a,
-                value_b=tanphi_b,
-                value_c=tanphi_c,
-                is_symmetrical=is_symmetrical,
+                tan_phi_set=PowerFactor(
+                    tanphi_dir=tanphi_dir,
+                    value=tanphi,
+                    value_a=tanphi_a,
+                    value_b=tanphi_b,
+                    value_c=tanphi_c,
+                    is_symmetrical=is_symmetrical,
+                )
             )
 
 
@@ -179,12 +184,14 @@ class TestControlCosPhiConst:
     ) -> None:
         with expectation:
             ControlCosPhiConst(
-                cos_phi_dir=cos_phi_dir,
-                value=cos_phi,
-                value_a=cos_phi_a,
-                value_b=cos_phi_b,
-                value_c=cos_phi_c,
-                is_symmetrical=is_symmetrical,
+                cos_phi_set=PowerFactor(
+                    cos_phi_dir=cos_phi_dir,
+                    value=cos_phi,
+                    value_a=cos_phi_a,
+                    value_b=cos_phi_b,
+                    value_c=cos_phi_c,
+                    is_symmetrical=is_symmetrical,
+                )
             )
 
 
@@ -410,10 +417,11 @@ class TestControlPConst:
         expectation,
     ) -> None:
         with expectation:
-            ControlPConst(
+            p_set = ActivePowerSet(
                 value=value,
                 value_a=value_a,
                 value_b=value_b,
                 value_c=value_c,
                 is_symmetrical=is_symmetrical,
             )
+            ControlPConst(p_set=p_set)

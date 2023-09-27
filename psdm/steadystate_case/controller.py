@@ -11,8 +11,11 @@ import pydantic
 
 from psdm.base import Base
 from psdm.steadystate_case.characteristic import Characteristic
-from psdm.topology.load import Power
+from psdm.topology.load import ActivePower
+from psdm.topology.load import Frequency
 from psdm.topology.load import PowerFactor
+from psdm.topology.load import ReactivePower
+from psdm.topology.load import Voltage
 
 
 class QControlStrategy(enum.Enum):
@@ -46,7 +49,7 @@ class ControlledVoltageRef(enum.Enum):
 
 class ControlQConst(Base):
     # q-setpoint control mode
-    q_set: Power  # set point of reactive power
+    q_set: ReactivePower  # set point of reactive power
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -56,7 +59,7 @@ class ControlQConst(Base):
 
 class ControlUConst(Base):
     # u-setpoint control mode
-    u_set: float = pydantic.Field(ge=0)  # Setpoint of voltage.
+    u_set: Voltage  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
 
     @pydantic.computed_field  # type: ignore[misc]
@@ -87,14 +90,8 @@ class ControlCosPhiConst(Base):
 
 class ControlCosPhiP(Base):
     # cos(phi(P)) control mode
-    cos_phi_ue: float = pydantic.Field(
-        ge=0,
-        le=1,
-    )  # under excited: cos(phi) for calculation of Q in relation to P.
-    cos_phi_oe: float = pydantic.Field(
-        ge=0,
-        le=1,
-    )  # over excited: cos(phi) for calculation of Q in relation to P.
+    cos_phi_ue: PowerFactor  # under excited: cos(phi) for calculation of Q in relation to P.
+    cos_phi_oe: PowerFactor  # over excited: cos(phi) for calculation of Q in relation to P.
     p_threshold_ue: float = pydantic.Field(le=0)  # under excited: threshold for P.
     p_threshold_oe: float = pydantic.Field(le=0)  # over excited: threshold for P.
 
@@ -106,18 +103,10 @@ class ControlCosPhiP(Base):
 
 class ControlCosPhiU(Base):
     # cos(phi(U)) control mode
-    cos_phi_ue: float = pydantic.Field(
-        ...,
-        ge=0,
-        le=1,
-    )  # under excited: cos(phi) for calculation of Q in relation to P.
-    cos_phi_oe: float = pydantic.Field(
-        ...,
-        ge=0,
-        le=1,
-    )  # over excited: cos(phi) for calculation of Q in relation to P.
-    u_threshold_ue: float = pydantic.Field(..., ge=0)  # under excited: threshold for U.
-    u_threshold_oe: float = pydantic.Field(..., ge=0)  # over excited: threshold for U.
+    cos_phi_ue: PowerFactor  # under excited: cos(phi) for calculation of Q in relation to P.
+    cos_phi_oe: PowerFactor  # over excited: cos(phi) for calculation of Q in relation to P.
+    u_threshold_ue: Voltage  # under excited: threshold for U.
+    u_threshold_oe: Voltage  # over excited: threshold for U.
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -135,17 +124,11 @@ class ControlQU(Base):
         ...,
         ge=0,
     )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2018: '%/pu'-value --> Q = m_% * Pr * dU_(% of Un)
-    u_q0: float = pydantic.Field(..., ge=0)  # Voltage value, where Q=0: absolut value in V
-    u_deadband_up: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
-    u_deadband_low: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
-    q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value in var
-    q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value in var
+    u_q0: Voltage  # Voltage value, where Q=0: absolut value in V
+    u_deadband_up: Voltage  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
+    u_deadband_low: Voltage  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
+    q_max_ue: ReactivePower  # Under excited limit of Q: absolut value in var
+    q_max_oe: ReactivePower  # Over excited limit of Q: absolut value in var
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -163,8 +146,8 @@ def validate_pos(value: float | None) -> float | None:
 class ControlQP(Base):
     # Q(P) characteristic control mode
     q_p_characteristic: Characteristic
-    q_max_ue: float | None = None  # Under excited limit of Q: absolut value
-    q_max_oe: float | None = None  # Over excited limit of Q: absolut value
+    q_max_ue: ReactivePower  # Under excited limit of Q: absolut value
+    q_max_oe: ReactivePower  # Over excited limit of Q: absolut value
 
     @pydantic.field_validator("q_max_ue", mode="before")
     def validate_q_max_ue(cls, v: float | None) -> float | None:
@@ -182,7 +165,7 @@ class ControlQP(Base):
 
 class ControlPConst(Base):
     # p-setpoint control mode
-    p_set: Power  # set point of active power
+    p_set: ActivePower  # set point of active power
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -195,20 +178,14 @@ class ControlPF(Base):
     droop_over_freq: float = pydantic.Field(
         ...,
         ge=0,
-    )  # Droop/Slope of power infeed reduction if freqeuncy is above f_deadband_up: '%/Hz'
+    )  # Droop/Slope of power infeed reduction if frequency is above f_deadband_up: '%/Hz'
     droop_under_freq: float = pydantic.Field(
         ...,
         ge=0,
-    )  # Droop/Slope of power infeed increase if freqeuncy is below f_deadband_low: '%/Hz'
-    f_p0: float = pydantic.Field(..., ge=0)  # Nominal freqeuncy value: absolut value in Hz
-    f_deadband_up: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of upper deadband (f_up - f_P0): absolut value in Hz
-    f_deadband_low: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
+    )  # Droop/Slope of power infeed increase if frequency is below f_deadband_low: '%/Hz'
+    f_p0: Frequency  # Nominal frequency value: absolut value in Hz
+    f_deadband_up: Frequency  # Width of upper deadband (f_up - f_P0): absolut value in Hz
+    f_deadband_low: Frequency  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
 
     @pydantic.computed_field  # type: ignore[misc]
     @property

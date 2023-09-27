@@ -10,6 +10,7 @@ from psdm.steadystate_case.controller import QController
 from psdm.steadystate_case.controller import ControlQConst
 
 from psdm.steadystate_case.reactive_power import ReactivePower
+from psdm.topology.load import ReactivePower as ReactivePowerSet
 
 
 class TestReactivePower:
@@ -23,11 +24,13 @@ class TestReactivePower:
                 QController(
                     node_target="Node_A",
                     control_type=ControlQConst(
-                        value=0,
-                        value_a=0,
-                        value_b=0,
-                        value_c=0,
-                        is_symmetrical=True,
+                        q_set=ReactivePowerSet(
+                            value=0,
+                            value_a=0,
+                            value_b=0,
+                            value_c=0,
+                            is_symmetrical=True,
+                        ),
                     ),
                 ),
                 does_not_raise(),

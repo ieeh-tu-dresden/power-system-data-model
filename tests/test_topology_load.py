@@ -7,7 +7,7 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.topology.load import RatedPower
+from psdm.topology.load import RatedPower, PowerFactor, Power
 from psdm.topology.load import PowerType
 
 
@@ -55,15 +55,19 @@ class TestRatedPower:
         expectation,
     ) -> None:
         with expectation:
-            RatedPower(
+            power = Power(
                 value=value,
                 value_a=value_a,
                 value_b=value_b,
                 value_c=value_c,
-                cos_phi=cos_phi,
-                cos_phi_a=cos_phi_a,
-                cos_phi_b=cos_phi_b,
-                cos_phi_c=cos_phi_c,
                 power_type=power_type,
                 is_symmetrical=is_symmetrical,
             )
+            power_factor = PowerFactor(
+                value=cos_phi,
+                value_a=cos_phi_a,
+                value_b=cos_phi_b,
+                value_c=cos_phi_c,
+                is_symmetrical=is_symmetrical,
+            )
+            rated_power = RatedPower(power=power, cos_phi=power_factor)

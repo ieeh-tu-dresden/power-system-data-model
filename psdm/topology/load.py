@@ -5,14 +5,12 @@
 from __future__ import annotations
 
 import enum
-import typing as t
 
 import pydantic
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
-from psdm.topology.active_power import ActivePower
-from psdm.topology.reactive_power import ReactivePower
+from psdm.topology.load_model import LoadModel
 
 
 class LoadType(enum.Enum):
@@ -92,9 +90,36 @@ class PowerType(enum.Enum):
 class PowerFactorDirection(enum.Enum):
     UE = "UE"
     OE = "OE"
+    ND = "ND"
 
 
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
+
+
+class Frequency(Base):
+    value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
+
+
+class Voltage(Base):
+    value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
+    value_a: float = pydantic.Field(..., ge=0)  # voltage (phase a)
+    value_b: float = pydantic.Field(..., ge=0)  # voltage (phase b)
+    value_c: float = pydantic.Field(..., ge=0)  # voltage (phase c)
+    is_symmetrical: bool
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def validate_symmetry(cls, voltage: Voltage) -> Voltage:
+        if voltage.value != 0:
+            if voltage.is_symmetrical:
+                if not (voltage.value_a == voltage.value_b == voltage.value_c):
+                    msg = "Voltage mismatch: Three-phase voltage of load is not symmetrical."
+                    raise ValueError(msg)
+
+            elif voltage.value_a == voltage.value_b == voltage.value_c:
+                msg = "Voltage mismatch: Three-phase voltage of load is symmetrical."
+                raise ValueError(msg)
+
+        return voltage
 
 
 class Power(Base):
@@ -115,28 +140,26 @@ class Power(Base):
 
         return power
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def validate_symmetry(cls, power: Power) -> Power:
-        if power.value != 0:
-            if power.is_symmetrical:
-                if not (power.value_a == power.value_b == power.value_c):
-                    msg = "Power mismatch: Three-phase power of load is not symmetrical."
-                    raise ValueError(msg)
 
-            elif power.value_a == power.value_b == power.value_c:
-                msg = "Power mismatch: Three-phase power of load is symmetrical."
-                raise ValueError(msg)
+class ReactivePower(Power):
+    power_type: PowerType = PowerType.AC_REACTIVE
 
-        return power
+
+class ApparentPower(Power):
+    power_type: PowerType = PowerType.AC_APPARENT
+
+
+class ActivePower(Power):
+    power_type: PowerType = PowerType.AC_ACTIVE
 
 
 class PowerFactor(Base):
-    value: float  # cos(phi) (three-phase)
-    value_a: float  # cos(phi) (phase a)
-    value_b: float  # cos(phi) (phase b)
-    value_c: float  # cos(phi) (phase c)
+    value: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (three-phase)
+    value_a: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (phase a)
+    value_b: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (phase b)
+    value_c: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (phase c)
     is_symmetrical: bool
-    direction: PowerFactorDirection
+    direction: PowerFactorDirection = PowerFactorDirection.ND
 
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
     def _validate_symmetry(cls, power_factor: PowerFactor) -> PowerFactor:
@@ -155,6 +178,11 @@ class PowerFactor(Base):
 class RatedPower(Base):
     power: Power
     cos_phi: PowerFactor
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def is_symmetrical(self) -> bool:
+        return self.power.is_symmetrical and self.cos_phi.is_symmetrical
 
 
 class ConnectedPhases(Base):
@@ -177,8 +205,8 @@ class Load(Base):  # including assets of type load and generator
     name: str
     node: str
     rated_power: RatedPower
-    active_power: ActivePower
-    reactive_power: ReactivePower
+    active_power_model: LoadModel
+    reactive_power_model: LoadModel
     connected_phases: ConnectedPhases
     phase_connection_type: PhaseConnectionType
     type: LoadType  # noqa: A003
