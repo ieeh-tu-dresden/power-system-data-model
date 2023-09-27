@@ -7,12 +7,12 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.base import PowerfactorDirection
+from psdm.base import PowerFactorDirection
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import (
-    ControlCosphiConst,
-    ControlCosphiP,
-    ControlCosphiU,
+    ControlCosPhiConst,
+    ControlCosPhiP,
+    ControlCosPhiU,
     ControlPConst,
     ControlPF,
     ControlledVoltageRef,
@@ -109,16 +109,16 @@ class TestControlTanphiConst:
             "expectation",
         ),
         [
-            (PowerfactorDirection.UE, 1, 1, 1, 1, True, does_not_raise()),
-            (PowerfactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
-            (PowerfactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
-            (PowerfactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
-            (PowerfactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 0.9, -0.6, 0.9, 0.9, False, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 2, 2, 2, 2, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, None, None, None, None, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.UE, 1, 1, 1, 1, True, does_not_raise()),
+            (PowerFactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
+            (PowerFactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
+            (PowerFactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
+            (PowerFactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 0.9, -0.6, 0.9, 0.9, False, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 2, 2, 2, 2, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, None, None, None, None, True, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
@@ -142,57 +142,57 @@ class TestControlTanphiConst:
             )
 
 
-class TestControlCosphiConst:
+class TestControlCosPhiConst:
     @pytest.mark.parametrize(
         (
-            "cosphi_dir",
-            "cosphi",
-            "cosphi_a",
-            "cosphi_b",
-            "cosphi_c",
+            "cos_phi_dir",
+            "cos_phi",
+            "cos_phi_a",
+            "cos_phi_b",
+            "cos_phi_c",
             "is_symmetrical",
             "expectation",
         ),
         [
-            (PowerfactorDirection.UE, 1, 1, 1, 1, True, does_not_raise()),
-            (PowerfactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
-            (PowerfactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
-            (PowerfactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
-            (PowerfactorDirection.OE, 1, 0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 0.9, -0.6, 0.9, 0.9, False, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, 2, 2, 2, 2, True, pytest.raises(pydantic.ValidationError)),
-            (PowerfactorDirection.OE, None, None, None, None, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.UE, 1, 1, 1, 1, True, does_not_raise()),
+            (PowerFactorDirection.UE, 0, 0, 0, 0, True, does_not_raise()),
+            (PowerFactorDirection.OE, 0.9, 0.9, 0.9, 0.9, True, does_not_raise()),
+            (PowerFactorDirection.OE, 0.9, 0.9, 0.8, 1, False, does_not_raise()),
+            (PowerFactorDirection.OE, 1, 0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 0.9, 0.6, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, -0.9, -0.9, -0.9, -0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 0.9, -0.9, 0.9, 0.9, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 0.9, -0.6, 0.9, 0.9, False, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, 2, 2, 2, 2, True, pytest.raises(pydantic.ValidationError)),
+            (PowerFactorDirection.OE, None, None, None, None, True, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
         self,
-        cosphi_dir,
-        cosphi,
-        cosphi_a,
-        cosphi_b,
-        cosphi_c,
+        cos_phi_dir,
+        cos_phi,
+        cos_phi_a,
+        cos_phi_b,
+        cos_phi_c,
         is_symmetrical,
         expectation,
     ) -> None:
         with expectation:
-            ControlCosphiConst(
-                cosphi_dir=cosphi_dir,
-                value=cosphi,
-                value_a=cosphi_a,
-                value_b=cosphi_b,
-                value_c=cosphi_c,
+            ControlCosPhiConst(
+                cos_phi_dir=cos_phi_dir,
+                value=cos_phi,
+                value_a=cos_phi_a,
+                value_b=cos_phi_b,
+                value_c=cos_phi_c,
                 is_symmetrical=is_symmetrical,
             )
 
 
-class TestControlCosphiP:
+class TestControlCosPhiP:
     @pytest.mark.parametrize(
         (
-            "cosphi_ue",
-            "cosphi_oe",
+            "cos_phi_ue",
+            "cos_phi_oe",
             "p_threshold_ue",
             "p_threshold_oe",
             "expectation",
@@ -210,26 +210,26 @@ class TestControlCosphiP:
     )
     def test_init(  # noqa: PLR0913
         self,
-        cosphi_ue,
-        cosphi_oe,
+        cos_phi_ue,
+        cos_phi_oe,
         p_threshold_ue,
         p_threshold_oe,
         expectation,
     ) -> None:
         with expectation:
-            ControlCosphiP(
-                cosphi_ue=cosphi_ue,
-                cosphi_oe=cosphi_oe,
+            ControlCosPhiP(
+                cos_phi_ue=cos_phi_ue,
+                cos_phi_oe=cos_phi_oe,
                 p_threshold_ue=p_threshold_ue,
                 p_threshold_oe=p_threshold_oe,
             )
 
 
-class TestControlCosphiU:
+class TestControlCosPhiU:
     @pytest.mark.parametrize(
         (
-            "cosphi_ue",
-            "cosphi_oe",
+            "cos_phi_ue",
+            "cos_phi_oe",
             "u_threshold_ue",
             "u_threshold_oe",
             "expectation",
@@ -247,16 +247,16 @@ class TestControlCosphiU:
     )
     def test_init(  # noqa: PLR0913
         self,
-        cosphi_ue,
-        cosphi_oe,
+        cos_phi_ue,
+        cos_phi_oe,
         u_threshold_ue,
         u_threshold_oe,
         expectation,
     ) -> None:
         with expectation:
-            ControlCosphiU(
-                cosphi_ue=cosphi_ue,
-                cosphi_oe=cosphi_oe,
+            ControlCosPhiU(
+                cos_phi_ue=cos_phi_ue,
+                cos_phi_oe=cos_phi_oe,
                 u_threshold_ue=u_threshold_ue,
                 u_threshold_oe=u_threshold_oe,
             )

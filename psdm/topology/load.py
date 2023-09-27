@@ -89,104 +89,72 @@ class PowerType(enum.Enum):
     THERMAL = "THERMAL"
 
 
+class PowerFactorDirection(enum.Enum):
+    UE = "UE"
+    OE = "OE"
+
+
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
-class PowerBase(Base):
+class Power(Base):
     value: float  # power (three-phase)
     value_a: float  # power (phase a)
     value_b: float  # power (phase b)
     value_c: float  # power (phase c)
     is_symmetrical: bool
-
-
-class PowerfactorBase(Base):
-    cosphi: float  # cos(phi) (three-phase)
-    cosphi_a: float  # cos(phi) (phase a)
-    cosphi_b: float  # cos(phi) (phase b)
-    cosphi_c: float  # cos(phi) (phase c)
-    is_symmetrical: bool
-
-
-P = t.TypeVar("P", bound=PowerBase)
-F = t.TypeVar("F", bound=PowerfactorBase)
-
-
-def validate_power_total(power: P) -> P:
-    pow_total = power.value_a + power.value_b + power.value_c
-    diff = abs(power.value - pow_total)
-    if diff > THRESHOLD:
-        msg = f"Power mismatch: Total power should be {pow_total}, is {power.value}."
-        raise ValueError(msg)
-
-    return power
-
-
-def validate_power_symmetry(power: P) -> P:
-    if power.value != 0:
-        if power.is_symmetrical:
-            if not (power.value_a == power.value_b == power.value_c):
-                msg = "Power mismatch: Three-phase power of load is not symmetrical."
-                raise ValueError(msg)
-
-        elif power.value_a == power.value_b == power.value_c:
-            msg = "Power mismatch: Three-phase power of load is symmetrical."
-            raise ValueError(msg)
-
-    return power
-
-
-def validate_powerfactor_symmetry(powerfactor: F) -> F:
-    if powerfactor.is_symmetrical:
-        if not (powerfactor.cosphi == powerfactor.cosphi_a == powerfactor.cosphi_b == powerfactor.cosphi_c):
-            msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
-            raise ValueError(msg)
-
-    elif powerfactor.cosphi_a == powerfactor.cosphi_b == powerfactor.cosphi_c:
-        msg = "Power factor mismatch: Three-phase power factor of load is symmetrical."
-        raise ValueError(msg)
-
-    return powerfactor
-
-
-def validate_symmetry(power: RatedPower) -> RatedPower:
-    if power.value != 0:
-        if power.is_symmetrical:
-            if not (power.value_a == power.value_b == power.value_c):
-                if not (power.cosphi_a == power.cosphi_b == power.cosphi_c):
-                    msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
-                    raise ValueError(msg)
-                msg = "Power mismatch: Three-phase power of load is not symmetrical."
-                raise ValueError(msg)
-
-        elif power.value_a == power.value_b == power.value_c and power.cosphi_a == power.cosphi_b == power.cosphi_c:
-            msg = "Power mismatch: Three-phase power of load is symmetrical."
-            raise ValueError(msg)
-    else:
-        validate_powerfactor_symmetry(power)
-
-    return power
-
-
-class RatedPower(PowerBase, PowerfactorBase):
-    value: float = pydantic.Field(..., ge=0)  # rated power (three phase); base for p.u. calculation
-    value_a: float = pydantic.Field(..., ge=0)  # rated power (phase a)
-    value_b: float = pydantic.Field(..., ge=0)  # rated power (phase b)
-    value_c: float = pydantic.Field(..., ge=0)  # rated power (phase c)
-    cosphi: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) in relation to rated power
-    cosphi_a: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase a)
-    cosphi_b: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase b)
-    cosphi_c: float = pydantic.Field(1, ge=0, le=1)  # rated cos(phi) (phase c)
     power_type: PowerType
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def validate_total(cls, power: Power) -> Power:
+        pow_total = power.value_a + power.value_b + power.value_c
+        diff = abs(power.value - pow_total)
+        if diff > THRESHOLD:
+            msg = f"Power mismatch: Total power should be {pow_total}, is {power.value}."
+            raise ValueError(msg)
+
+        return power
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def validate_symmetry(cls, power: Power) -> Power:
+        if power.value != 0:
+            if power.is_symmetrical:
+                if not (power.value_a == power.value_b == power.value_c):
+                    msg = "Power mismatch: Three-phase power of load is not symmetrical."
+                    raise ValueError(msg)
+
+            elif power.value_a == power.value_b == power.value_c:
+                msg = "Power mismatch: Three-phase power of load is symmetrical."
+                raise ValueError(msg)
+
+        return power
+
+
+class PowerFactor(Base):
+    value: float  # cos(phi) (three-phase)
+    value_a: float  # cos(phi) (phase a)
+    value_b: float  # cos(phi) (phase b)
+    value_c: float  # cos(phi) (phase c)
     is_symmetrical: bool
+    direction: PowerFactorDirection
 
     @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, power: RatedPower) -> RatedPower:
-        return validate_symmetry(power)
+    def _validate_symmetry(cls, power_factor: PowerFactor) -> PowerFactor:
+        if power_factor.is_symmetrical:
+            if not (power_factor.value == power_factor.value_a == power_factor.value_b == power_factor.value_c):
+                msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
+                raise ValueError(msg)
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_power_total(cls, power: RatedPower) -> RatedPower:
-        return validate_power_total(power)
+        elif power_factor.value_a == power_factor.value_b == power_factor.value_c:
+            msg = "Power factor mismatch: Three-phase power factor of load is symmetrical."
+            raise ValueError(msg)
+
+        return power_factor
+
+
+class RatedPower(Base):
+    power: Power
+    cos_phi: PowerFactor
 
 
 class ConnectedPhases(Base):

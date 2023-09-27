@@ -21,11 +21,6 @@ class VoltageSystemType(enum.Enum):
     DC = "DC"
 
 
-class PowerfactorDirection(enum.Enum):
-    UE = "UE"
-    OE = "OE"
-
-
 def _validate_unique_list(v: tuple[U]) -> tuple[U]:
     if len(v) != len(set(v)):
         error_type = "unique_list"
