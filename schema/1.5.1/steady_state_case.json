@@ -33,15 +33,15 @@
       "title": "ActivePower",
       "type": "object"
     },
-    "ControlCosphiConst": {
+    "ControlCosPhiConst": {
       "properties": {
-        "cosphi_dir": {
-          "$ref": "#/$defs/CosphiDir"
+        "cos_phi_dir": {
+          "$ref": "#/$defs/CosPhiDir"
         },
-        "cosphi": {
+        "cos_phi": {
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi",
+          "title": "CosPhi",
           "type": "number"
         },
         "control_strategy": {
@@ -54,24 +54,24 @@
         }
       },
       "required": [
-        "cosphi_dir",
-        "cosphi"
+        "cos_phi_dir",
+        "cos_phi"
       ],
-      "title": "ControlCosphiConst",
+      "title": "ControlCosPhiConst",
       "type": "object"
     },
-    "ControlCosphiP": {
+    "ControlCosPhiP": {
       "properties": {
-        "cosphi_ue": {
+        "cos_phi_ue": {
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi Ue",
+          "title": "CosPhi Ue",
           "type": "number"
         },
-        "cosphi_oe": {
+        "cos_phi_oe": {
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi Oe",
+          "title": "CosPhi Oe",
           "type": "number"
         },
         "p_threshold_ue": {
@@ -94,26 +94,26 @@
         }
       },
       "required": [
-        "cosphi_ue",
-        "cosphi_oe",
+        "cos_phi_ue",
+        "cos_phi_oe",
         "p_threshold_ue",
         "p_threshold_oe"
       ],
-      "title": "ControlCosphiP",
+      "title": "ControlCosPhiP",
       "type": "object"
     },
-    "ControlCosphiU": {
+    "ControlCosPhiU": {
       "properties": {
-        "cosphi_ue": {
+        "cos_phi_ue": {
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi Ue",
+          "title": "CosPhi Ue",
           "type": "number"
         },
-        "cosphi_oe": {
+        "cos_phi_oe": {
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi Oe",
+          "title": "CosPhi Oe",
           "type": "number"
         },
         "u_threshold_ue": {
@@ -136,12 +136,12 @@
         }
       },
       "required": [
-        "cosphi_ue",
-        "cosphi_oe",
+        "cos_phi_ue",
+        "cos_phi_oe",
         "u_threshold_ue",
         "u_threshold_oe"
       ],
-      "title": "ControlCosphiU",
+      "title": "ControlCosPhiU",
       "type": "object"
     },
     "ControlQConst": {
@@ -285,13 +285,13 @@
     },
     "ControlTanphiConst": {
       "properties": {
-        "cosphi_dir": {
-          "$ref": "#/$defs/CosphiDir"
+        "cos_phi_dir": {
+          "$ref": "#/$defs/CosPhiDir"
         },
-        "cosphi": {
+        "cos_phi": {
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi",
+          "title": "CosPhi",
           "type": "number"
         },
         "control_strategy": {
@@ -304,8 +304,8 @@
         }
       },
       "required": [
-        "cosphi_dir",
-        "cosphi"
+        "cos_phi_dir",
+        "cos_phi"
       ],
       "title": "ControlTanphiConst",
       "type": "object"
@@ -372,13 +372,13 @@
               "$ref": "#/$defs/ControlTanphiConst"
             },
             {
-              "$ref": "#/$defs/ControlCosphiConst"
+              "$ref": "#/$defs/ControlCosPhiConst"
             },
             {
-              "$ref": "#/$defs/ControlCosphiP"
+              "$ref": "#/$defs/ControlCosPhiP"
             },
             {
-              "$ref": "#/$defs/ControlCosphiU"
+              "$ref": "#/$defs/ControlCosPhiU"
             },
             {
               "$ref": "#/$defs/ControlQU"
@@ -412,12 +412,12 @@
       "title": "Controller",
       "type": "object"
     },
-    "CosphiDir": {
+    "CosPhiDir": {
       "enum": [
         "UE",
         "OE"
       ],
-      "title": "CosphiDir",
+      "title": "CosPhiDir",
       "type": "string"
     },
     "ExternalGrid": {

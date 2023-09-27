@@ -183,8 +183,8 @@
         "u_set"
       ]
     },
-    "CosphiDir": {
-      "title": "CosphiDir",
+    "CosPhiDir": {
+      "title": "CosPhiDir",
       "description": "An enumeration.",
       "enum": [
         "UE",
@@ -195,11 +195,11 @@
       "title": "ControlTanphiConst",
       "type": "object",
       "properties": {
-        "cosphi_dir": {
-          "$ref": "#/definitions/CosphiDir"
+        "cos_phi_dir": {
+          "$ref": "#/definitions/CosPhiDir"
         },
-        "cosphi": {
-          "title": "Cosphi",
+        "cos_phi": {
+          "title": "CosPhi",
           "minimum": 0,
           "maximum": 1,
           "type": "number"
@@ -214,19 +214,19 @@
         }
       },
       "required": [
-        "cosphi_dir",
-        "cosphi"
+        "cos_phi_dir",
+        "cos_phi"
       ]
     },
-    "ControlCosphiConst": {
-      "title": "ControlCosphiConst",
+    "ControlCosPhiConst": {
+      "title": "ControlCosPhiConst",
       "type": "object",
       "properties": {
-        "cosphi_dir": {
-          "$ref": "#/definitions/CosphiDir"
+        "cos_phi_dir": {
+          "$ref": "#/definitions/CosPhiDir"
         },
-        "cosphi": {
-          "title": "Cosphi",
+        "cos_phi": {
+          "title": "CosPhi",
           "minimum": 0,
           "maximum": 1,
           "type": "number"
@@ -241,22 +241,22 @@
         }
       },
       "required": [
-        "cosphi_dir",
-        "cosphi"
+        "cos_phi_dir",
+        "cos_phi"
       ]
     },
-    "ControlCosphiP": {
-      "title": "ControlCosphiP",
+    "ControlCosPhiP": {
+      "title": "ControlCosPhiP",
       "type": "object",
       "properties": {
-        "cosphi_ue": {
-          "title": "Cosphi Ue",
+        "cos_phi_ue": {
+          "title": "CosPhi Ue",
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cosphi_oe": {
-          "title": "Cosphi Oe",
+        "cos_phi_oe": {
+          "title": "CosPhi Oe",
           "minimum": 0,
           "maximum": 1,
           "type": "number"
@@ -281,24 +281,24 @@
         }
       },
       "required": [
-        "cosphi_ue",
-        "cosphi_oe",
+        "cos_phi_ue",
+        "cos_phi_oe",
         "p_threshold_ue",
         "p_threshold_oe"
       ]
     },
-    "ControlCosphiU": {
-      "title": "ControlCosphiU",
+    "ControlCosPhiU": {
+      "title": "ControlCosPhiU",
       "type": "object",
       "properties": {
-        "cosphi_ue": {
-          "title": "Cosphi Ue",
+        "cos_phi_ue": {
+          "title": "CosPhi Ue",
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cosphi_oe": {
-          "title": "Cosphi Oe",
+        "cos_phi_oe": {
+          "title": "CosPhi Oe",
           "minimum": 0,
           "maximum": 1,
           "type": "number"
@@ -323,8 +323,8 @@
         }
       },
       "required": [
-        "cosphi_ue",
-        "cosphi_oe",
+        "cos_phi_ue",
+        "cos_phi_oe",
         "u_threshold_ue",
         "u_threshold_oe"
       ]
@@ -437,13 +437,13 @@
               "$ref": "#/definitions/ControlTanphiConst"
             },
             {
-              "$ref": "#/definitions/ControlCosphiConst"
+              "$ref": "#/definitions/ControlCosPhiConst"
             },
             {
-              "$ref": "#/definitions/ControlCosphiP"
+              "$ref": "#/definitions/ControlCosPhiP"
             },
             {
-              "$ref": "#/definitions/ControlCosphiU"
+              "$ref": "#/definitions/ControlCosPhiU"
             },
             {
               "$ref": "#/definitions/ControlQU"

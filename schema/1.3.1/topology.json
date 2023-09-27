@@ -275,29 +275,29 @@
           "minimum": 0,
           "type": "number"
         },
-        "cosphi": {
-          "title": "Cosphi",
+        "cos_phi": {
+          "title": "CosPhi",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cosphi_a": {
-          "title": "Cosphi A",
+        "cos_phi_a": {
+          "title": "CosPhi A",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cosphi_b": {
-          "title": "Cosphi B",
+        "cos_phi_b": {
+          "title": "CosPhi B",
           "default": 1,
           "minimum": 0,
           "maximum": 1,
           "type": "number"
         },
-        "cosphi_c": {
-          "title": "Cosphi C",
+        "cos_phi_c": {
+          "title": "CosPhi C",
           "default": 1,
           "minimum": 0,
           "maximum": 1,

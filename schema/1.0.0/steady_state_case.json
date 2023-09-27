@@ -115,8 +115,8 @@
         "ND"
       ]
     },
-    "CosphiDir": {
-      "title": "CosphiDir",
+    "CosPhiDir": {
+      "title": "CosPhiDir",
       "description": "An enumeration.",
       "enum": [
         "UE",
@@ -134,11 +134,11 @@
           "title": "External Controller Name",
           "type": "string"
         },
-        "cosphi_type": {
-          "$ref": "#/definitions/CosphiDir"
+        "cos_phi_type": {
+          "$ref": "#/definitions/CosPhiDir"
         },
-        "cosphi": {
-          "title": "Cosphi",
+        "cos_phi": {
+          "title": "CosPhi",
           "type": "number"
         },
         "q_set": {

@@ -704,32 +704,32 @@
           "title": "Is Symmetrical",
           "type": "boolean"
         },
-        "cosphi": {
+        "cos_phi": {
           "default": 1,
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi",
+          "title": "CosPhi",
           "type": "number"
         },
-        "cosphi_a": {
+        "cos_phi_a": {
           "default": 1,
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi A",
+          "title": "CosPhi A",
           "type": "number"
         },
-        "cosphi_b": {
+        "cos_phi_b": {
           "default": 1,
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi B",
+          "title": "CosPhi B",
           "type": "number"
         },
-        "cosphi_c": {
+        "cos_phi_c": {
           "default": 1,
           "maximum": 1,
           "minimum": 0,
-          "title": "Cosphi C",
+          "title": "CosPhi C",
           "type": "number"
         },
         "power_type": {

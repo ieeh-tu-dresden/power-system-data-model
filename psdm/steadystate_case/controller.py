@@ -6,18 +6,13 @@
 from __future__ import annotations
 
 import enum
-import math
 
 import pydantic
 
 from psdm.base import Base
-from psdm.base import PowerfactorDirection
 from psdm.steadystate_case.characteristic import Characteristic
-from psdm.topology.load import PowerBase
-from psdm.topology.load import PowerfactorBase
-from psdm.topology.load import validate_power_symmetry
-from psdm.topology.load import validate_power_total
-from psdm.topology.load import validate_powerfactor_symmetry
+from psdm.topology.load import Power
+from psdm.topology.load import PowerFactor
 
 
 class QControlStrategy(enum.Enum):
@@ -51,35 +46,7 @@ class ControlledVoltageRef(enum.Enum):
 
 class ControlQConst(Base):
     # q-setpoint control mode
-    value: float  # set point of reactive power (three-phase)
-    value_a: float  # set point of reactive power (phase a)
-    value_b: float  # set point of reactive power (phase b)
-    value_c: float  # set point of reactive power (phase c)
-    is_symmetrical: bool
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlQConst) -> ControlQConst:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        validate_power_symmetry(power)
-        return controller
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, controller: ControlQConst) -> ControlQConst:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        validate_power_total(power)
-        return controller
+    q_set: Power  # set point of reactive power
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -100,24 +67,7 @@ class ControlUConst(Base):
 
 class ControlTanphiConst(Base):
     # tan(phi) control mode
-    tanphi_dir: PowerfactorDirection
-    value: float = pydantic.Field(ge=0, le=1)  # average tan(phi) for calculation of Q in relation to P.
-    value_a: float = pydantic.Field(ge=0, le=1)  # phase a tan(phi) for calculation of Q in relation to P.
-    value_b: float = pydantic.Field(ge=0, le=1)  # phase b tan(phi) for calculation of Q in relation to P.
-    value_c: float = pydantic.Field(ge=0, le=1)  # phase c tan(phi) for calculation of Q in relation to P.
-    is_symmetrical: bool
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlTanphiConst) -> ControlTanphiConst:
-        power = PowerfactorBase(
-            cosphi=math.tan(math.acos(controller.value)),
-            cosphi_a=math.tan(math.acos(controller.value_a)),
-            cosphi_b=math.tan(math.acos(controller.value_b)),
-            cosphi_c=math.tan(math.acos(controller.value_c)),
-            is_symmetrical=controller.is_symmetrical,
-        )
-        validate_powerfactor_symmetry(power)
-        return controller
+    tan_phi_set: PowerFactor  # set point of tan(phi)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -125,26 +75,9 @@ class ControlTanphiConst(Base):
         return QControlStrategy.TANPHI_CONST
 
 
-class ControlCosphiConst(Base):
+class ControlCosPhiConst(Base):
     # cos(phi) control mode
-    cosphi_dir: PowerfactorDirection
-    value: float = pydantic.Field(ge=0, le=1)  # average cos(phi) for calculation of Q in relation to P.
-    value_a: float = pydantic.Field(ge=0, le=1)  # phase a cos(phi) for calculation of Q in relation to P.
-    value_b: float = pydantic.Field(ge=0, le=1)  # phase b cos(phi) for calculation of Q in relation to P.
-    value_c: float = pydantic.Field(ge=0, le=1)  # phase c cos(phi) for calculation of Q in relation to P.
-    is_symmetrical: bool
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlCosphiConst) -> ControlCosphiConst:
-        power = PowerfactorBase(
-            cosphi=controller.value,
-            cosphi_a=controller.value_a,
-            cosphi_b=controller.value_b,
-            cosphi_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        validate_powerfactor_symmetry(power)
-        return controller
+    cos_phi_set: PowerFactor  # set point of cos(phi)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -152,13 +85,13 @@ class ControlCosphiConst(Base):
         return QControlStrategy.COSPHI_CONST
 
 
-class ControlCosphiP(Base):
+class ControlCosPhiP(Base):
     # cos(phi(P)) control mode
-    cosphi_ue: float = pydantic.Field(
+    cos_phi_ue: float = pydantic.Field(
         ge=0,
         le=1,
     )  # under excited: cos(phi) for calculation of Q in relation to P.
-    cosphi_oe: float = pydantic.Field(
+    cos_phi_oe: float = pydantic.Field(
         ge=0,
         le=1,
     )  # over excited: cos(phi) for calculation of Q in relation to P.
@@ -171,14 +104,14 @@ class ControlCosphiP(Base):
         return QControlStrategy.COSPHI_P
 
 
-class ControlCosphiU(Base):
+class ControlCosPhiU(Base):
     # cos(phi(U)) control mode
-    cosphi_ue: float = pydantic.Field(
+    cos_phi_ue: float = pydantic.Field(
         ...,
         ge=0,
         le=1,
     )  # under excited: cos(phi) for calculation of Q in relation to P.
-    cosphi_oe: float = pydantic.Field(
+    cos_phi_oe: float = pydantic.Field(
         ...,
         ge=0,
         le=1,
@@ -249,35 +182,7 @@ class ControlQP(Base):
 
 class ControlPConst(Base):
     # p-setpoint control mode
-    value: float  # set point of active power (three-phase)
-    value_a: float  # set point of active power (phase a)
-    value_b: float  # set point of active power (phase b)
-    value_c: float  # set point of active power (phase c)
-    is_symmetrical: bool
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlPConst) -> ControlPConst:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        validate_power_symmetry(power)
-        return controller
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, controller: ControlPConst) -> ControlPConst:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        validate_power_total(power)
-        return controller
+    p_set: Power  # set point of active power
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -315,9 +220,9 @@ QControlType = (
     ControlQConst
     | ControlUConst
     | ControlTanphiConst
-    | ControlCosphiConst
-    | ControlCosphiP
-    | ControlCosphiU
+    | ControlCosPhiConst
+    | ControlCosPhiP
+    | ControlCosPhiU
     | ControlQU
     | ControlQP
 )
