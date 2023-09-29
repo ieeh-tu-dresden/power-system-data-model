@@ -36,7 +36,6 @@
       typing     = ["mypy"]
 
 [tool.ruff]
-  extend-exclude = ["tests"]
   ignore = [
     "ANN002",
     "ANN003",
@@ -59,6 +58,9 @@
   ]
   line-length = 120
   select = ["ALL"]
+
+  [tool.ruff.extend-per-file-ignores]
+    "tests/*" = ["ANN001", "ANN201", "INP001", "PLR0913", "S101"]
 
   [tool.ruff.flake8-type-checking]
     runtime-evaluated-base-classes = [

@@ -4,7 +4,10 @@
 
 from __future__ import annotations
 
+import collections.abc as cabc
 import enum
+import itertools
+import typing as t
 
 import pydantic
 
@@ -93,6 +96,9 @@ class PowerFactorDirection(enum.Enum):
     ND = "ND"
 
 
+PhaseConnection = tuple[Phase, Phase] | None
+
+
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
@@ -100,79 +106,59 @@ class Frequency(Base):
     value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
 
 
-class Voltage(Base):
-    value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
-    value_a: float = pydantic.Field(..., ge=0)  # voltage (phase a)
-    value_b: float = pydantic.Field(..., ge=0)  # voltage (phase b)
-    value_c: float = pydantic.Field(..., ge=0)  # voltage (phase c)
-    is_symmetrical: bool
+class MultiPhaseQuantity(Base):
+    values: cabc.Sequence[float]  # values (starting at phase a)
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def validate_symmetry(cls, voltage: Voltage) -> Voltage:
-        if voltage.value != 0:
-            if voltage.is_symmetrical:
-                if not (voltage.value_a == voltage.value_b == voltage.value_c):
-                    msg = "Voltage mismatch: Three-phase voltage of load is not symmetrical."
-                    raise ValueError(msg)
-
-            elif voltage.value_a == voltage.value_b == voltage.value_c:
-                msg = "Voltage mismatch: Three-phase voltage of load is symmetrical."
-                raise ValueError(msg)
-
-        return voltage
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def is_symmetrical(self) -> bool:
+        return len(list(itertools.groupby(self.values))) in (0, 1)
 
 
-class Power(Base):
-    value: float  # power (three-phase)
-    value_a: float  # power (phase a)
-    value_b: float  # power (phase b)
-    value_c: float  # power (phase c)
-    is_symmetrical: bool
-    power_type: PowerType
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def validate_total(cls, power: Power) -> Power:
-        pow_total = power.value_a + power.value_b + power.value_c
-        diff = abs(power.value - pow_total)
-        if diff > THRESHOLD:
-            msg = f"Power mismatch: Total power should be {pow_total}, is {power.value}."
-            raise ValueError(msg)
-
-        return power
+class Voltage(MultiPhaseQuantity):
+    values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
 
 
-class ReactivePower(Power):
-    power_type: PowerType = PowerType.AC_REACTIVE
+class Droop(MultiPhaseQuantity):
+    values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
 
 
-class ApparentPower(Power):
-    power_type: PowerType = PowerType.AC_APPARENT
+class Power(MultiPhaseQuantity):
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def total(self) -> float:
+        return sum(self.values)
 
 
 class ActivePower(Power):
-    power_type: PowerType = PowerType.AC_ACTIVE
+    @pydantic.model_validator(mode="before")
+    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["power_type"] = PowerType.AC_ACTIVE.value
+        return values
 
 
-class PowerFactor(Base):
-    value: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (three-phase)
-    value_a: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (phase a)
-    value_b: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (phase b)
-    value_c: float = pydantic.Field(..., ge=0, le=1)  # cos(phi) (phase c)
-    is_symmetrical: bool
+class ApparentPower(Power):
+    @pydantic.model_validator(mode="before")
+    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["power_type"] = PowerType.AC_APPARENT.value
+        return values
+
+
+class ReactivePower(Power):
+    @pydantic.model_validator(mode="before")
+    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["power_type"] = PowerType.AC_REACTIVE.value
+        return values
+
+
+class PowerFactor(MultiPhaseQuantity):
+    values: cabc.Sequence[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, power_factor: PowerFactor) -> PowerFactor:
-        if power_factor.is_symmetrical:
-            if not (power_factor.value == power_factor.value_a == power_factor.value_b == power_factor.value_c):
-                msg = "Power factor mismatch: Three-phase power factor of load is not symmetrical."
-                raise ValueError(msg)
-
-        elif power_factor.value_a == power_factor.value_b == power_factor.value_c:
-            msg = "Power factor mismatch: Three-phase power factor of load is symmetrical."
-            raise ValueError(msg)
-
-        return power_factor
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def n_phases(self) -> int:
+        return len(self.values)
 
 
 class RatedPower(Base):
@@ -185,15 +171,13 @@ class RatedPower(Base):
         return self.power.is_symmetrical and self.cos_phi.is_symmetrical
 
 
-class ConnectedPhases(Base):
-    phases_a: tuple[Phase, Phase] | None
-    phases_b: tuple[Phase, Phase] | None
-    phases_c: tuple[Phase, Phase] | None
+class PhaseConnections(Base):
+    values: cabc.Sequence[PhaseConnections]
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def n_connected_phases(self) -> int:
-        return sum([getattr(self, f"phases_{idx}") is not None for idx in ["a", "b", "c"]])
+        return sum(e is not None for e in self.values)
 
 
 class Load(Base):  # including assets of type load and generator
@@ -207,7 +191,7 @@ class Load(Base):  # including assets of type load and generator
     rated_power: RatedPower
     active_power_model: LoadModel
     reactive_power_model: LoadModel
-    connected_phases: ConnectedPhases
+    phase_connections: PhaseConnections
     phase_connection_type: PhaseConnectionType
     type: LoadType  # noqa: A003
     system_type: SystemType

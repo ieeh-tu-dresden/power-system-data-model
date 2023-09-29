@@ -8,50 +8,36 @@ import pydantic
 import pytest
 
 from psdm.steadystate_case.active_power import ActivePower
+from psdm.steadystate_case.controller import ControlPConst
+from psdm.steadystate_case.controller import PController
 from psdm.topology.load import ActivePower as ActivePowerSet
-from psdm.steadystate_case.controller import ControlPConst, PController
 
 
 class TestActivePower:
     @pytest.mark.parametrize(
         (
-            "value",
-            "value_a",
-            "value_b",
-            "value_c",
-            "is_symmetrical",
+            "controller",
             "expectation",
         ),
         [
-            (0, 0, 0, 0, True, does_not_raise()),
-            (0, 0, 0, 0, False, does_not_raise()),
-            (3, 1, 1, 1, True, does_not_raise()),
-            (2, 1, 1, 1, True, pytest.raises(pydantic.ValidationError)),
-            (3, 1, 2, 1, False, pytest.raises(pydantic.ValidationError)),
-            (4, 1, 2, 1, False, does_not_raise()),
-            (4, 1, 2, 1, True, pytest.raises(pydantic.ValidationError)),
+            (
+                PController(
+                    node_target="Node_A",
+                    control_type=ControlPConst(
+                        p_set=ActivePowerSet(
+                            values=(0, 0, 0),
+                        ),
+                    ),
+                ),
+                does_not_raise(),
+            ),
+            (None, pytest.raises(pydantic.ValidationError)),
         ],
     )
-    def test_init(  # noqa: PLR0913
+    def test_init(
         self,
-        value,
-        value_a,
-        value_b,
-        value_c,
-        is_symmetrical,
+        controller,
         expectation,
     ) -> None:
         with expectation:
-            controller = PController(
-                node_target="Node_A",
-                control_type=ControlPConst(
-                    p_set=ActivePowerSet(
-                        value=value,
-                        value_a=value_a,
-                        value_b=value_b,
-                        value_c=value_c,
-                        is_symmetrical=is_symmetrical,
-                    ),
-                ),
-            )
             ActivePower(controller=controller)

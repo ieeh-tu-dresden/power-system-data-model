@@ -7,67 +7,152 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.topology.load import RatedPower, PowerFactor, Power
+from psdm.topology.load import ActivePower
+from psdm.topology.load import ApparentPower
+from psdm.topology.load import Frequency
+from psdm.topology.load import Power
+from psdm.topology.load import PowerFactor
 from psdm.topology.load import PowerType
+from psdm.topology.load import ReactivePower
+from psdm.topology.load import Voltage
 
 
-class TestRatedPower:
+class TestFrequency:
     @pytest.mark.parametrize(
         (
             "value",
-            "value_a",
-            "value_b",
-            "value_c",
-            "cos_phi",
-            "cos_phi_a",
-            "cos_phi_b",
-            "cos_phi_c",
+            "expectation",
+        ),
+        [
+            (0, does_not_raise()),
+            (1, does_not_raise()),
+            (-2, pytest.raises(pydantic.ValidationError)),
+        ],
+    )
+    def test_init(
+        self,
+        value,
+        expectation,
+    ) -> None:
+        with expectation:
+            Frequency(
+                value=value,
+            )
+
+
+class TestVoltage:
+    @pytest.mark.parametrize(
+        (
+            "values",
+            "is_symmetrical",
+            "expectation",
+        ),
+        [
+            ((0, 0, 0), True, does_not_raise()),
+            ((1, 1, 1), True, does_not_raise()),
+            ((2, 1, 1), False, does_not_raise()),
+            ((1, 1, 1), False, pytest.raises(AssertionError)),
+            ((-2, 1, 1), True, pytest.raises(pydantic.ValidationError)),
+            ((2, 1, 1), True, pytest.raises(AssertionError)),
+        ],
+    )
+    def test_init(
+        self,
+        values,
+        is_symmetrical,
+        expectation,
+    ) -> None:
+        with expectation:
+            v = Voltage(
+                values=values,
+            )
+            assert v.is_symmetrical == is_symmetrical
+
+
+class TestPower:
+    @pytest.mark.parametrize(
+        (
+            "value_total",
+            "values",
             "power_type",
             "is_symmetrical",
             "expectation",
         ),
         [
-            (0, 0, 0, 0, 0, 0, 0, 0, PowerType.AC_APPARENT, True, does_not_raise()),
-            (3, 1, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, does_not_raise()),
-            (4, 2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, does_not_raise()),
-            (3, 1, 1, 1, 1, 0.9, 1, 1, PowerType.AC_APPARENT, False, does_not_raise()),
-            (3, 1, 1, 1, 0.9, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
-            (2, 2, 1, 1, 1, 1, 2, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
-            (2, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
-            (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
-            (4, 2, 1, 1, 1, 1, 2, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
-            (0, -2, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, True, pytest.raises(pydantic.ValidationError)),
-            (3, 1, 1, 1, 1, 1, 1, 1, PowerType.AC_APPARENT, False, pytest.raises(pydantic.ValidationError)),
+            (0, (0, 0, 0), PowerType.AC_APPARENT, True, does_not_raise()),
+            (3, (1, 1, 1), PowerType.AC_APPARENT, True, does_not_raise()),
+            (4, (2, 1, 1), PowerType.AC_APPARENT, False, does_not_raise()),
+            (3, (1, 1, 1), PowerType.AC_APPARENT, False, pytest.raises(AssertionError)),
+            (2, (2, 1, 1), PowerType.AC_APPARENT, False, pytest.raises(AssertionError)),
+            (2, (-2, 1, 1), PowerType.AC_APPARENT, True, pytest.raises(AssertionError)),
+            (0, (-2, 1, 1), PowerType.AC_APPARENT, False, does_not_raise()),
+            (4, (2, 1, 1), PowerType.AC_APPARENT, True, pytest.raises(AssertionError)),
+            (0, (-2, 1, 1), PowerType.AC_APPARENT, True, pytest.raises(AssertionError)),
         ],
     )
-    def test_init(  # noqa: PLR0913
+    def test_init(
         self,
-        value,
-        value_a,
-        value_b,
-        value_c,
-        cos_phi,
-        cos_phi_a,
-        cos_phi_b,
-        cos_phi_c,
+        value_total,
+        values,
         power_type,
         is_symmetrical,
         expectation,
     ) -> None:
         with expectation:
-            power = Power(
-                value=value,
-                value_a=value_a,
-                value_b=value_b,
-                value_c=value_c,
+            p = Power(
+                values=values,
                 power_type=power_type,
-                is_symmetrical=is_symmetrical,
             )
-            power_factor = PowerFactor(
-                value=cos_phi,
-                value_a=cos_phi_a,
-                value_b=cos_phi_b,
-                value_c=cos_phi_c,
-                is_symmetrical=is_symmetrical,
+            assert p.is_symmetrical == is_symmetrical
+            assert p.total == value_total
+
+
+class TestReactivePower:
+    def test_init(self) -> None:
+        ReactivePower(
+            values=(0, 0, 0),
+        )
+
+
+class TestApparentPower:
+    def test_init(self) -> None:
+        ApparentPower(
+            values=(0, 0, 0),
+        )
+
+
+class TestActivePower:
+    def test_init(self) -> None:
+        ActivePower(
+            values=(0, 0, 0),
+        )
+
+
+class TestPowerFactor:
+    @pytest.mark.parametrize(
+        (
+            "values",
+            "is_symmetrical",
+            "expectation",
+        ),
+        [
+            ((0, 0, 0), True, does_not_raise()),
+            ((1, 1, 1), True, does_not_raise()),
+            ((0.9, 1, 1), False, does_not_raise()),
+            ((1, 1, 1), False, pytest.raises(AssertionError)),
+            ((1, 2, 1), False, pytest.raises(pydantic.ValidationError)),
+            ((1, 2, 1), True, pytest.raises(pydantic.ValidationError)),
+            ((1, -1, 1), True, pytest.raises(pydantic.ValidationError)),
+        ],
+    )
+    def test_init(
+        self,
+        values,
+        is_symmetrical,
+        expectation,
+    ) -> None:
+        with expectation:
+            pf = PowerFactor(
+                values=values,
             )
-            rated_power = RatedPower(power=power, cos_phi=power_factor)
+            assert pf.is_symmetrical == is_symmetrical
