@@ -62,25 +62,34 @@
   [tool.ruff.extend-per-file-ignores]
     "tests/*" = ["ANN001", "ANN201", "INP001", "PLR0913", "S101"]
 
-  [tool.ruff.flake8-type-checking]
-    runtime-evaluated-base-classes = [
-      "psdm.base.Base",
-      "psdm.topology.load.PowerBase",
-      "pydantic.BaseModel",
-    ]
+  [tool.ruff.flake8-import-conventions.extend-aliases]
+    "collections.abc"  = "cabc"
+    "datetime"         = "dt"
+    "geopandas"        = "gpd"
+    "numpy.typing"     = "npt"
+    "rasterio"         = "rio"
+    "shapely.geometry" = "shg"
+    "typing"           = "t"
 
-  [tool.ruff.isort]
-    force-single-line = true
+[tool.ruff.flake8-type-checking]
+  runtime-evaluated-base-classes = [
+    "psdm.base.Base",
+    "psdm.topology.load.PowerBase",
+    "pydantic.BaseModel",
+  ]
 
-  [tool.ruff.pydocstyle]
-    convention = "pep257"
+[tool.ruff.isort]
+  force-single-line = true
 
-  [tool.ruff.pep8-naming]
-    classmethod-decorators = [
-      "classmethod",
-      "pydantic.field_validator",
-      "pydantic.model_validator",
-    ]
+[tool.ruff.pydocstyle]
+  convention = "pep257"
+
+[tool.ruff.pep8-naming]
+  classmethod-decorators = [
+    "classmethod",
+    "pydantic.field_validator",
+    "pydantic.model_validator",
+  ]
 
 [tool.black]
   line_length = 120
