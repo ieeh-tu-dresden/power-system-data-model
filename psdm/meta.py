@@ -23,7 +23,7 @@ class SignConvention(enum.Enum):
 class Meta(Base):
     """This class represents the meta data related to the grid export."""
 
-    name: str
+    grid: str
     date: datetime.date
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
     sign_convention: SignConvention | None = None
