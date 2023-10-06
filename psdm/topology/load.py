@@ -7,6 +7,7 @@ from __future__ import annotations
 import collections.abc as cabc
 import enum
 import itertools
+import math
 import typing as t
 
 import pydantic
@@ -114,6 +115,14 @@ class MultiPhaseQuantity(Base):
     def is_symmetrical(self) -> bool:
         return len(list(itertools.groupby(self.values))) in (0, 1)
 
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def n_phases(self) -> int:
+        return len(self.values)
+
+    def __len__(self) -> int:
+        return self.n_phases
+
 
 class Voltage(MultiPhaseQuantity):
     values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
@@ -124,6 +133,8 @@ class Droop(MultiPhaseQuantity):
 
 
 class Power(MultiPhaseQuantity):
+    power_type: PowerType
+
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
@@ -131,6 +142,8 @@ class Power(MultiPhaseQuantity):
 
 
 class ActivePower(Power):
+    power_type: PowerType = PowerType.AC_ACTIVE
+
     @pydantic.model_validator(mode="before")
     def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["power_type"] = PowerType.AC_ACTIVE.value
@@ -138,6 +151,8 @@ class ActivePower(Power):
 
 
 class ApparentPower(Power):
+    power_type: PowerType = PowerType.AC_APPARENT
+
     @pydantic.model_validator(mode="before")
     def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["power_type"] = PowerType.AC_APPARENT.value
@@ -145,6 +160,8 @@ class ApparentPower(Power):
 
 
 class ReactivePower(Power):
+    power_type: PowerType = PowerType.AC_REACTIVE
+
     @pydantic.model_validator(mode="before")
     def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["power_type"] = PowerType.AC_REACTIVE.value
@@ -155,35 +172,71 @@ class PowerFactor(MultiPhaseQuantity):
     values: cabc.Sequence[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
+
+class RatedPower(Base):
+    apparent_power: ApparentPower
+    active_power: ActivePower
+    reactive_power: ReactivePower
+    cos_phi: PowerFactor
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def validate_length(cls, rated_power: RatedPower) -> RatedPower:
+        if (
+            rated_power.apparent_power.n_phases
+            == rated_power.active_power.n_phases
+            == rated_power.reactive_power.n_phases
+            == rated_power.cos_phi.n_phases
+        ):
+            return rated_power
+
+        msg = "Length mismatch."
+        raise ValueError(msg)
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def is_symmetrical(self) -> bool:
+        return self.apparent_power.is_symmetrical and self.cos_phi.is_symmetrical
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def cos_phi_total(self) -> float:
+        return sum(self.active_power.values) / sum(self.apparent_power.values)
+
+    @classmethod
+    def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: PowerFactor) -> RatedPower:
+        active_power = ActivePower(values=[p * c for p, c in zip(apparent_power.values, cos_phi.values, strict=True)])
+        reactive_power = ReactivePower(
+            values=[p * math.sin(math.acos(c)) for p, c in zip(apparent_power.values, cos_phi.values, strict=True)],
+        )
+        return RatedPower(
+            apparent_power=apparent_power,
+            active_power=active_power,
+            reactive_power=reactive_power,
+            cos_phi=cos_phi,
+        )
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def n_phases(self) -> int:
+        return len(self.cos_phi.values)
+
+    def __len__(self) -> int:
+        return self.n_phases
+
+
+class PhaseConnections(Base):
+    values: cabc.Sequence[PhaseConnection]
+
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def n_phases(self) -> int:
         return len(self.values)
 
 
-class RatedPower(Base):
-    power: Power
-    cos_phi: PowerFactor
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def is_symmetrical(self) -> bool:
-        return self.power.is_symmetrical and self.cos_phi.is_symmetrical
-
-
-class PhaseConnections(Base):
-    values: cabc.Sequence[PhaseConnections]
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def n_connected_phases(self) -> int:
-        return sum(e is not None for e in self.values)
-
-
 class Load(Base):  # including assets of type load and generator
     """This class represents a load.
 
-    It is mainly characterized by the load model of active and reactive power, the  connected phases and the load type itself (Producer, Consumer, Storage or passive shunt).
+    It is mainly characterized by the load model of active and reactive power, the connected phases and the load type itself (Producer, Consumer, Storage or passive shunt).
     """
 
     name: str
@@ -197,3 +250,11 @@ class Load(Base):  # including assets of type load and generator
     system_type: SystemType
     voltage_system_type: VoltageSystemType
     description: str | None = None
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def validate_length(cls, load: Load) -> Load:
+        if load.rated_power.n_phases == load.phase_connections.n_phases:
+            return load
+
+        msg = "Length mismatch."
+        raise ValueError(msg)
