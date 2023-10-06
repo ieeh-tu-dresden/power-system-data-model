@@ -54,14 +54,14 @@ class TestActivePower:
             (
                 "Node_A",
                 None,
-                pytest.raises(pydantic.ValidationError),
+                pytest.raises(TypeError),
             ),
             (
                 "Node_A",
                 ControlQConst(
                     q_set=ReactivePowerSet(values=[0, 0, 0]),
                 ),
-                pytest.raises(pydantic.ValidationError),
+                pytest.raises(TypeError),
             ),
         ],
     )

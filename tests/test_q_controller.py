@@ -116,13 +116,13 @@ class TestReactivePower:
                 ),
                 pytest.raises(pydantic.ValidationError),
             ),
-            ("Node_A", None, pytest.raises(pydantic.ValidationError)),
+            ("Node_A", None, pytest.raises(TypeError)),
             (
                 "Node_A",
                 ControlPConst(
                     p_set=ActivePowerSet(values=[0, 0, 0]),
                 ),
-                pytest.raises(pydantic.ValidationError),
+                pytest.raises(TypeError),
             ),
         ],
     )
