@@ -1,4 +1,5 @@
 # :author: Sasan Jacob Rasti <sasan_jacob.rasti@tu-dresden.de>
+# :author: Sebastian Krahmer <sebastian.krahmer@tu-dresden.de>
 # :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2023.
 # :license: BSD 3-Clause
 
@@ -8,7 +9,6 @@ import collections.abc as cabc
 import enum
 import itertools
 import math
-import typing as t
 
 import pydantic
 
@@ -108,6 +108,8 @@ class Frequency(Base):
 
 
 class MultiPhaseQuantity(Base):
+    """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
+
     values: cabc.Sequence[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
@@ -129,11 +131,15 @@ class Voltage(MultiPhaseQuantity):
 
 
 class Droop(MultiPhaseQuantity):
-    values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: cabc.Sequence[float]  # values (starting at phase a)
 
 
 class Power(MultiPhaseQuantity):
-    power_type: PowerType
+    """Base class for power quantities.
+
+    It comes with the computed property "total" that is the total power of all phases.
+    This value should be used for symmetrical calculations.
+    """
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -142,30 +148,24 @@ class Power(MultiPhaseQuantity):
 
 
 class ActivePower(Power):
-    power_type: PowerType = PowerType.AC_ACTIVE
-
-    @pydantic.model_validator(mode="before")
-    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
-        values["power_type"] = PowerType.AC_ACTIVE.value
-        return values
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_ACTIVE
 
 
 class ApparentPower(Power):
-    power_type: PowerType = PowerType.AC_APPARENT
-
-    @pydantic.model_validator(mode="before")
-    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
-        values["power_type"] = PowerType.AC_APPARENT.value
-        return values
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_APPARENT
 
 
 class ReactivePower(Power):
-    power_type: PowerType = PowerType.AC_REACTIVE
-
-    @pydantic.model_validator(mode="before")
-    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
-        values["power_type"] = PowerType.AC_REACTIVE.value
-        return values
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_REACTIVE
 
 
 class PowerFactor(MultiPhaseQuantity):
@@ -174,6 +174,12 @@ class PowerFactor(MultiPhaseQuantity):
 
 
 class RatedPower(Base):
+    """Rated power of a load specified by rated apparent power and power factor.
+
+    A RatedPower object should be created via the class method "from_apparent_power(apparent_power, power_factor)"
+    as active and reactive power will be automatically computed based on rated power and powerfactor.
+    """
+
     apparent_power: ApparentPower
     active_power: ActivePower
     reactive_power: ReactivePower

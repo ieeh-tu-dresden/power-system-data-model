@@ -133,4 +133,7 @@ class TestReactivePower:
         expectation,
     ) -> None:
         with expectation:
-            QController(node_target=node_target, control_type=control_type)
+            QController(
+                node_target=node_target,
+                control_type=control_type,
+            )
