@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import enum
+import typing as t
 
 import pydantic
 
@@ -59,10 +60,12 @@ class ControlQConst(Base):
     # q-setpoint control mode
     q_set: ReactivePower  # set point of reactive power
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.Q_CONST
+    control_strategy: QControlStrategy = QControlStrategy.Q_CONST
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.Q_CONST.value
+        return values
 
 
 class ControlUConst(Base):
@@ -70,30 +73,36 @@ class ControlUConst(Base):
     u_set: Voltage  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.U_CONST
+    control_strategy: QControlStrategy = QControlStrategy.U_CONST
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.U_CONST.value
+        return values
 
 
 class ControlTanPhiConst(Base):
     # tan(phi) control mode
     tan_phi_set: PowerFactor  # set point of tan(phi)
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.TANPHI_CONST
+    control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.TANPHI_CONST.value
+        return values
 
 
 class ControlCosPhiConst(Base):
     # cos(phi) control mode
     cos_phi_set: PowerFactor  # set point of cos(phi)
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.COSPHI_CONST
+    control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.COSPHI_CONST.value
+        return values
 
 
 class ControlCosPhiP(Base):
@@ -103,10 +112,12 @@ class ControlCosPhiP(Base):
     p_threshold_ue: ActivePower  # under excited: threshold for P.
     p_threshold_oe: ActivePower  # over excited: threshold for P.
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.COSPHI_P
+    control_strategy: QControlStrategy = QControlStrategy.COSPHI_P
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.COSPHI_P.value
+        return values
 
 
 class ControlCosPhiU(Base):
@@ -117,10 +128,12 @@ class ControlCosPhiU(Base):
     u_threshold_oe: Voltage  # over excited: threshold for U
     node_ref_u: str  # reference node at which the voltage is measured
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.COSPHI_U
+    control_strategy: QControlStrategy = QControlStrategy.COSPHI_U
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.COSPHI_U.value
+        return values
 
 
 class ControlQU(Base):
@@ -133,18 +146,20 @@ class ControlQU(Base):
     q_max_ue: ReactivePower  # Under excited limit of Q: absolut value in var
     q_max_oe: ReactivePower  # Over excited limit of Q: absolut value in var
 
-    @pydantic.field_validator("q_max_ue", mode="before")
+    control_strategy: QControlStrategy = QControlStrategy.Q_U
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.Q_U.value
+        return values
+
+    @pydantic.field_validator("q_max_ue", mode="after")
     def validate_q_max_ue(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
         return validate_pos(power_limit)
 
-    @pydantic.field_validator("q_max_oe", mode="before")
+    @pydantic.field_validator("q_max_oe", mode="after")
     def validate_q_max_oe(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
         return validate_pos(power_limit)
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.Q_U
 
 
 class ControlQP(Base):
@@ -153,28 +168,32 @@ class ControlQP(Base):
     q_max_ue: ReactivePower | None  # Under excited limit of Q: absolut value
     q_max_oe: ReactivePower | None  # Over excited limit of Q: absolut value
 
-    @pydantic.field_validator("q_max_ue", mode="before")
+    control_strategy: QControlStrategy = QControlStrategy.Q_P
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.Q_P.value
+        return values
+
+    @pydantic.field_validator("q_max_ue", mode="after")
     def validate_q_max_ue(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
         return validate_pos(power_limit)
 
-    @pydantic.field_validator("q_max_oe", mode="before")
+    @pydantic.field_validator("q_max_oe", mode="after")
     def validate_q_max_oe(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
         return validate_pos(power_limit)
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> QControlStrategy:
-        return QControlStrategy.Q_P
 
 
 class ControlPConst(Base):
     # p-setpoint control mode
     p_set: ActivePower  # set point of active power
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> PControlStrategy:
-        return PControlStrategy.P_CONST
+    control_strategy: PControlStrategy = PControlStrategy.P_CONST
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = PControlStrategy.P_CONST.value
+        return values
 
 
 class ControlPF(Base):
@@ -185,10 +204,12 @@ class ControlPF(Base):
     f_deadband_up: Frequency  # Width of upper deadband (f_up - f_P0): absolut value in Hz
     f_deadband_low: Frequency  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def control_strategy(self) -> PControlStrategy:
-        return PControlStrategy.P_F
+    control_strategy: PControlStrategy = PControlStrategy.P_F
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = PControlStrategy.P_F.value
+        return values
 
 
 QControlType = (
