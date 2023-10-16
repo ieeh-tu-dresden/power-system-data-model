@@ -11,6 +11,7 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
+from psdm.base import model_validator_after
 from psdm.topology.active_power import ActivePower
 from psdm.topology.reactive_power import ReactivePower
 
@@ -139,13 +140,13 @@ class RatedPower(PowerBase):
     power_type: PowerType
     is_symmetrical: bool
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, power: RatedPower) -> RatedPower:
-        return validate_symmetry(power)
+    @model_validator_after
+    def _validate_symmetry(self) -> RatedPower:
+        return validate_symmetry(self)
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, power: RatedPower) -> RatedPower:
-        return validate_total(power)
+    @model_validator_after
+    def _validate_total(self) -> RatedPower:
+        return validate_total(self)
 
 
 class ConnectedPhases(Base):
