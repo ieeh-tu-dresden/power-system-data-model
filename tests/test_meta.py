@@ -35,4 +35,5 @@ class TestMeta:
                 assert m.grid == result
                 if warning:
                     assert len(w) == 1
+                    assert w[0].category is DeprecationWarning
                     assert str(w[0].message) == "name is deprecated. Use grid instead."

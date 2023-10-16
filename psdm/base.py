@@ -70,7 +70,7 @@ class Base(pydantic.BaseModel):
 def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
     if getattr(self, attr_dpr) is not None:
         msg = f"{attr_dpr} is deprecated. Use {attr_new} instead."
-        warnings.warn(msg, stacklevel=4)
+        warnings.warn(msg, DeprecationWarning, stacklevel=4)
 
     return self
 
