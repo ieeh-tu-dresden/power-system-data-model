@@ -74,11 +74,7 @@
     convention = "pep257"
 
   [tool.ruff.pep8-naming]
-    classmethod-decorators = [
-      "classmethod",
-      "pydantic.field_validator",
-      "pydantic.model_validator",
-    ]
+    classmethod-decorators = ["classmethod", "pydantic.field_validator"]
 
 [tool.black]
   line_length = 120

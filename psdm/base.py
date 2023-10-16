@@ -67,9 +67,9 @@ class Base(pydantic.BaseModel):
         return cls.model_validate_json(json_str)
 
 
-def validate_deprecated(cls: type[U], obj: U, attr_dpr: str, attr_new: str) -> U:  # noqa: ARG001
-    if getattr(obj, attr_dpr) is not None:
+def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
+    if getattr(self, attr_dpr) is not None:
         msg = f"{attr_dpr} is deprecated. Use {attr_new} instead."
         warnings.warn(msg, stacklevel=4)
 
-    return obj
+    return self
