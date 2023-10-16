@@ -35,9 +35,7 @@ class TestFrequency:
         expectation,
     ) -> None:
         with expectation:
-            Frequency(
-                value=value,
-            )
+            Frequency(value=value)
 
 
 class TestVoltage:
@@ -63,9 +61,7 @@ class TestVoltage:
         expectation,
     ) -> None:
         with expectation:
-            v = Voltage(
-                values=values,
-            )
+            v = Voltage(values=values)
             assert v.is_symmetrical == is_symmetrical
 
 
@@ -82,10 +78,10 @@ class TestPower:
             (0, (0, 0, 0), PowerType.AC_APPARENT, True, does_not_raise()),
             (3, (1, 1, 1), PowerType.AC_APPARENT, True, does_not_raise()),
             (4, (2, 1, 1), PowerType.AC_APPARENT, False, does_not_raise()),
+            (0, (-2, 1, 1), PowerType.AC_APPARENT, False, does_not_raise()),
             (3, (1, 1, 1), PowerType.AC_APPARENT, False, pytest.raises(AssertionError)),
             (2, (2, 1, 1), PowerType.AC_APPARENT, False, pytest.raises(AssertionError)),
             (2, (-2, 1, 1), PowerType.AC_APPARENT, True, pytest.raises(AssertionError)),
-            (0, (-2, 1, 1), PowerType.AC_APPARENT, False, does_not_raise()),
             (4, (2, 1, 1), PowerType.AC_APPARENT, True, pytest.raises(AssertionError)),
             (0, (-2, 1, 1), PowerType.AC_APPARENT, True, pytest.raises(AssertionError)),
         ],
@@ -109,23 +105,17 @@ class TestPower:
 
 class TestReactivePower:
     def test_init(self) -> None:
-        ReactivePower(
-            values=(0, 0, 0),
-        )
+        ReactivePower(values=(0, 0, 0))
 
 
 class TestApparentPower:
     def test_init(self) -> None:
-        ApparentPower(
-            values=(0, 0, 0),
-        )
+        ApparentPower(values=(0, 0, 0))
 
 
 class TestActivePower:
     def test_init(self) -> None:
-        ActivePower(
-            values=(0, 0, 0),
-        )
+        ActivePower(values=(0, 0, 0))
 
 
 class TestPowerFactor:
@@ -152,7 +142,5 @@ class TestPowerFactor:
         expectation,
     ) -> None:
         with expectation:
-            pf = PowerFactor(
-                values=values,
-            )
+            pf = PowerFactor(values=values)
             assert pf.is_symmetrical == is_symmetrical

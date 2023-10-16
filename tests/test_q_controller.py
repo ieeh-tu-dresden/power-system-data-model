@@ -116,13 +116,13 @@ class TestReactivePower:
                 ),
                 pytest.raises(pydantic.ValidationError),
             ),
-            ("Node_A", None, pytest.raises(pydantic.ValidationError)),
+            ("Node_A", None, pytest.raises(TypeError)),
             (
                 "Node_A",
                 ControlPConst(
                     p_set=ActivePowerSet(values=[0, 0, 0]),
                 ),
-                pytest.raises(pydantic.ValidationError),
+                pytest.raises(TypeError),
             ),
         ],
     )
@@ -133,4 +133,7 @@ class TestReactivePower:
         expectation,
     ) -> None:
         with expectation:
-            QController(node_target=node_target, control_type=control_type)
+            QController(
+                node_target=node_target,
+                control_type=control_type,
+            )

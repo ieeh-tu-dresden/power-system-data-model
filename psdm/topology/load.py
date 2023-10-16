@@ -1,4 +1,5 @@
 # :author: Sasan Jacob Rasti <sasan_jacob.rasti@tu-dresden.de>
+# :author: Sebastian Krahmer <sebastian.krahmer@tu-dresden.de>
 # :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2023.
 # :license: BSD 3-Clause
 
@@ -103,11 +104,17 @@ PhaseConnection = tuple[Phase, Phase] | None
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
+def find_decimals(value: float) -> int:
+    return len(str(value).split(".")[1])
+
+
 class Frequency(Base):
     value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
 
 
 class MultiPhaseQuantity(Base):
+    """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
+
     values: cabc.Sequence[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
@@ -127,18 +134,41 @@ class MultiPhaseQuantity(Base):
 class Voltage(MultiPhaseQuantity):
     values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
 
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def average(self) -> float:
+        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+
+
+class Current(MultiPhaseQuantity):
+    values: cabc.Sequence[float]  # values (starting at phase a)
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def average(self) -> float:
+        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+
 
 class Droop(MultiPhaseQuantity):
-    values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: cabc.Sequence[float]  # values (starting at phase a)
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def average(self) -> float:
+        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
 
 
 class Power(MultiPhaseQuantity):
-    power_type: PowerType
+    """Base class for power quantities.
+
+    It comes with the computed property "total" that is the total power of all phases.
+    This value should be used for symmetrical calculations.
+    """
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return sum(self.values)
+        return round(sum(self.values), find_decimals(self.values[0]))
 
 
 class ActivePower(Power):
@@ -172,8 +202,19 @@ class PowerFactor(MultiPhaseQuantity):
     values: cabc.Sequence[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def average(self) -> float:
+        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+
 
 class RatedPower(Base):
+    """Rated power of a load specified by rated apparent power and power factor.
+
+    A RatedPower object should be created via the class method "from_apparent_power(apparent_power, power_factor)"
+    as active and reactive power will be automatically computed based on rated power and powerfactor.
+    """
+
     apparent_power: ApparentPower
     active_power: ActivePower
     reactive_power: ReactivePower
@@ -200,13 +241,21 @@ class RatedPower(Base):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def cos_phi_total(self) -> float:
-        return sum(self.active_power.values) / sum(self.apparent_power.values)
+        return round(
+            sum(self.active_power.values) / sum(self.apparent_power.values),
+            find_decimals(self.cos_phi.values[0]),  # noqa: PD011
+        )
 
     @classmethod
     def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: PowerFactor) -> RatedPower:
-        active_power = ActivePower(values=[p * c for p, c in zip(apparent_power.values, cos_phi.values, strict=True)])
+        active_power = ActivePower(
+            values=[round(p * c, find_decimals(p)) for p, c in zip(apparent_power.values, cos_phi.values, strict=True)],
+        )
         reactive_power = ReactivePower(
-            values=[p * math.sin(math.acos(c)) for p, c in zip(apparent_power.values, cos_phi.values, strict=True)],
+            values=[
+                round(p * math.sin(math.acos(c)), find_decimals(p))
+                for p, c in zip(apparent_power.values, cos_phi.values, strict=True)
+            ],
         )
         return RatedPower(
             apparent_power=apparent_power,

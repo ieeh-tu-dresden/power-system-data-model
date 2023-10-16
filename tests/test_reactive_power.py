@@ -7,9 +7,12 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
+from psdm.steadystate_case.controller import ControlPConst
 from psdm.steadystate_case.controller import ControlQConst
+from psdm.steadystate_case.controller import PController
 from psdm.steadystate_case.controller import QController
 from psdm.steadystate_case.reactive_power import ReactivePower
+from psdm.topology.load import ActivePower as ActivePowerSet
 from psdm.topology.load import ReactivePower as ReactivePowerSet
 
 
@@ -32,6 +35,17 @@ class TestReactivePower:
                 does_not_raise(),
             ),
             (None, pytest.raises(pydantic.ValidationError)),
+            (
+                PController(
+                    node_target="Node_A",
+                    control_type=ControlPConst(
+                        p_set=ActivePowerSet(
+                            values=(0, 0, 0),
+                        ),
+                    ),
+                ),
+                pytest.raises(pydantic.ValidationError),
+            ),
         ],
     )
     def test_init(
@@ -40,6 +54,4 @@ class TestReactivePower:
         expectation,
     ) -> None:
         with expectation:
-            ReactivePower(
-                controller=controller,
-            )
+            ReactivePower(controller=controller)

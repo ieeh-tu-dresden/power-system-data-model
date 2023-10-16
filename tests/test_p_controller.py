@@ -1,4 +1,5 @@
 # :author: Sasan Jacob Rasti <sasan_jacob.rasti@tu-dresden.de>
+# :author: Sebastian Krahmer <sebastian.krahmer@tu-dresden.de>
 # :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2023.
 # :license: BSD 3-Clause
 
@@ -53,14 +54,14 @@ class TestActivePower:
             (
                 "Node_A",
                 None,
-                pytest.raises(pydantic.ValidationError),
+                pytest.raises(TypeError),
             ),
             (
                 "Node_A",
                 ControlQConst(
                     q_set=ReactivePowerSet(values=[0, 0, 0]),
                 ),
-                pytest.raises(pydantic.ValidationError),
+                pytest.raises(TypeError),
             ),
         ],
     )
@@ -71,4 +72,7 @@ class TestActivePower:
         expectation,
     ) -> None:
         with expectation:
-            PController(node_target=node_target, control_type=control_type)
+            PController(
+                node_target=node_target,
+                control_type=control_type,
+            )
