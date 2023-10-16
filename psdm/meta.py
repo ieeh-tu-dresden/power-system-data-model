@@ -12,6 +12,8 @@ import uuid
 import pydantic
 
 from psdm.base import Base
+from psdm.base import model_validator_after
+from psdm.base import model_validator_before
 from psdm.base import validate_deprecated
 
 VERSION = "1.8.1"
@@ -27,14 +29,14 @@ class Meta(Base):
 
     name: str | None = pydantic.Field(None, repr=False)
 
-    @pydantic.model_validator(mode="after")
+    @model_validator_after
     def _validate_deprecated(self) -> Meta:
         return validate_deprecated(self, attr_dpr="name", attr_new="grid")
 
     grid: str | None = None
 
-    @pydantic.model_validator(mode="before")
-    def _validate_naming(cls, data: t.Any) -> t.Any:  # noqa: ANN401, N805
+    @model_validator_before
+    def _validate_naming(cls, data: t.Any) -> t.Any:  # noqa: ANN401
         if data.get("grid") is None and data.get("name") is None:
             msg = "grid\nField required"
             raise ValueError(msg)
