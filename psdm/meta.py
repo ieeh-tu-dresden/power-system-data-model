@@ -11,6 +11,7 @@ import uuid
 import pydantic
 
 from psdm.base import Base
+from psdm.base import validate_deprecated
 
 VERSION = "1.8.1"
 
@@ -23,7 +24,22 @@ class SignConvention(enum.Enum):
 class Meta(Base):
     """This class represents the meta data related to the grid export."""
 
-    grid: str
+    name: str | None = None
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_deprecated(cls, meta: Meta) -> Meta:
+        return validate_deprecated(cls, obj=meta, attr_dpr="name", attr_new="grid")  # type: ignore[arg-type]
+
+    grid: str | None = None
+
+    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
+    def _validate_naming(cls, meta: Meta) -> Meta:
+        if meta.name is None and meta.grid is None:
+            msg = "grid\nField required"
+            raise ValueError(msg)
+
+        return meta
+
     date: datetime.date
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
     sign_convention: SignConvention | None = None
