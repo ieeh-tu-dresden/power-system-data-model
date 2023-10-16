@@ -8,6 +8,7 @@ from __future__ import annotations
 import pydantic
 
 from psdm.base import Base
+from psdm.base import model_validator_after
 
 
 class LoadModel(Base):
@@ -25,16 +26,16 @@ class LoadModel(Base):
     exp_i: int = 1
     exp_z: int = 2
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def validate_range_c(cls, load_model: LoadModel) -> LoadModel:
-        name = load_model.name
-        c_p = load_model.c_p
-        c_i = load_model.c_i
+    @model_validator_after
+    def validate_range_c(self) -> LoadModel:
+        name = self.name
+        c_p = self.c_p
+        c_i = self.c_i
         if c_p + c_i > 1:
             msg = f"Load model {name!r}: Sum of components must not exceed 1, but {(c_p + c_i)=}."
             raise ValueError(msg)
 
-        return load_model
+        return self
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
