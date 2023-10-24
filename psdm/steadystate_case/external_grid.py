@@ -1,17 +1,22 @@
 # :author: Sasan Jacob Rasti <sasan_jacob.rasti@tu-dresden.de>
+# :author: Sebastian Krahmer <sebastian.krahmer@tu-dresden.de>
 # :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2023.
 # :license: BSD 3-Clause
 
 from __future__ import annotations
 
 from psdm.base import Base
+from psdm.topology.load import ActivePower
+from psdm.topology.load import Angle
+from psdm.topology.load import ReactivePower
+from psdm.topology.load import Voltage
 
 
 class ExternalGrid(Base):
     """This class represents the operating point of an external grid or a grid subsitute equivalent respectively."""
 
     name: str
-    u_0: float | None = None
-    phi_0: float | None = None
-    p_0: float | None = None
-    q_0: float | None = None
+    u_0: Voltage | None = None
+    phi_0: Angle | None = None
+    p_0: ActivePower | None = None
+    q_0: ReactivePower | None = None

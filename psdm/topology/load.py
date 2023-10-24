@@ -149,6 +149,15 @@ class Current(MultiPhaseQuantity):
         return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
 
 
+class Angle(MultiPhaseQuantity):
+    values: cabc.Sequence[float]  # values (starting at phase a)
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def average(self) -> float:
+        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+
+
 class Droop(MultiPhaseQuantity):
     values: cabc.Sequence[float]  # values (starting at phase a)
 
