@@ -1,0 +1,1254 @@
+{
+  "$defs": {
+    "ActivePower": {
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_ACTIVE"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "ApparentPower": {
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_APPARENT"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ApparentPower",
+      "type": "object"
+    },
+    "Branch": {
+      "description": "This class represents a branch adn therefore includes lines, cables or branch fuses.\n\nIt is characterized by a branch type (line, cable or fuse).",
+      "properties": {
+        "node_1": {
+          "title": "Node 1",
+          "type": "string"
+        },
+        "node_2": {
+          "title": "Node 2",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_n": {
+          "title": "U N",
+          "type": "number"
+        },
+        "i_r": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "I R"
+        },
+        "r1": {
+          "title": "R1",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "g1": {
+          "title": "G1",
+          "type": "number"
+        },
+        "b1": {
+          "title": "B1",
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/$defs/BranchType"
+        },
+        "voltage_system_type": {
+          "$ref": "#/$defs/VoltageSystemType"
+        },
+        "r0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "R0"
+        },
+        "x0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "X0"
+        },
+        "g0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "G0"
+        },
+        "b0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B0"
+        },
+        "f_n": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "F N"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "energized": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Energized"
+        },
+        "length": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Length"
+        },
+        "rn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rn"
+        },
+        "xn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Xn"
+        },
+        "gn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gn"
+        },
+        "bn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bn"
+        },
+        "rpn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rpn"
+        },
+        "xpn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Xpn"
+        },
+        "gpn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gpn"
+        },
+        "bpn": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bpn"
+        }
+      },
+      "required": [
+        "node_1",
+        "node_2",
+        "name",
+        "u_n",
+        "i_r",
+        "r1",
+        "x1",
+        "g1",
+        "b1",
+        "type",
+        "voltage_system_type"
+      ],
+      "title": "Branch",
+      "type": "object"
+    },
+    "BranchType": {
+      "enum": [
+        "LINE",
+        "COUPLER",
+        "FUSE"
+      ],
+      "title": "BranchType",
+      "type": "string"
+    },
+    "ExternalGrid": {
+      "description": "This class represents an external grid or a grid subsitute equivalent respectively.\n\nIt is characterized by a grid type (slack, P-V-node, P-Q-node).",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Description"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/GridType"
+        },
+        "short_circuit_power_max": {
+          "$ref": "#/$defs/Power"
+        },
+        "short_circuit_power_min": {
+          "$ref": "#/$defs/Power"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "node",
+        "type",
+        "short_circuit_power_max",
+        "short_circuit_power_min"
+      ],
+      "title": "ExternalGrid",
+      "type": "object"
+    },
+    "GridType": {
+      "enum": [
+        "SL",
+        "PV",
+        "PQ"
+      ],
+      "title": "GridType",
+      "type": "string"
+    },
+    "Load": {
+      "description": "This class represents a load.\n\nIt is mainly characterized by the load model of active and reactive power, the connected phases and the load type itself (Producer, Consumer, Storage or passive shunt).",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        },
+        "rated_power": {
+          "$ref": "#/$defs/RatedPower"
+        },
+        "active_power_model": {
+          "$ref": "#/$defs/LoadModel"
+        },
+        "reactive_power_model": {
+          "$ref": "#/$defs/LoadModel"
+        },
+        "phase_connections": {
+          "$ref": "#/$defs/PhaseConnections"
+        },
+        "phase_connection_type": {
+          "$ref": "#/$defs/PhaseConnectionType"
+        },
+        "type": {
+          "$ref": "#/$defs/LoadType"
+        },
+        "system_type": {
+          "$ref": "#/$defs/SystemType"
+        },
+        "voltage_system_type": {
+          "$ref": "#/$defs/VoltageSystemType"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "node",
+        "rated_power",
+        "active_power_model",
+        "reactive_power_model",
+        "phase_connections",
+        "phase_connection_type",
+        "type",
+        "system_type",
+        "voltage_system_type"
+      ],
+      "title": "Load",
+      "type": "object"
+    },
+    "LoadModel": {
+      "description": "Load representation based on polynomial model.\n\npower = power_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)\nc_z = 1 - c_p - c_i",
+      "properties": {
+        "u_0": {
+          "title": "U 0",
+          "type": "number"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "c_p": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "C P",
+          "type": "number"
+        },
+        "c_i": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "C I",
+          "type": "number"
+        },
+        "exp_p": {
+          "default": 0,
+          "title": "Exp P",
+          "type": "integer"
+        },
+        "exp_i": {
+          "default": 1,
+          "title": "Exp I",
+          "type": "integer"
+        },
+        "exp_z": {
+          "default": 2,
+          "title": "Exp Z",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "u_0"
+      ],
+      "title": "LoadModel",
+      "type": "object"
+    },
+    "LoadType": {
+      "enum": [
+        "CONSUMER",
+        "PRODUCER",
+        "PROSUMER",
+        "SHUNT",
+        "STORAGE"
+      ],
+      "title": "LoadType",
+      "type": "string"
+    },
+    "Meta": {
+      "description": "This class represents the meta data related to the grid export.",
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "grid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grid"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "sign_convention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignConvention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        }
+      },
+      "required": [
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "Node": {
+      "description": "This class represents a terminal within the grid.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_n": {
+          "title": "U N",
+          "type": "number"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "u_n"
+      ],
+      "title": "Node",
+      "type": "object"
+    },
+    "Phase": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "N"
+      ],
+      "title": "Phase",
+      "type": "string"
+    },
+    "PhaseConnectionType": {
+      "enum": [
+        "ONE_PH_PH_E",
+        "ONE_PH_PH_N",
+        "ONE_PH_PH_PH",
+        "THREE_PH_D",
+        "THREE_PH_PH_E",
+        "THREE_PH_YN",
+        "TWO_PH_PH_E",
+        "TWO_PH_YN"
+      ],
+      "title": "PhaseConnectionType",
+      "type": "string"
+    },
+    "PhaseConnections": {
+      "properties": {
+        "values": {
+          "items": {
+            "anyOf": [
+              {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "$ref": "#/$defs/Phase"
+                  },
+                  {
+                    "$ref": "#/$defs/Phase"
+                  }
+                ],
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Values",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "PhaseConnections",
+      "type": "object"
+    },
+    "Power": {
+      "description": "Base class for power quantities.\n\nIt comes with the computed property \"total\" that is the total power of all phases.\nThis value should be used for symmetrical calculations.",
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "Power",
+      "type": "object"
+    },
+    "PowerFactor": {
+      "properties": {
+        "values": {
+          "items": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerFactorDirection"
+            }
+          ],
+          "default": "ND"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "PowerFactor",
+      "type": "object"
+    },
+    "PowerFactorDirection": {
+      "enum": [
+        "UE",
+        "OE",
+        "ND"
+      ],
+      "title": "PowerFactorDirection",
+      "type": "string"
+    },
+    "PowerType": {
+      "enum": [
+        "AC_ACTIVE",
+        "AC_APPARENT",
+        "AC_REACTIVE",
+        "CURRENT",
+        "DC",
+        "GAS",
+        "IMPEDANCE",
+        "MECHANICAL",
+        "THERMAL"
+      ],
+      "title": "PowerType",
+      "type": "string"
+    },
+    "RatedPower": {
+      "description": "Rated power of a load specified by rated apparent power and power factor.\n\nA RatedPower object should be created via the class method \"from_apparent_power(apparent_power, power_factor)\"\nas active and reactive power will be automatically computed based on rated power and powerfactor.",
+      "properties": {
+        "apparent_power": {
+          "$ref": "#/$defs/ApparentPower"
+        },
+        "active_power": {
+          "$ref": "#/$defs/ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/$defs/ReactivePower"
+        },
+        "cos_phi": {
+          "$ref": "#/$defs/PowerFactor"
+        }
+      },
+      "required": [
+        "apparent_power",
+        "active_power",
+        "reactive_power",
+        "cos_phi"
+      ],
+      "title": "RatedPower",
+      "type": "object"
+    },
+    "ReactivePower": {
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_REACTIVE"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    },
+    "SignConvention": {
+      "enum": [
+        "PASSIVE",
+        "ACTIVE"
+      ],
+      "title": "SignConvention",
+      "type": "string"
+    },
+    "SystemType": {
+      "enum": [
+        "BATTERY_STORAGE",
+        "BIOGAS",
+        "CHARGING_POINT",
+        "COAL",
+        "DIESEL",
+        "EXTERNAL_GRID_EQUIVALENT",
+        "FILTER_C",
+        "FILTER_HARMONIC",
+        "FILTER_RL",
+        "FILTER_RLC",
+        "FILTER_RLCCRP",
+        "FILTER_RLCRP",
+        "FIXED_CONSUMPTION",
+        "FUELCELL",
+        "GAS",
+        "HEAT_PUMP",
+        "HVAC",
+        "HVDC",
+        "HYDRO",
+        "NIGHT_STORAGE",
+        "NUCLEAR",
+        "OIL",
+        "OTHER",
+        "PEAT",
+        "PUMP_STORAGE",
+        "PV",
+        "REACTIVE_POWER_COMPENSATOR",
+        "RENEWABLE_ENERGY",
+        "SOLAR",
+        "STAT_GEN",
+        "STATIC_VAR_SYSTEM",
+        "VARIABLE_CONSUMPTION",
+        "WIND"
+      ],
+      "title": "SystemType",
+      "type": "string"
+    },
+    "TapSide": {
+      "enum": [
+        "HV",
+        "MV",
+        "LV"
+      ],
+      "title": "TapSide",
+      "type": "string"
+    },
+    "Transformer": {
+      "description": "This class represents a transformer and consists of winding elements.\n\nIt is characterized by windings elements (2w or 3w), the vector group as well as the transformer tap control.",
+      "properties": {
+        "node_1": {
+          "title": "Node 1",
+          "type": "string"
+        },
+        "node_2": {
+          "title": "Node 2",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "number": {
+          "title": "Number",
+          "type": "integer"
+        },
+        "vector_group": {
+          "$ref": "#/$defs/psdm__topology__transformer__VectorGroup"
+        },
+        "i_0": {
+          "title": "I 0",
+          "type": "number"
+        },
+        "p_fe": {
+          "title": "P Fe",
+          "type": "number"
+        },
+        "i_00": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "I 00"
+        },
+        "p_fe0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P Fe0"
+        },
+        "windings": {
+          "items": {
+            "$ref": "#/$defs/Winding"
+          },
+          "title": "Windings",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "phase_technology_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TransformerPhaseTechnologyType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "tap_u_abs": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap U Abs"
+        },
+        "tap_u_phi": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap U Phi"
+        },
+        "tap_max": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Max"
+        },
+        "tap_min": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Min"
+        },
+        "tap_neutral": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Neutral"
+        },
+        "tap_side": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TapSide"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "node_1",
+        "node_2",
+        "name",
+        "number",
+        "vector_group",
+        "i_0",
+        "p_fe",
+        "windings"
+      ],
+      "title": "Transformer",
+      "type": "object"
+    },
+    "TransformerPhaseTechnologyType": {
+      "enum": [
+        "SINGLE_PH_E",
+        "SINGLE_PH",
+        "THREE_PH"
+      ],
+      "title": "TransformerPhaseTechnologyType",
+      "type": "string"
+    },
+    "VoltageSystemType": {
+      "enum": [
+        "AC",
+        "DC"
+      ],
+      "title": "VoltageSystemType",
+      "type": "string"
+    },
+    "Winding": {
+      "description": "This class represents a winding of a transformer.\n\nFor example, a 2-winding transformer has a high and low voltage level winding.\nEach windings is characterized by vector group, which defines the interconnection of the three phases.",
+      "properties": {
+        "node": {
+          "title": "Node",
+          "type": "string"
+        },
+        "s_r": {
+          "title": "S R",
+          "type": "number"
+        },
+        "u_n": {
+          "title": "U N",
+          "type": "number"
+        },
+        "u_r": {
+          "title": "U R",
+          "type": "number"
+        },
+        "r1": {
+          "title": "R1",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "r0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "R0"
+        },
+        "x0": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "X0"
+        },
+        "re": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Re"
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Xe"
+        },
+        "phase_angle_clock": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase Angle Clock"
+        },
+        "vector_group": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__topology__windings__VectorGroup"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "neutral_connected": {
+          "default": false,
+          "title": "Neutral Connected",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "node",
+        "s_r",
+        "u_n",
+        "u_r",
+        "r1",
+        "x1"
+      ],
+      "title": "Winding",
+      "type": "object"
+    },
+    "psdm__topology__transformer__VectorGroup": {
+      "enum": [
+        "Dd0",
+        "Yy0",
+        "YNy0",
+        "Yyn0",
+        "YNyn0",
+        "Dz0",
+        "Dzn0",
+        "Zd0",
+        "ZNd0",
+        "Dyn1",
+        "Dy5",
+        "Dyn5",
+        "Yd5",
+        "YNd5",
+        "Yz5",
+        "YNz5",
+        "Yzn5",
+        "YNzn5",
+        "Dd6",
+        "Yy6",
+        "YNy6",
+        "Yyn6",
+        "YNyn6",
+        "Dz6",
+        "Dzn6",
+        "Zd6",
+        "ZNd6",
+        "Dyn7",
+        "Dy11",
+        "Dyn11",
+        "Yd11",
+        "YNd11",
+        "Yz11",
+        "YNz11",
+        "Yzn11",
+        "YNzn11"
+      ],
+      "title": "VectorGroup",
+      "type": "string"
+    },
+    "psdm__topology__windings__VectorGroup": {
+      "enum": [
+        "Y",
+        "YN",
+        "Z",
+        "ZN",
+        "D"
+      ],
+      "title": "VectorGroup",
+      "type": "string"
+    }
+  },
+  "description": "This class represents operating point independent topology of a grid.\n\nIt is characterized by list of branches, nodes, loads, transformers and external grids.",
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "branches": {
+      "items": {
+        "$ref": "#/$defs/Branch"
+      },
+      "title": "Branches",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/Node"
+      },
+      "title": "Nodes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/Load"
+      },
+      "title": "Loads",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transformers": {
+      "items": {
+        "$ref": "#/$defs/Transformer"
+      },
+      "title": "Transformers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "external_grids": {
+      "items": {
+        "$ref": "#/$defs/ExternalGrid"
+      },
+      "title": "External Grids",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "branches",
+    "nodes",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "title": "Topology",
+  "type": "object"
+}

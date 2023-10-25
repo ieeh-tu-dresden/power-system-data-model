@@ -1,3 +1,14 @@
+## 1.9.0 (2023-10-25)
+
+### Feat
+
+- use n-phase quantities instead of single floats (contributors: @sasanjac, @SebastianDD)
+
+### Fix
+
+- deprecate meta.name in favor of meta.grid (contributors: @SebastianDD, @sasanjac)
+- add reference voltage to load model (contributors: @sasanjac, @SebastianDD)
+
 ## 1.8.1 (2023-09-20)
 
 ### Fix
