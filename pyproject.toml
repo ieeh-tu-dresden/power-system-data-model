@@ -1,9 +1,8 @@
 [project]
   authors = [
-    { name = "Sasan Jacob Rasti", email = "sasan_jacob.rasti@tu-dresden.de" },
-
     { name = "Laura Fiedler", email = "laura.fiedler1@tu-dresden.de" },
     { name = "Maximilian Schmidt", email = "maximilian.schmidt@tu-dresden.de" },
+    { name = "Sasan Jacob Rasti", email = "sasan_jacob.rasti@tu-dresden.de" },
     { name = "Sebastian Krahmer", email = "sebastian.krahmer@tu-dresden.de" },
   ]
   dependencies = ["loguru", "pydantic>=2.0"]
@@ -87,8 +86,8 @@
 [tool.ruff.pep8-naming]
   classmethod-decorators = [
     "classmethod",
+    "psdm.base.model_validator_before",
     "pydantic.field_validator",
-    "pydantic.model_validator",
   ]
 
 [tool.black]

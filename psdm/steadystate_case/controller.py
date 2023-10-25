@@ -11,6 +11,7 @@ import typing as t
 import pydantic
 
 from psdm.base import Base
+from psdm.base import model_validator_before
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.topology.load import ActivePower
 from psdm.topology.load import Droop
@@ -62,7 +63,7 @@ class ControlQConst(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.Q_CONST
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.Q_CONST.value
         return values
@@ -75,7 +76,7 @@ class ControlUConst(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.U_CONST
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.U_CONST.value
         return values
@@ -87,7 +88,7 @@ class ControlTanPhiConst(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.TANPHI_CONST.value
         return values
@@ -99,7 +100,7 @@ class ControlCosPhiConst(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.COSPHI_CONST.value
         return values
@@ -114,7 +115,7 @@ class ControlCosPhiP(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_P
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.COSPHI_P.value
         return values
@@ -130,7 +131,7 @@ class ControlCosPhiU(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_U
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.COSPHI_U.value
         return values
@@ -148,7 +149,7 @@ class ControlQU(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.Q_U
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.Q_U.value
         return values
@@ -170,7 +171,7 @@ class ControlQP(Base):
 
     control_strategy: QControlStrategy = QControlStrategy.Q_P
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = QControlStrategy.Q_P.value
         return values
@@ -190,7 +191,7 @@ class ControlPConst(Base):
 
     control_strategy: PControlStrategy = PControlStrategy.P_CONST
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = PControlStrategy.P_CONST.value
         return values
@@ -206,7 +207,7 @@ class ControlPF(Base):
 
     control_strategy: PControlStrategy = PControlStrategy.P_F
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["control_strategy"] = PControlStrategy.P_F.value
         return values

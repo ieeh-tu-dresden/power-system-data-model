@@ -8,6 +8,7 @@ import enum
 import json
 import pathlib
 import typing as t
+import warnings
 
 import pydantic
 from pydantic_core import PydanticCustomError
@@ -59,3 +60,15 @@ class Base(pydantic.BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Base:
         return cls.model_validate_json(json_str)
+
+
+def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
+    if getattr(self, attr_dpr) is not None:
+        msg = f"{attr_dpr} is deprecated. Use {attr_new} instead."
+        warnings.warn(msg, DeprecationWarning, stacklevel=4)
+
+    return self
+
+
+model_validator_after = pydantic.model_validator(mode="after")
+model_validator_before = pydantic.model_validator(mode="before")

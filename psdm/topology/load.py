@@ -15,6 +15,8 @@ import pydantic
 from psdm.base import Base
 from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
+from psdm.base import model_validator_after
+from psdm.base import model_validator_before
 from psdm.topology.load_model import LoadModel
 
 
@@ -179,7 +181,7 @@ class Power(MultiPhaseQuantity):
 class ActivePower(Power):
     power_type: PowerType = PowerType.AC_ACTIVE
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["power_type"] = PowerType.AC_ACTIVE.value
         return values
@@ -188,7 +190,7 @@ class ActivePower(Power):
 class ApparentPower(Power):
     power_type: PowerType = PowerType.AC_APPARENT
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["power_type"] = PowerType.AC_APPARENT.value
         return values
@@ -197,7 +199,7 @@ class ApparentPower(Power):
 class ReactivePower(Power):
     power_type: PowerType = PowerType.AC_REACTIVE
 
-    @pydantic.model_validator(mode="before")
+    @model_validator_before
     def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
         values["power_type"] = PowerType.AC_REACTIVE.value
         return values
@@ -225,15 +227,15 @@ class RatedPower(Base):
     reactive_power: ReactivePower
     cos_phi: PowerFactor
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def validate_length(cls, rated_power: RatedPower) -> RatedPower:
+    @model_validator_after
+    def validate_length(self) -> RatedPower:
         if (
-            rated_power.apparent_power.n_phases
-            == rated_power.active_power.n_phases
-            == rated_power.reactive_power.n_phases
-            == rated_power.cos_phi.n_phases
+            self.apparent_power.n_phases
+            == self.active_power.n_phases
+            == self.reactive_power.n_phases
+            == self.cos_phi.n_phases
         ):
-            return rated_power
+            return self
 
         msg = "Length mismatch."
         raise ValueError(msg)
@@ -305,10 +307,10 @@ class Load(Base):  # including assets of type load and generator
     voltage_system_type: VoltageSystemType
     description: str | None = None
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def validate_length(cls, load: Load) -> Load:
-        if load.rated_power.n_phases == load.phase_connections.n_phases:
-            return load
+    @model_validator_after
+    def validate_length(self) -> Load:
+        if self.rated_power.n_phases == self.phase_connections.n_phases:
+            return self
 
         msg = "Length mismatch."
         raise ValueError(msg)
