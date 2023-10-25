@@ -3,7 +3,8 @@
 # :license: BSD 3-Clause
 
 from psdm.base import VoltageSystemType
-from psdm.topology.branch import Branch, BranchType
+from psdm.topology.branch import Branch
+from psdm.topology.branch import BranchType
 
 
 class TestBranch:

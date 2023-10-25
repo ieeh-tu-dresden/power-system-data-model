@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import enum
 import uuid
 
@@ -24,7 +24,7 @@ class Meta(Base):
     """This class represents the meta data related to the grid export."""
 
     name: str
-    date: datetime.date
+    date: dt.date
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
     sign_convention: SignConvention | None = None
     project: str | None = None

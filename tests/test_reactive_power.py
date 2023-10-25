@@ -6,10 +6,14 @@ from contextlib import nullcontext as does_not_raise
 
 import pydantic
 import pytest
-from psdm.steadystate_case.controller import QController
-from psdm.steadystate_case.controller import ControlQConst
 
+from psdm.steadystate_case.controller import ControlPConst
+from psdm.steadystate_case.controller import ControlQConst
+from psdm.steadystate_case.controller import PController
+from psdm.steadystate_case.controller import QController
 from psdm.steadystate_case.reactive_power import ReactivePower
+from psdm.topology.load import ActivePower as ActivePowerSet
+from psdm.topology.load import ReactivePower as ReactivePowerSet
 
 
 class TestReactivePower:
@@ -23,24 +27,31 @@ class TestReactivePower:
                 QController(
                     node_target="Node_A",
                     control_type=ControlQConst(
-                        value=0,
-                        value_a=0,
-                        value_b=0,
-                        value_c=0,
-                        is_symmetrical=True,
+                        q_set=ReactivePowerSet(
+                            values=[0, 0, 0],
+                        ),
                     ),
                 ),
                 does_not_raise(),
             ),
             (None, pytest.raises(pydantic.ValidationError)),
+            (
+                PController(
+                    node_target="Node_A",
+                    control_type=ControlPConst(
+                        p_set=ActivePowerSet(
+                            values=(0, 0, 0),
+                        ),
+                    ),
+                ),
+                pytest.raises(pydantic.ValidationError),
+            ),
         ],
     )
-    def test_init(  # noqa: PLR0913
+    def test_init(
         self,
         controller,
         expectation,
     ) -> None:
         with expectation:
-            ReactivePower(
-                controller=controller,
-            )
+            ReactivePower(controller=controller)

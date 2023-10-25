@@ -7,6 +7,7 @@ from __future__ import annotations
 from enum import Enum
 
 from psdm.base import Base
+from psdm.topology.load import Power
 
 
 class GridType(Enum):
@@ -25,5 +26,5 @@ class ExternalGrid(Base):
     description: str | None
     node: str
     type: GridType  # noqa: A003
-    short_circuit_power_max: float
-    short_circuit_power_min: float
+    short_circuit_power_max: Power
+    short_circuit_power_min: Power

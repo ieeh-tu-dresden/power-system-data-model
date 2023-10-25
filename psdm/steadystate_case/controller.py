@@ -6,15 +6,18 @@
 from __future__ import annotations
 
 import enum
+import typing as t
 
 import pydantic
 
 from psdm.base import Base
-from psdm.base import CosphiDir
 from psdm.steadystate_case.characteristic import Characteristic
-from psdm.topology.load import PowerBase
-from psdm.topology.load import validate_symmetry
-from psdm.topology.load import validate_total
+from psdm.topology.load import ActivePower
+from psdm.topology.load import Droop
+from psdm.topology.load import Frequency
+from psdm.topology.load import PowerFactor
+from psdm.topology.load import ReactivePower
+from psdm.topology.load import Voltage
 
 
 class QControlStrategy(enum.Enum):
@@ -46,209 +49,176 @@ class ControlledVoltageRef(enum.Enum):
     POS_SEQ = "POS_SEQ"
 
 
+def validate_pos(power: ReactivePower | None) -> ReactivePower | None:
+    if power is not None and any(e < 0 for e in power.values):  # noqa: PD011
+        raise ValueError
+
+    return power
+
+
 class ControlQConst(Base):
     # q-setpoint control mode
-    value: float  # set point of reactive power (three-phase)
-    value_a: float  # set point of reactive power (phase a)
-    value_b: float  # set point of reactive power (phase b)
-    value_c: float  # pset point of reactive ower (phase c)
-    is_symmetrical: bool
+    q_set: ReactivePower  # set point of reactive power
 
     control_strategy: QControlStrategy = QControlStrategy.Q_CONST
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlQConst) -> PowerBase:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        return validate_symmetry(power)
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, controller: ControlQConst) -> PowerBase:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        return validate_total(power)
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.Q_CONST.value
+        return values
 
 
 class ControlUConst(Base):
     # u-setpoint control mode
-    u_set: float = pydantic.Field(ge=0)  # Setpoint of voltage.
+    u_set: Voltage  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
 
     control_strategy: QControlStrategy = QControlStrategy.U_CONST
 
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.U_CONST.value
+        return values
 
-class ControlTanphiConst(Base):
-    # cos(phi) control mode
-    cosphi_dir: CosphiDir
-    cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
+
+class ControlTanPhiConst(Base):
+    # tan(phi) control mode
+    tan_phi_set: PowerFactor  # set point of tan(phi)
 
     control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
 
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.TANPHI_CONST.value
+        return values
 
-class ControlCosphiConst(Base):
+
+class ControlCosPhiConst(Base):
     # cos(phi) control mode
-    cosphi_dir: CosphiDir
-    cosphi: float = pydantic.Field(ge=0, le=1)  # cos(phi) for calculation of Q in relation to P.
+    cos_phi_set: PowerFactor  # set point of cos(phi)
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
 
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.COSPHI_CONST.value
+        return values
 
-class ControlCosphiP(Base):
+
+class ControlCosPhiP(Base):
     # cos(phi(P)) control mode
-    cosphi_ue: float = pydantic.Field(
-        ge=0,
-        le=1,
-    )  # under excited: cos(phi) for calculation of Q in relation to P.
-    cosphi_oe: float = pydantic.Field(
-        ge=0,
-        le=1,
-    )  # over excited: cos(phi) for calculation of Q in relation to P.
-    p_threshold_ue: float = pydantic.Field(le=0)  # under excited: threshold for P.
-    p_threshold_oe: float = pydantic.Field(le=0)  # over excited: threshold for P.
+    cos_phi_ue: PowerFactor  # under excited: cos(phi) for calculation of Q in relation to P.
+    cos_phi_oe: PowerFactor  # over excited: cos(phi) for calculation of Q in relation to P.
+    p_threshold_ue: ActivePower  # under excited: threshold for P.
+    p_threshold_oe: ActivePower  # over excited: threshold for P.
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_P
 
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.COSPHI_P.value
+        return values
 
-class ControlCosphiU(Base):
+
+class ControlCosPhiU(Base):
     # cos(phi(U)) control mode
-    cosphi_ue: float = pydantic.Field(
-        ...,
-        ge=0,
-        le=1,
-    )  # under excited: cos(phi) for calculation of Q in relation to P.
-    cosphi_oe: float = pydantic.Field(
-        ...,
-        ge=0,
-        le=1,
-    )  # over excited: cos(phi) for calculation of Q in relation to P.
-    u_threshold_ue: float = pydantic.Field(..., ge=0)  # under excited: threshold for U.
-    u_threshold_oe: float = pydantic.Field(..., ge=0)  # over excited: threshold for U.
+    cos_phi_ue: PowerFactor  # under excited: cos(phi) for calculation of Q in relation to P
+    cos_phi_oe: PowerFactor  # over excited: cos(phi) for calculation of Q in relation to P
+    u_threshold_ue: Voltage  # under excited: threshold for U
+    u_threshold_oe: Voltage  # over excited: threshold for U
+    node_ref_u: str  # reference node at which the voltage is measured
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_U
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.COSPHI_U.value
+        return values
 
 
 class ControlQU(Base):
     # Q(U) characteristic control mode
-    droop_tg_2015: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2015: '%/kV'-value --> Q = m_% * Pr * dU_kV
-    droop_tg_2018: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Droop/Slope based on technical guideline VDE-AR-N 4120:2018: '%/pu'-value --> Q = m_% * Pr * dU_(% of Un)
-    u_q0: float = pydantic.Field(..., ge=0)  # Voltage value, where Q=0: absolut value in V
-    u_deadband_up: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
-    u_deadband_low: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
-    q_max_ue: float = pydantic.Field(..., ge=0)  # Under excited limit of Q: absolut value in var
-    q_max_oe: float = pydantic.Field(..., ge=0)  # Over excited limit of Q: absolut value in var
+    droop_up: Droop  # Droop/Slope for voltage above the u_deadband_up
+    droop_low: Droop  # Droop/Slope for voltage above the u_deadband_low
+    u_q0: Voltage  # Voltage value, where Q=0: absolut value in V
+    u_deadband_up: Voltage  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
+    u_deadband_low: Voltage  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
+    q_max_ue: ReactivePower  # Under excited limit of Q: absolut value in var
+    q_max_oe: ReactivePower  # Over excited limit of Q: absolut value in var
 
     control_strategy: QControlStrategy = QControlStrategy.Q_U
 
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.Q_U.value
+        return values
 
-def validate_pos(value: float | None) -> float | None:
-    if value is not None and value < 0:
-        raise ValueError
+    @pydantic.field_validator("q_max_ue", mode="after")
+    def validate_q_max_ue(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
+        return validate_pos(power_limit)
 
-    return value
+    @pydantic.field_validator("q_max_oe", mode="after")
+    def validate_q_max_oe(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
+        return validate_pos(power_limit)
 
 
 class ControlQP(Base):
     # Q(P) characteristic control mode
     q_p_characteristic: Characteristic
-    q_max_ue: float | None = None  # Under excited limit of Q: absolut value
-    q_max_oe: float | None = None  # Over excited limit of Q: absolut value
+    q_max_ue: ReactivePower | None  # Under excited limit of Q: absolut value
+    q_max_oe: ReactivePower | None  # Over excited limit of Q: absolut value
 
     control_strategy: QControlStrategy = QControlStrategy.Q_P
 
-    @pydantic.field_validator("q_max_ue", mode="before")
-    def validate_q_max_ue(cls, v: float | None) -> float | None:
-        return validate_pos(v)
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = QControlStrategy.Q_P.value
+        return values
 
-    @pydantic.field_validator("q_max_oe", mode="before")
-    def validate_q_max_oe(cls, v: float | None) -> float | None:
-        return validate_pos(v)
+    @pydantic.field_validator("q_max_ue", mode="after")
+    def validate_q_max_ue(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
+        return validate_pos(power_limit)
+
+    @pydantic.field_validator("q_max_oe", mode="after")
+    def validate_q_max_oe(cls, power_limit: ReactivePower | None) -> ReactivePower | None:
+        return validate_pos(power_limit)
 
 
 class ControlPConst(Base):
     # p-setpoint control mode
-    value: float  # set point of active power (three-phase)
-    value_a: float  # set point of active power (phase a)
-    value_b: float  # set point of active power (phase b)
-    value_c: float  # pset point of active ower (phase c)
-    is_symmetrical: bool
+    p_set: ActivePower  # set point of active power
 
     control_strategy: PControlStrategy = PControlStrategy.P_CONST
 
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_symmetry(cls, controller: ControlPConst) -> PowerBase:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        return validate_symmetry(power)
-
-    @pydantic.model_validator(mode="after")  # type: ignore[arg-type]
-    def _validate_total(cls, controller: ControlPConst) -> PowerBase:
-        power = PowerBase(
-            value=controller.value,
-            value_a=controller.value_a,
-            value_b=controller.value_b,
-            value_c=controller.value_c,
-            is_symmetrical=controller.is_symmetrical,
-        )
-        return validate_total(power)
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = PControlStrategy.P_CONST.value
+        return values
 
 
 class ControlPF(Base):
     # P(f) characteristic control mode
-    droop_over_freq: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Droop/Slope of power infeed reduction if freqeuncy is above f_deadband_up: '%/Hz'
-    droop_under_freq: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Droop/Slope of power infeed increase if freqeuncy is below f_deadband_low: '%/Hz'
-    f_p0: float = pydantic.Field(..., ge=0)  # Nominal freqeuncy value: absolut value in Hz
-    f_deadband_up: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of upper deadband (f_up - f_P0): absolut value in Hz
-    f_deadband_low: float = pydantic.Field(
-        ...,
-        ge=0,
-    )  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
+    droop_up: Droop  # Droop/Slope of power infeed reduction if frequency is above f_deadband_up: '%/Hz'
+    droop_low: Droop  # Droop/Slope of power infeed increase if frequency is below f_deadband_low: '%/Hz'
+    f_p0: Frequency  # Nominal frequency value: absolut value in Hz
+    f_deadband_up: Frequency  # Width of upper deadband (f_up - f_P0): absolut value in Hz
+    f_deadband_low: Frequency  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
 
     control_strategy: PControlStrategy = PControlStrategy.P_F
+
+    @pydantic.model_validator(mode="before")
+    def set_control_strategy(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
+        values["control_strategy"] = PControlStrategy.P_F.value
+        return values
 
 
 QControlType = (
     ControlQConst
     | ControlUConst
-    | ControlTanphiConst
-    | ControlCosphiConst
-    | ControlCosphiP
-    | ControlCosphiU
+    | ControlTanPhiConst
+    | ControlCosPhiConst
+    | ControlCosPhiP
+    | ControlCosPhiU
     | ControlQU
     | ControlQP
 )
