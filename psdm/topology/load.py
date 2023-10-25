@@ -228,14 +228,14 @@ class RatedPower(Base):
     cos_phi: PowerFactor
 
     @model_validator_after
-    def validate_length(cls, rated_power: RatedPower) -> RatedPower:
+    def validate_length(self) -> RatedPower:
         if (
-            rated_power.apparent_power.n_phases
-            == rated_power.active_power.n_phases
-            == rated_power.reactive_power.n_phases
-            == rated_power.cos_phi.n_phases
+            self.apparent_power.n_phases
+            == self.active_power.n_phases
+            == self.reactive_power.n_phases
+            == self.cos_phi.n_phases
         ):
-            return rated_power
+            return self
 
         msg = "Length mismatch."
         raise ValueError(msg)
@@ -308,9 +308,9 @@ class Load(Base):  # including assets of type load and generator
     description: str | None = None
 
     @model_validator_after
-    def validate_length(cls, load: Load) -> Load:
-        if load.rated_power.n_phases == load.phase_connections.n_phases:
-            return load
+    def validate_length(self) -> Load:
+        if self.rated_power.n_phases == self.phase_connections.n_phases:
+            return self
 
         msg = "Length mismatch."
         raise ValueError(msg)
