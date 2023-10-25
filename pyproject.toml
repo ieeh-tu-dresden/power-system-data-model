@@ -86,9 +86,9 @@
 [tool.ruff.pep8-naming]
   classmethod-decorators = [
     "classmethod",
-    "pydantic.field_validator",
     "psdm.base.model_validator_after",
     "psdm.base.model_validator_before",
+    "pydantic.field_validator",
   ]
 
 [tool.black]
