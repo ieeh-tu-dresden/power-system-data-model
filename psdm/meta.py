@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import enum
 import typing as t
 import uuid
@@ -46,7 +46,8 @@ class Meta(Base):
 
         return data
 
-    date: datetime.date
+    date: dt.date
+
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)  # noqa: A003
     sign_convention: SignConvention | None = None
     project: str | None = None
