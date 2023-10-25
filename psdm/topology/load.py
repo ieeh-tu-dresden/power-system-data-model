@@ -115,7 +115,7 @@ class Frequency(Base):
 class MultiPhaseQuantity(Base):
     """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
 
-    values: UniqueTuple[float]  # values (starting at phase a)
+    values: tuple[float, ...]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -132,7 +132,7 @@ class MultiPhaseQuantity(Base):
 
 
 class Voltage(MultiPhaseQuantity):
-    values: UniqueTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: tuple[pydantic.confloat(ge=0), ...]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -141,8 +141,6 @@ class Voltage(MultiPhaseQuantity):
 
 
 class Current(MultiPhaseQuantity):
-    values: UniqueTuple[float]  # values (starting at phase a)
-
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
@@ -150,7 +148,7 @@ class Current(MultiPhaseQuantity):
 
 
 class Angle(MultiPhaseQuantity):
-    values: UniqueTuple[float]  # values (starting at phase a)
+    values: tuple[pydantic.confloat(ge=0, le=360), ...]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -159,8 +157,6 @@ class Angle(MultiPhaseQuantity):
 
 
 class Droop(MultiPhaseQuantity):
-    values: UniqueTuple[float]  # values (starting at phase a)
-
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
@@ -208,7 +204,7 @@ class ReactivePower(Power):
 
 
 class PowerFactor(MultiPhaseQuantity):
-    values: UniqueTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
+    values: tuple[pydantic.confloat(ge=0, le=1), ...]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
     @pydantic.computed_field  # type: ignore[misc]
