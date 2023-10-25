@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-import collections.abc as cabc
 import enum
 import itertools
 import math
@@ -14,6 +13,7 @@ import typing as t
 import pydantic
 
 from psdm.base import Base
+from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
 from psdm.topology.load_model import LoadModel
 
@@ -115,7 +115,7 @@ class Frequency(Base):
 class MultiPhaseQuantity(Base):
     """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
 
-    values: cabc.Sequence[float]  # values (starting at phase a)
+    values: UniqueTuple[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -132,7 +132,7 @@ class MultiPhaseQuantity(Base):
 
 
 class Voltage(MultiPhaseQuantity):
-    values: cabc.Sequence[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: UniqueTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -141,7 +141,7 @@ class Voltage(MultiPhaseQuantity):
 
 
 class Current(MultiPhaseQuantity):
-    values: cabc.Sequence[float]  # values (starting at phase a)
+    values: UniqueTuple[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -150,7 +150,7 @@ class Current(MultiPhaseQuantity):
 
 
 class Angle(MultiPhaseQuantity):
-    values: cabc.Sequence[float]  # values (starting at phase a)
+    values: UniqueTuple[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -159,7 +159,7 @@ class Angle(MultiPhaseQuantity):
 
 
 class Droop(MultiPhaseQuantity):
-    values: cabc.Sequence[float]  # values (starting at phase a)
+    values: UniqueTuple[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -208,7 +208,7 @@ class ReactivePower(Power):
 
 
 class PowerFactor(MultiPhaseQuantity):
-    values: cabc.Sequence[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
+    values: UniqueTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
     @pydantic.computed_field  # type: ignore[misc]
@@ -283,7 +283,7 @@ class RatedPower(Base):
 
 
 class PhaseConnections(Base):
-    values: cabc.Sequence[PhaseConnection]
+    values: UniqueTuple[PhaseConnection]
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
