@@ -9,7 +9,6 @@ import enum
 import itertools
 import math
 import typing as t
-from ast import TypeVarTuple
 
 import pydantic
 
