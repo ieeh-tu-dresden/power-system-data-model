@@ -9,6 +9,7 @@ import enum
 import itertools
 import math
 import typing as t
+from ast import TypeVarTuple
 
 import pydantic
 
@@ -101,6 +102,8 @@ class PowerFactorDirection(enum.Enum):
 
 
 PhaseConnection = tuple[Phase, Phase] | None
+T = t.TypeVar("T")
+NonEmptyTuple = t.Annotated[tuple[T, ...], pydantic.annotated_types.Len(1, 2**126)]
 
 
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
@@ -117,7 +120,7 @@ class Frequency(Base):
 class MultiPhaseQuantity(Base):
     """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
 
-    values: tuple[float, ...]  # values (starting at phase a)
+    values: NonEmptyTuple[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -134,7 +137,7 @@ class MultiPhaseQuantity(Base):
 
 
 class Voltage(MultiPhaseQuantity):
-    values: tuple[pydantic.confloat(ge=0), ...]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -150,7 +153,7 @@ class Current(MultiPhaseQuantity):
 
 
 class Angle(MultiPhaseQuantity):
-    values: tuple[pydantic.confloat(ge=0, le=360), ...]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: NonEmptyTuple[pydantic.confloat(ge=0, le=360)]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -206,7 +209,7 @@ class ReactivePower(Power):
 
 
 class PowerFactor(MultiPhaseQuantity):
-    values: tuple[pydantic.confloat(ge=0, le=1), ...]  # type: ignore[valid-type] # values (starting at phase a)
+    values: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
     @pydantic.computed_field  # type: ignore[misc]
