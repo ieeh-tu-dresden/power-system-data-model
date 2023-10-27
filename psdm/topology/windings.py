@@ -7,6 +7,10 @@ from __future__ import annotations
 import enum
 
 from psdm.base import Base
+from psdm.topology.load import ApparentPower
+from psdm.topology.load import PhaseAngleClock
+from psdm.topology.load import Resistance
+from psdm.topology.load import Voltage
 
 
 class VectorGroup(enum.Enum):
@@ -25,15 +29,15 @@ class Winding(Base):
     """
 
     node: str
-    s_r: float
-    u_n: float  # Nominal Voltage of connected nodes (CIM: BaseVoltage)
-    u_r: float  # Rated Voltage of the transformer windings itself (CIM: ratedU)
-    r1: float  # positive sequence values of transformer T-representation
-    x1: float
-    r0: float | None = None  # zero sequence values of transformer T-representation
-    x0: float | None = None
-    re: float | None = None  # earthing of neutral point
-    xe: float | None = None  # earthing of neutral point
-    phase_angle_clock: int | None = None
+    s_r: ApparentPower
+    u_n: Voltage  # Nominal Voltage of connected nodes (CIM: BaseVoltage)
+    u_r: Voltage  # Rated Voltage of the transformer windings itself (CIM: ratedU)
+    r1: Resistance  # positive sequence values of transformer T-representation
+    x1: Resistance
+    r0: Resistance | None = None  # zero sequence values of transformer T-representation
+    x0: Resistance | None = None
+    re: Resistance | None = None  # earthing of neutral point
+    xe: Resistance | None = None  # earthing of neutral point
+    phase_angle_clock: PhaseAngleClock | None = None
     vector_group: VectorGroup | None = None
     neutral_connected: bool = False  # indicates if neutral line is connected to winding object

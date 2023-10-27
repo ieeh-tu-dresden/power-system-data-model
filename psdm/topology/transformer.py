@@ -9,6 +9,8 @@ import enum
 
 from psdm.base import Base
 from psdm.base import UniqueTuple
+from psdm.topology.load import ActivePower
+from psdm.topology.load import Current
 from psdm.topology.windings import Winding
 
 
@@ -74,10 +76,10 @@ class Transformer(Base):
     name: str
     number: int  # number of parallel units
     vector_group: VectorGroup  # specifier for connection of wiring e.g. DYn5
-    i_0: float  # no-load current in %
-    p_fe: float  # no-load losses (Iron losses)
-    i_00: float | None = None  # zero sequence values of PI-representation
-    p_fe0: float | None = None  # zero sequence values of PI-representation
+    i_0: Current  # no-load current in %
+    p_fe: ActivePower  # no-load losses (Iron losses)
+    i_00: Current | None = None  # zero sequence values of PI-representation
+    p_fe0: ActivePower | None = None  # zero sequence values of PI-representation
     windings: UniqueTuple[Winding]  # winding object for each voltage level
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None

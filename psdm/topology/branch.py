@@ -8,6 +8,11 @@ from enum import Enum
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
+from psdm.topology.load import Admittance
+from psdm.topology.load import Current
+from psdm.topology.load import Frequency
+from psdm.topology.load import Resistance
+from psdm.topology.load import Voltage
 
 
 class BranchType(Enum):
@@ -25,27 +30,27 @@ class Branch(Base):
     node_1: str
     node_2: str
     name: str
-    u_n: float  # nominal voltage of the branch connected nodes
-    i_r: float | None  # rated current of branch (thermal limit in continuous operation)
-    r1: float  # positive sequence values of PI-representation
-    x1: float  # positive sequence values of PI-representation
-    g1: float  # positive sequence values of PI-representation
-    b1: float  # positive sequence values of PI-representation
+    u_n: Voltage  # nominal voltage of the branch connected nodes
+    i_r: Current | None  # rated current of branch (thermal limit in continuous operation)
+    r1: Resistance  # positive sequence values of PI-representation
+    x1: Resistance  # positive sequence values of PI-representation
+    g1: Admittance  # positive sequence values of PI-representation
+    b1: Admittance  # positive sequence values of PI-representation
     type: BranchType  # noqa: A003
     voltage_system_type: VoltageSystemType
-    r0: float | None = None  # zero sequence values of PI-representation
-    x0: float | None = None  # zero sequence values of PI-representation
-    g0: float | None = None  # zero sequence values of PI-representation
-    b0: float | None = None  # zero sequence values of PI-representation
-    f_n: float | None = None  # nominal frequency the values x and b apply
+    r0: Resistance | None = None  # zero sequence values of PI-representation
+    x0: Resistance | None = None  # zero sequence values of PI-representation
+    g0: Admittance | None = None  # zero sequence values of PI-representation
+    b0: Admittance | None = None  # zero sequence values of PI-representation
+    f_n: Frequency | None = None  # nominal frequency the values x and b apply
     description: str | None = None
     energized: bool | None = None
     length: float | None = None  # length of the line the impedance and admittance values apply
-    rn: float | None = None  # neutral natural values
-    xn: float | None = None  # neutral natural values
-    gn: float | None = None  # neutral natural values
-    bn: float | None = None  # neutral natural values
-    rpn: float | None = None  # neutral-line couple values
-    xpn: float | None = None  # neutral-line couple values
-    gpn: float | None = None  # neutral-line couple values
-    bpn: float | None = None  # neutral-line couple values
+    rn: Resistance | None = None  # neutral natural values
+    xn: Resistance | None = None  # neutral natural values
+    gn: Admittance | None = None  # neutral natural values
+    bn: Admittance | None = None  # neutral natural values
+    rpn: Resistance | None = None  # neutral-line couple values
+    xpn: Resistance | None = None  # neutral-line couple values
+    gpn: Admittance | None = None  # neutral-line couple values
+    bpn: Admittance | None = None  # neutral-line couple values

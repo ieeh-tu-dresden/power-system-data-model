@@ -111,7 +111,24 @@ def find_decimals(value: float) -> int:
 
 
 class Frequency(Base):
-    value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
+    value: float = pydantic.Field(..., ge=0)  # frequency
+
+
+class Resistance(Base):
+    value: float = pydantic.Field(..., ge=0)  # resistance
+
+
+class Admittance(Base):
+    value: float = pydantic.Field(..., ge=0)  # admittance
+
+
+class PhaseAngleClock(Base):
+    value: int = pydantic.Field(..., ge=0, le=12)  # admittance
+
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def angle(self) -> float:
+        return self.value * 30.0
 
 
 class MultiPhaseQuantity(Base):
@@ -171,6 +188,8 @@ class Power(MultiPhaseQuantity):
     It comes with the computed property "total" that is the total power of all phases.
     This value should be used for symmetrical calculations.
     """
+
+    power_type: PowerType
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
