@@ -13,6 +13,7 @@ import typing as t
 import pydantic
 
 from psdm.base import Base
+from psdm.base import NonEmptyTuple
 from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
 from psdm.base import model_validator_after
@@ -101,8 +102,6 @@ class PowerFactorDirection(enum.Enum):
 
 
 PhaseConnection = tuple[Phase, Phase] | None
-T = t.TypeVar("T")
-NonEmptyTuple = t.Annotated[tuple[T, ...], pydantic.annotated_types.Len(1, 2**126)]
 
 
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)

@@ -10,6 +10,7 @@ import pathlib
 import typing as t
 import warnings
 
+import annotated_types
 import pydantic
 from pydantic_core import PydanticCustomError
 
@@ -35,6 +36,7 @@ UniqueTuple = t.Annotated[
     pydantic.AfterValidator(_validate_unique_list),
     pydantic.Field(json_schema_extra={"uniqueItems": True}),
 ]
+NonEmptyTuple = t.Annotated[tuple[T, ...], annotated_types.Len(1, 2**126)]
 
 
 class Base(pydantic.BaseModel):
