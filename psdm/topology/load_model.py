@@ -9,6 +9,8 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import model_validator_after
+from psdm.quantities import Power
+from psdm.quantities import Voltage
 
 
 class LoadModel(Base):
@@ -18,7 +20,7 @@ class LoadModel(Base):
     c_z = 1 - c_p - c_i
     """
 
-    u_0: float
+    u_0: Voltage
     name: str | None = None
     c_p: pydantic.confloat(ge=0, le=1) = 1.0  # type: ignore[valid-type]
     c_i: pydantic.confloat(ge=0, le=1) = 0.0  # type: ignore[valid-type]
@@ -42,9 +44,14 @@ class LoadModel(Base):
     def c_z(self) -> float:
         return 1 - self.c_p - self.c_i
 
-    def calc_power(self, u: float, power: float) -> float:
-        return power * (
-            self.c_p * (u / self.u_0) ** self.exp_p
-            + self.c_i * (u / self.u_0) ** self.exp_i
-            + self.c_z * (u / self.u_0) ** self.exp_z
+    def calc_power(self, u: Voltage, power: Power) -> Power:
+        values = tuple(
+            p
+            * (
+                self.c_p * (_u / self.u_0) ** self.exp_p
+                + self.c_i * (_u / self.u_0) ** self.exp_i
+                + self.c_z * (_u / self.u_0) ** self.exp_z
+            )
+            for p, _u in zip(power.values, u.values, strict=True)
         )
+        return Power(power_type=power.power_type, values=values)

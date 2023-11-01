@@ -6,18 +6,18 @@
 from __future__ import annotations
 
 import enum
-import itertools
 import math
-import typing as t
 
 import pydantic
 
 from psdm.base import Base
-from psdm.base import NonEmptyTuple
-from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
 from psdm.base import model_validator_after
-from psdm.base import model_validator_before
+from psdm.quantities import ActivePower
+from psdm.quantities import ApparentPower
+from psdm.quantities import PhaseConnections
+from psdm.quantities import PowerFactor
+from psdm.quantities import ReactivePower
 from psdm.topology.load_model import LoadModel
 
 
@@ -76,144 +76,11 @@ class PhaseConnectionType(enum.Enum):
     TWO_PH_YN = "TWO_PH_YN"
 
 
-class Phase(enum.Enum):
-    A = "A"
-    B = "B"
-    C = "C"
-    N = "N"
-
-
-class PowerType(enum.Enum):
-    AC_ACTIVE = "AC_ACTIVE"
-    AC_APPARENT = "AC_APPARENT"
-    AC_REACTIVE = "AC_REACTIVE"
-    CURRENT = "CURRENT"
-    DC = "DC"
-    GAS = "GAS"
-    IMPEDANCE = "IMPEDANCE"
-    MECHANICAL = "MECHANICAL"
-    THERMAL = "THERMAL"
-
-
-class PowerFactorDirection(enum.Enum):
-    UE = "UE"
-    OE = "OE"
-    ND = "ND"
-
-
-PhaseConnection = tuple[Phase, Phase] | None
-
-
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
 def find_decimals(value: float) -> int:
     return len(str(value).split(".")[1])
-
-
-class Frequency(Base):
-    value: float = pydantic.Field(..., ge=0)  # voltage (three-phase)
-
-
-class MultiPhaseQuantity(Base):
-    """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
-
-    values: NonEmptyTuple[float]  # values (starting at phase a)
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def is_symmetrical(self) -> bool:
-        return len(list(itertools.groupby(self.values))) in (0, 1)
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def n_phases(self) -> int:
-        return len(self.values)
-
-    def __len__(self) -> int:
-        return self.n_phases
-
-
-class Voltage(MultiPhaseQuantity):
-    values: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
-
-
-class Current(MultiPhaseQuantity):
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
-
-
-class Angle(MultiPhaseQuantity):
-    values: NonEmptyTuple[pydantic.confloat(ge=0, le=360)]  # type: ignore[valid-type]  # values (starting at phase a)
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
-
-
-class Droop(MultiPhaseQuantity):
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
-
-
-class Power(MultiPhaseQuantity):
-    """Base class for power quantities.
-
-    It comes with the computed property "total" that is the total power of all phases.
-    This value should be used for symmetrical calculations.
-    """
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def total(self) -> float:
-        return round(sum(self.values), find_decimals(self.values[0]))
-
-
-class ActivePower(Power):
-    power_type: PowerType = PowerType.AC_ACTIVE
-
-    @model_validator_before
-    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
-        values["power_type"] = PowerType.AC_ACTIVE.value
-        return values
-
-
-class ApparentPower(Power):
-    power_type: PowerType = PowerType.AC_APPARENT
-
-    @model_validator_before
-    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
-        values["power_type"] = PowerType.AC_APPARENT.value
-        return values
-
-
-class ReactivePower(Power):
-    power_type: PowerType = PowerType.AC_REACTIVE
-
-    @model_validator_before
-    def set_power_type(cls, values: dict[str, t.Any]) -> dict[str, t.Any]:
-        values["power_type"] = PowerType.AC_REACTIVE.value
-        return values
-
-
-class PowerFactor(MultiPhaseQuantity):
-    values: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
-    direction: PowerFactorDirection = PowerFactorDirection.ND
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
 
 
 class RatedPower(Base):
@@ -282,15 +149,6 @@ class RatedPower(Base):
 
     def __len__(self) -> int:
         return self.n_phases
-
-
-class PhaseConnections(Base):
-    values: UniqueTuple[PhaseConnection]
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def n_phases(self) -> int:
-        return len(self.values)
 
 
 class Load(Base):  # including assets of type load and generator

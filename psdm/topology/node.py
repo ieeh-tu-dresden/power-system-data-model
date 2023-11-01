@@ -3,11 +3,12 @@
 # :license: BSD 3-Clause
 
 from psdm.base import Base
+from psdm.quantities import Voltage
 
 
 class Node(Base):
     """This class represents a terminal within the grid."""
 
     name: str
-    u_n: float
+    u_n: Voltage
     description: str | None = None

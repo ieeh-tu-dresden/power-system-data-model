@@ -6,10 +6,10 @@
 from __future__ import annotations
 
 from psdm.base import Base
-from psdm.topology.load import ActivePower
-from psdm.topology.load import Angle
-from psdm.topology.load import ReactivePower
-from psdm.topology.load import Voltage
+from psdm.quantities import ActivePower
+from psdm.quantities import Angle
+from psdm.quantities import ReactivePower
+from psdm.quantities import Voltage
 
 
 class ExternalGrid(Base):
