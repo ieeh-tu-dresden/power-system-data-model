@@ -114,7 +114,7 @@ class Frequency(Base):
     value: float = pydantic.Field(..., ge=0)  # frequency
 
 
-class Resistance(Base):
+class Impedance(Base):
     value: float = pydantic.Field(..., ge=0)  # resistance
 
 
