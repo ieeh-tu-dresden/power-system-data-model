@@ -65,17 +65,6 @@ class SystemType(enum.Enum):
     WIND = "WIND"
 
 
-class PhaseConnectionType(enum.Enum):
-    ONE_PH_PH_E = "ONE_PH_PH_E"
-    ONE_PH_PH_N = "ONE_PH_PH_N"
-    ONE_PH_PH_PH = "ONE_PH_PH_PH"
-    THREE_PH_D = "THREE_PH_D"
-    THREE_PH_PH_E = "THREE_PH_PH_E"
-    THREE_PH_YN = "THREE_PH_YN"
-    TWO_PH_PH_E = "TWO_PH_PH_E"
-    TWO_PH_YN = "TWO_PH_YN"
-
-
 THRESHOLD = 0.51  # acceptable rounding error (0.5 W) + epsilon for calculation accuracy (0.01 W)
 
 
@@ -163,7 +152,6 @@ class Load(Base):  # including assets of type load and generator
     active_power_model: LoadModel
     reactive_power_model: LoadModel
     phase_connections: PhaseConnections
-    phase_connection_type: PhaseConnectionType
     type: LoadType  # noqa: A003
     system_type: SystemType
     voltage_system_type: VoltageSystemType
