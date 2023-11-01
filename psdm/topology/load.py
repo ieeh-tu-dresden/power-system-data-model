@@ -13,6 +13,7 @@ import typing as t
 import pydantic
 
 from psdm.base import Base
+from psdm.base import NonEmptyTuple
 from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
 from psdm.base import model_validator_after
@@ -117,7 +118,7 @@ class Frequency(Base):
 class MultiPhaseQuantity(Base):
     """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
 
-    values: tuple[float, ...]  # values (starting at phase a)
+    values: NonEmptyTuple[float]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -134,7 +135,7 @@ class MultiPhaseQuantity(Base):
 
 
 class Voltage(MultiPhaseQuantity):
-    values: tuple[pydantic.confloat(ge=0), ...]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -150,7 +151,7 @@ class Current(MultiPhaseQuantity):
 
 
 class Angle(MultiPhaseQuantity):
-    values: tuple[pydantic.confloat(ge=0, le=360), ...]  # type: ignore[valid-type]  # values (starting at phase a)
+    values: NonEmptyTuple[pydantic.confloat(ge=0, le=360)]  # type: ignore[valid-type]  # values (starting at phase a)
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -206,7 +207,7 @@ class ReactivePower(Power):
 
 
 class PowerFactor(MultiPhaseQuantity):
-    values: tuple[pydantic.confloat(ge=0, le=1), ...]  # type: ignore[valid-type] # values (starting at phase a)
+    values: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type] # values (starting at phase a)
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
     @pydantic.computed_field  # type: ignore[misc]
@@ -248,10 +249,13 @@ class RatedPower(Base):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def cos_phi_total(self) -> float:
-        return round(
-            sum(self.active_power.values) / sum(self.apparent_power.values),
-            find_decimals(self.cos_phi.values[0]),  # noqa: PD011
-        )
+        try:
+            return round(
+                sum(self.active_power.values) / sum(self.apparent_power.values),
+                find_decimals(self.cos_phi.values[0]),  # noqa: PD011
+            )
+        except ZeroDivisionError:
+            return float("nan")
 
     @classmethod
     def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: PowerFactor) -> RatedPower:
