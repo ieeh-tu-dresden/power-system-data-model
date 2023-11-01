@@ -47,13 +47,13 @@ PhaseConnection = tuple[Phase, Phase] | None
 
 
 def find_decimals(value: float) -> int:
+    if math.isnan(value):
+        return 0
+
     return len(str(value).split(".")[1])
 
 
 def round_avg(qty: MultiPhaseQuantity) -> float:
-    if any(math.isnan(e) for e in qty.values):  # noqa: PD011
-        return float("nan")
-
     return round(sum(qty.values) / qty.n_phases, find_decimals(qty.values[0]))  # noqa: PD011
 
 
@@ -141,7 +141,7 @@ class Power(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return round(sum(self.values), find_decimals(self.values[0]))
+        return sum(self.values)
 
 
 class ActivePower(Power):
