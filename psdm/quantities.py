@@ -142,7 +142,7 @@ class Power(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return sum(self.values)
+        return round(sum(self.values), find_decimals(self.values[0]))
 
 
 class ActivePower(Power):
