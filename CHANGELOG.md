@@ -1,3 +1,9 @@
+## 2.0.1 (2023-11-01)
+
+### Fix
+
+- release pipeline
+
 ## 2.0.0 (2023-11-01)
 
 ### BREAKING CHANGE
