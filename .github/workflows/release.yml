@@ -70,7 +70,7 @@ jobs:
         run: pdm install
 
       - name: Install graphviz
-        run: apt-get install -y graphviz graphviz-dev
+        run: sudo apt-get install -y graphviz graphviz-dev
 
       - name: Install erdantic
         run: pdm add erdantic
@@ -95,7 +95,7 @@ jobs:
             erd.create(SteadystateCase).draw(f_ssc)
 
       - name: Copy diagrams to docs
-        run: yes | cp -rf./schema/${{ steps.cz.outputs.version }}/*.png ./docs/
+        run: yes | cp -rf ./schema/${{ steps.cz.outputs.version }}/*.png ./docs/
 
       - name: Stage schema diagram files
         run: git add ./docs
