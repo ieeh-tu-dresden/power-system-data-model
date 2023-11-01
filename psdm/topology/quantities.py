@@ -50,6 +50,13 @@ def find_decimals(value: float) -> int:
     return len(str(value).split(".")[1])
 
 
+def round_avg(qty: MultiPhaseQuantity) -> float:
+    if any(math.isnan(e) for e in qty.values):  # noqa: PD011
+        return float("nan")
+
+    return round(sum(qty.values) / qty.n_phases, find_decimals(qty.values[0]))  # noqa: PD011
+
+
 class Frequency(Base):
     value: float = pydantic.Field(..., ge=0)  # frequency
 
@@ -96,14 +103,14 @@ class Voltage(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Current(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Angle(MultiPhaseQuantity):
@@ -112,14 +119,14 @@ class Angle(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Droop(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Power(MultiPhaseQuantity):
@@ -134,7 +141,7 @@ class Power(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return round(sum(self.values), find_decimals(self.values[0]))
+        return sum(self.values)
 
 
 class ActivePower(Power):
@@ -171,7 +178,7 @@ class PowerFactor(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class RatedPower(Base):
