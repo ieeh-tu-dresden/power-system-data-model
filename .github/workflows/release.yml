@@ -124,6 +124,9 @@ jobs:
       - name: Stage schema JSON files
         run: git add ./schema
 
+      - name: Delete unstages changes
+        run: git restore .
+
       - name: Get current date
         id: get_date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT

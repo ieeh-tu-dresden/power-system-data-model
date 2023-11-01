@@ -6,11 +6,7 @@
     { name = "Laura Fiedler", email = "laura.fiedler1@tu-dresden.de" },
     { name = "Maximilian Schmidt", email = "maximilian.schmidt@tu-dresden.de" },
   ]
-  dependencies = [
-      "loguru",
-      "pydantic>=2.0",
-      "erdantic>=0.6.0",
-  ]
+  dependencies = ["loguru", "pydantic>=2.0"]
   description = "A data model for describing power systems"
   license = { file = "LICENSE" }
   name = "ieeh-power-system-data-model"
@@ -22,8 +18,8 @@
     Source = "https://github.com/ieeh-tu-dresden/power-system-data-model"
 
 [build-system]
-  build-backend = "pdm.pep517.api"
-  requires      = ["pdm-pep517"]
+  build-backend = "pdm.backend"
+  requires      = ["pdm-backend"]
 
 [tool]
 
