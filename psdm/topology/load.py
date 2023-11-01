@@ -249,10 +249,13 @@ class RatedPower(Base):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def cos_phi_total(self) -> float:
-        return round(
-            sum(self.active_power.values) / sum(self.apparent_power.values),
-            find_decimals(self.cos_phi.values[0]),  # noqa: PD011
-        )
+        try:
+            return round(
+                sum(self.active_power.values) / sum(self.apparent_power.values),
+                find_decimals(self.cos_phi.values[0]),  # noqa: PD011
+            )
+        except ZeroDivisionError:
+            return float("nan")
 
     @classmethod
     def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: PowerFactor) -> RatedPower:
