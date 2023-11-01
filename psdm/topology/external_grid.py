@@ -7,6 +7,7 @@ from __future__ import annotations
 from enum import Enum
 
 from psdm.base import Base
+from psdm.quantities import PhaseConnections
 from psdm.quantities import Power
 
 
@@ -22,9 +23,10 @@ class ExternalGrid(Base):
     It is characterized by a grid type (slack, P-V-node, P-Q-node).
     """
 
-    name: str
     description: str | None
+    name: str
     node: str
-    type: GridType  # noqa: A003
+    phase_connections: PhaseConnections
     short_circuit_power_max: Power
     short_circuit_power_min: Power
+    type: GridType  # noqa: A003
