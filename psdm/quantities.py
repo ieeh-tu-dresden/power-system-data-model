@@ -22,6 +22,13 @@ class Phase(enum.Enum):
     B = "B"
     C = "C"
     N = "N"
+    E = "E"
+    U = "U"
+    V = "V"
+    W = "W"
+    X = "X"
+    Y = "Y"
+    Z = "Z"
 
 
 class PowerType(enum.Enum):
