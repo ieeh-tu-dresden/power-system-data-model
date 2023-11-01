@@ -1,3 +1,20 @@
+## 2.0.0 (2023-11-01)
+
+### BREAKING CHANGE
+
+- remove `meta.name` (contributors: @sasanjac)
+- remove `phase_connection_type` (contributors: @sasanjac)
+- add phase connections to external grid (contributors: @sasanjac)
+
+### Feat
+
+-  add earth and additional phase options (contributors: @sasanjac, @SebastianDD)
+
+### Fix
+
+- use n-phase quantities consistently (contributors: @sasanjac, @SebastianDD)
+- disallow empty sequences for quantity values (contributors: @sasanjac)
+
 ## 1.9.0 (2023-10-25)
 
 ### Feat

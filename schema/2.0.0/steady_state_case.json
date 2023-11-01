@@ -1,0 +1,892 @@
+{
+  "$defs": {
+    "Angle": {
+      "properties": {
+        "values": {
+          "items": {
+            "maximum": 360.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "maxLength": 85070591730234615865843651857942052864,
+          "minLength": 1,
+          "title": "Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "Angle",
+      "type": "object"
+    },
+    "Characteristic": {
+      "description": "This class represents a data point based characteristic of power injection for a load.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "data": {
+          "anyOf": [
+            {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Characteristic",
+      "type": "object"
+    },
+    "ControlCosPhiConst": {
+      "properties": {
+        "cos_phi_set": {
+          "$ref": "#/$defs/PowerFactor"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "COSPHI_CONST"
+        }
+      },
+      "required": [
+        "cos_phi_set"
+      ],
+      "title": "ControlCosPhiConst",
+      "type": "object"
+    },
+    "ControlCosPhiP": {
+      "properties": {
+        "cos_phi_ue": {
+          "$ref": "#/$defs/PowerFactor"
+        },
+        "cos_phi_oe": {
+          "$ref": "#/$defs/PowerFactor"
+        },
+        "p_threshold_ue": {
+          "$ref": "#/$defs/psdm__quantities__ActivePower"
+        },
+        "p_threshold_oe": {
+          "$ref": "#/$defs/psdm__quantities__ActivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "COSPHI_P"
+        }
+      },
+      "required": [
+        "cos_phi_ue",
+        "cos_phi_oe",
+        "p_threshold_ue",
+        "p_threshold_oe"
+      ],
+      "title": "ControlCosPhiP",
+      "type": "object"
+    },
+    "ControlCosPhiU": {
+      "properties": {
+        "cos_phi_ue": {
+          "$ref": "#/$defs/PowerFactor"
+        },
+        "cos_phi_oe": {
+          "$ref": "#/$defs/PowerFactor"
+        },
+        "u_threshold_ue": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_threshold_oe": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "node_ref_u": {
+          "title": "Node Ref U",
+          "type": "string"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "COSPHI_U"
+        }
+      },
+      "required": [
+        "cos_phi_ue",
+        "cos_phi_oe",
+        "u_threshold_ue",
+        "u_threshold_oe",
+        "node_ref_u"
+      ],
+      "title": "ControlCosPhiU",
+      "type": "object"
+    },
+    "ControlPConst": {
+      "properties": {
+        "p_set": {
+          "$ref": "#/$defs/psdm__quantities__ActivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PControlStrategy"
+            }
+          ],
+          "default": "P_CONST"
+        }
+      },
+      "required": [
+        "p_set"
+      ],
+      "title": "ControlPConst",
+      "type": "object"
+    },
+    "ControlPF": {
+      "properties": {
+        "droop_up": {
+          "$ref": "#/$defs/Droop"
+        },
+        "droop_low": {
+          "$ref": "#/$defs/Droop"
+        },
+        "f_p0": {
+          "$ref": "#/$defs/Frequency"
+        },
+        "f_deadband_up": {
+          "$ref": "#/$defs/Frequency"
+        },
+        "f_deadband_low": {
+          "$ref": "#/$defs/Frequency"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PControlStrategy"
+            }
+          ],
+          "default": "P_F"
+        }
+      },
+      "required": [
+        "droop_up",
+        "droop_low",
+        "f_p0",
+        "f_deadband_up",
+        "f_deadband_low"
+      ],
+      "title": "ControlPF",
+      "type": "object"
+    },
+    "ControlQConst": {
+      "properties": {
+        "q_set": {
+          "$ref": "#/$defs/psdm__quantities__ReactivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "Q_CONST"
+        }
+      },
+      "required": [
+        "q_set"
+      ],
+      "title": "ControlQConst",
+      "type": "object"
+    },
+    "ControlQP": {
+      "properties": {
+        "q_p_characteristic": {
+          "$ref": "#/$defs/Characteristic"
+        },
+        "q_max_ue": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__ReactivePower"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "q_max_oe": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__ReactivePower"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "Q_P"
+        }
+      },
+      "required": [
+        "q_p_characteristic",
+        "q_max_ue",
+        "q_max_oe"
+      ],
+      "title": "ControlQP",
+      "type": "object"
+    },
+    "ControlQU": {
+      "properties": {
+        "droop_up": {
+          "$ref": "#/$defs/Droop"
+        },
+        "droop_low": {
+          "$ref": "#/$defs/Droop"
+        },
+        "u_q0": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_deadband_up": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_deadband_low": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "q_max_ue": {
+          "$ref": "#/$defs/psdm__quantities__ReactivePower"
+        },
+        "q_max_oe": {
+          "$ref": "#/$defs/psdm__quantities__ReactivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "Q_U"
+        }
+      },
+      "required": [
+        "droop_up",
+        "droop_low",
+        "u_q0",
+        "u_deadband_up",
+        "u_deadband_low",
+        "q_max_ue",
+        "q_max_oe"
+      ],
+      "title": "ControlQU",
+      "type": "object"
+    },
+    "ControlTanPhiConst": {
+      "properties": {
+        "tan_phi_set": {
+          "$ref": "#/$defs/PowerFactor"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "TANPHI_CONST"
+        }
+      },
+      "required": [
+        "tan_phi_set"
+      ],
+      "title": "ControlTanPhiConst",
+      "type": "object"
+    },
+    "ControlUConst": {
+      "properties": {
+        "u_set": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_meas_ref": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlledVoltageRef"
+            }
+          ],
+          "default": "POS_SEQ"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "U_CONST"
+        }
+      },
+      "required": [
+        "u_set"
+      ],
+      "title": "ControlUConst",
+      "type": "object"
+    },
+    "ControlledVoltageRef": {
+      "enum": [
+        "A",
+        "AB",
+        "AVG",
+        "B",
+        "BC",
+        "C",
+        "CA",
+        "POS_SEQ"
+      ],
+      "title": "ControlledVoltageRef",
+      "type": "string"
+    },
+    "Droop": {
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "maxLength": 85070591730234615865843651857942052864,
+          "minLength": 1,
+          "title": "Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "Droop",
+      "type": "object"
+    },
+    "ExternalGrid": {
+      "description": "This class represents the operating point of an external grid or a grid subsitute equivalent respectively.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Voltage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phi_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Angle"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "p_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__ActivePower"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "q_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__ReactivePower"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ExternalGrid",
+      "type": "object"
+    },
+    "Frequency": {
+      "properties": {
+        "value": {
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Frequency",
+      "type": "object"
+    },
+    "Load": {
+      "description": "This class represents the operating point of a load.\n\nIt is characterized by the active and reactive power.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "active_power": {
+          "$ref": "#/$defs/psdm__steadystate_case__active_power__ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/$defs/psdm__steadystate_case__reactive_power__ReactivePower"
+        }
+      },
+      "required": [
+        "name",
+        "active_power",
+        "reactive_power"
+      ],
+      "title": "Load",
+      "type": "object"
+    },
+    "Meta": {
+      "description": "This class represents the meta data related to the grid export.",
+      "properties": {
+        "grid": {
+          "title": "Grid",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "sign_convention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignConvention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        }
+      },
+      "required": [
+        "grid",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "PControlStrategy": {
+      "enum": [
+        "ND",
+        "P_CONST",
+        "P_F"
+      ],
+      "title": "PControlStrategy",
+      "type": "string"
+    },
+    "PController": {
+      "description": "This class represents a controller of active power of a load.\n\nIt is characterized by the control type, which comes with different controller parameters.",
+      "properties": {
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "external_controller_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Controller Name"
+        },
+        "control_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlPConst"
+            },
+            {
+              "$ref": "#/$defs/ControlPF"
+            }
+          ],
+          "title": "Control Type"
+        }
+      },
+      "required": [
+        "node_target",
+        "control_type"
+      ],
+      "title": "PController",
+      "type": "object"
+    },
+    "PowerFactor": {
+      "properties": {
+        "values": {
+          "items": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "maxLength": 85070591730234615865843651857942052864,
+          "minLength": 1,
+          "title": "Values",
+          "type": "array"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerFactorDirection"
+            }
+          ],
+          "default": "ND"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "PowerFactor",
+      "type": "object"
+    },
+    "PowerFactorDirection": {
+      "enum": [
+        "UE",
+        "OE",
+        "ND"
+      ],
+      "title": "PowerFactorDirection",
+      "type": "string"
+    },
+    "PowerType": {
+      "enum": [
+        "AC_ACTIVE",
+        "AC_APPARENT",
+        "AC_REACTIVE",
+        "CURRENT",
+        "DC",
+        "GAS",
+        "IMPEDANCE",
+        "MECHANICAL",
+        "THERMAL"
+      ],
+      "title": "PowerType",
+      "type": "string"
+    },
+    "QControlStrategy": {
+      "enum": [
+        "COSPHI_CONST",
+        "COSPHI_P",
+        "COSPHI_U",
+        "ND",
+        "Q_CONST",
+        "Q_P",
+        "Q_U",
+        "TANPHI_CONST",
+        "U_CONST"
+      ],
+      "title": "QControlStrategy",
+      "type": "string"
+    },
+    "QController": {
+      "description": "This class represents a controller of reactive power of a load.\n\nIt is characterized by the control type, which comes with different controller parameters.",
+      "properties": {
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "external_controller_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Controller Name"
+        },
+        "control_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlQConst"
+            },
+            {
+              "$ref": "#/$defs/ControlUConst"
+            },
+            {
+              "$ref": "#/$defs/ControlTanPhiConst"
+            },
+            {
+              "$ref": "#/$defs/ControlCosPhiConst"
+            },
+            {
+              "$ref": "#/$defs/ControlCosPhiP"
+            },
+            {
+              "$ref": "#/$defs/ControlCosPhiU"
+            },
+            {
+              "$ref": "#/$defs/ControlQU"
+            },
+            {
+              "$ref": "#/$defs/ControlQP"
+            }
+          ],
+          "title": "Control Type"
+        }
+      },
+      "required": [
+        "node_target",
+        "control_type"
+      ],
+      "title": "QController",
+      "type": "object"
+    },
+    "SignConvention": {
+      "enum": [
+        "PASSIVE",
+        "ACTIVE"
+      ],
+      "title": "SignConvention",
+      "type": "string"
+    },
+    "Transformer": {
+      "description": "This class represents the operationg point of a transformer.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "tap_pos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Pos"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Transformer",
+      "type": "object"
+    },
+    "Voltage": {
+      "properties": {
+        "values": {
+          "items": {
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "maxLength": 85070591730234615865843651857942052864,
+          "minLength": 1,
+          "title": "Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "Voltage",
+      "type": "object"
+    },
+    "psdm__quantities__ActivePower": {
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "maxLength": 85070591730234615865843651857942052864,
+          "minLength": 1,
+          "title": "Values",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_ACTIVE"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "psdm__quantities__ReactivePower": {
+      "properties": {
+        "values": {
+          "items": {
+            "type": "number"
+          },
+          "maxLength": 85070591730234615865843651857942052864,
+          "minLength": 1,
+          "title": "Values",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_REACTIVE"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    },
+    "psdm__steadystate_case__active_power__ActivePower": {
+      "description": "This class represents the three phase active power operating point of a load.\n\nIt must be characterized by a controller.",
+      "properties": {
+        "controller": {
+          "$ref": "#/$defs/PController"
+        }
+      },
+      "required": [
+        "controller"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "psdm__steadystate_case__reactive_power__ReactivePower": {
+      "description": "This class represents the three phase reactive power operating point of a load.\n\nIt must be characterized by a controller.",
+      "properties": {
+        "controller": {
+          "$ref": "#/$defs/QController"
+        }
+      },
+      "required": [
+        "controller"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    }
+  },
+  "description": "This class represents a steady state case / an operation point of a grid.\n\nIt is characterized by the operating points of all loads, transformers and external grids in operation.",
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/Load"
+      },
+      "title": "Loads",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transformers": {
+      "items": {
+        "$ref": "#/$defs/Transformer"
+      },
+      "title": "Transformers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "external_grids": {
+      "items": {
+        "$ref": "#/$defs/ExternalGrid"
+      },
+      "title": "External Grids",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "title": "Case",
+  "type": "object"
+}
