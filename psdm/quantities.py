@@ -103,14 +103,14 @@ class Voltage(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Current(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Angle(MultiPhaseQuantity):
@@ -119,14 +119,14 @@ class Angle(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Droop(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class Power(MultiPhaseQuantity):
@@ -178,7 +178,7 @@ class PowerFactor(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.values) / self.n_phases, find_decimals(self.values[0]))
+        return round_avg(self)
 
 
 class PhaseConnections(Base):
