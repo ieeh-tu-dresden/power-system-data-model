@@ -66,6 +66,10 @@ class Admittance(Base):
     value: float = pydantic.Field(..., ge=0)  # admittance
 
 
+class Length(Base):
+    value: float = pydantic.Field(..., ge=0)  # length
+
+
 class PhaseAngleClock(Base):
     value: float = pydantic.Field(..., ge=0, lt=12)  # admittance
 

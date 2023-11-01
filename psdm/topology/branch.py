@@ -12,6 +12,7 @@ from psdm.quantities import Admittance
 from psdm.quantities import Current
 from psdm.quantities import Frequency
 from psdm.quantities import Impedance
+from psdm.quantities import Length
 from psdm.quantities import Voltage
 
 
@@ -45,7 +46,7 @@ class Branch(Base):
     f_n: Frequency | None = None  # nominal frequency the values x and b apply
     description: str | None = None
     energized: bool | None = None
-    length: float | None = None  # length of the line the impedance and admittance values apply
+    length: Length | None = None  # length of the line the impedance and admittance values apply
     rn: Impedance | None = None  # neutral natural values
     xn: Impedance | None = None  # neutral natural values
     gn: Admittance | None = None  # neutral natural values
