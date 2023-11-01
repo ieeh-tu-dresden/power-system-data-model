@@ -7,7 +7,7 @@ from __future__ import annotations
 from enum import Enum
 
 from psdm.base import Base
-from psdm.topology.quantities import Power
+from psdm.quantities import Power
 
 
 class GridType(Enum):

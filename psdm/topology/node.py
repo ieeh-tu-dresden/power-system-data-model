@@ -3,7 +3,7 @@
 # :license: BSD 3-Clause
 
 from psdm.base import Base
-from psdm.topology.quantities import Voltage
+from psdm.quantities import Voltage
 
 
 class Node(Base):

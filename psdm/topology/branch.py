@@ -8,11 +8,11 @@ from enum import Enum
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
-from psdm.topology.quantities import Admittance
-from psdm.topology.quantities import Current
-from psdm.topology.quantities import Frequency
-from psdm.topology.quantities import Impedance
-from psdm.topology.quantities import Voltage
+from psdm.quantities import Admittance
+from psdm.quantities import Current
+from psdm.quantities import Frequency
+from psdm.quantities import Impedance
+from psdm.quantities import Voltage
 
 
 class BranchType(Enum):

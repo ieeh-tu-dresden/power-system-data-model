@@ -7,14 +7,14 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.topology.quantities import ActivePower
-from psdm.topology.quantities import ApparentPower
-from psdm.topology.quantities import Frequency
-from psdm.topology.quantities import Power
-from psdm.topology.quantities import PowerFactor
-from psdm.topology.quantities import PowerType
-from psdm.topology.quantities import ReactivePower
-from psdm.topology.quantities import Voltage
+from psdm.quantities import ActivePower
+from psdm.quantities import ApparentPower
+from psdm.quantities import Frequency
+from psdm.quantities import Power
+from psdm.quantities import PowerFactor
+from psdm.quantities import PowerType
+from psdm.quantities import ReactivePower
+from psdm.quantities import Voltage
 
 
 class TestFrequency:

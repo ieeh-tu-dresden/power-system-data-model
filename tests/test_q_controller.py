@@ -8,6 +8,12 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
+from psdm.quantities import ActivePower as ActivePowerSet
+from psdm.quantities import Droop
+from psdm.quantities import PowerFactor
+from psdm.quantities import PowerFactorDirection
+from psdm.quantities import ReactivePower as ReactivePowerSet
+from psdm.quantities import Voltage
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import ControlCosPhiConst
 from psdm.steadystate_case.controller import ControlCosPhiP
@@ -20,12 +26,6 @@ from psdm.steadystate_case.controller import ControlQU
 from psdm.steadystate_case.controller import ControlTanPhiConst
 from psdm.steadystate_case.controller import ControlUConst
 from psdm.steadystate_case.controller import QController
-from psdm.topology.quantities import ActivePower as ActivePowerSet
-from psdm.topology.quantities import Droop
-from psdm.topology.quantities import PowerFactor
-from psdm.topology.quantities import PowerFactorDirection
-from psdm.topology.quantities import ReactivePower as ReactivePowerSet
-from psdm.topology.quantities import Voltage
 
 
 class TestReactivePower:

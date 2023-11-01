@@ -3,12 +3,12 @@
 # :license: BSD 3-Clause
 
 from psdm.base import VoltageSystemType
+from psdm.quantities import Admittance
+from psdm.quantities import Current
+from psdm.quantities import Impedance
+from psdm.quantities import Voltage
 from psdm.topology.branch import Branch
 from psdm.topology.branch import BranchType
-from psdm.topology.quantities import Admittance
-from psdm.topology.quantities import Current
-from psdm.topology.quantities import Impedance
-from psdm.topology.quantities import Voltage
 
 
 class TestBranch:

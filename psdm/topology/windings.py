@@ -7,10 +7,10 @@ from __future__ import annotations
 import enum
 
 from psdm.base import Base
-from psdm.topology.quantities import ApparentPower
-from psdm.topology.quantities import Impedance
-from psdm.topology.quantities import PhaseAngleClock
-from psdm.topology.quantities import Voltage
+from psdm.quantities import ApparentPower
+from psdm.quantities import Impedance
+from psdm.quantities import PhaseAngleClock
+from psdm.quantities import Voltage
 
 
 class VectorGroup(enum.Enum):

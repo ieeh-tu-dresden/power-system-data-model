@@ -9,8 +9,8 @@ import enum
 
 from psdm.base import Base
 from psdm.base import UniqueTuple
-from psdm.topology.quantities import ActivePower
-from psdm.topology.quantities import Current
+from psdm.quantities import ActivePower
+from psdm.quantities import Current
 from psdm.topology.windings import Winding
 
 

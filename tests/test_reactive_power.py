@@ -7,13 +7,13 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
+from psdm.quantities import ActivePower as ActivePowerSet
+from psdm.quantities import ReactivePower as ReactivePowerSet
 from psdm.steadystate_case.controller import ControlPConst
 from psdm.steadystate_case.controller import ControlQConst
 from psdm.steadystate_case.controller import PController
 from psdm.steadystate_case.controller import QController
 from psdm.steadystate_case.reactive_power import ReactivePower
-from psdm.topology.quantities import ActivePower as ActivePowerSet
-from psdm.topology.quantities import ReactivePower as ReactivePowerSet
 
 
 class TestReactivePower:
