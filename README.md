@@ -19,10 +19,13 @@ The data model is structured as the following schema:
 
 - grid topology:
   - base topology containing all elements of the exported grid
+  ![topology relationship diagram](./docs/topology.png)
 - topology case;
   - information about disabled elements to represent a specific operational case based on the base topology
+  ![topology case relationship diagram](./docs/topology_case.png)
 - steadystate case
   - information about power draw/infeed for a specific operational case
+  ![steadystate case relationship diagram](./docs/steady_state_case.png)
 
 ## <div id="remarks" /> General Remarks
 

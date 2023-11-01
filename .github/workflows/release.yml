@@ -66,8 +66,39 @@ jobs:
         env:
           PDM_DEPS: "urllib3<2"
 
-      - name: Installing dependencies
+      - name: Install dependencies
         run: pdm install
+
+      - name: Install graphviz
+        run: sudo apt-get install -y graphviz graphviz-dev
+
+      - name: Install erdantic
+        run: pdm add erdantic
+
+      - name: Generate schema diagram files
+        run: pdm run python -c '$COMMAND'
+        env:
+          COMMAND: |
+            import erdantic as erd
+            from psdm.steadystate_case.case import Case as SteadystateCase
+            from psdm.topology.topology import Topology
+            from psdm.topology_case.case import Case as TopologyCase
+            from pathlib import Path
+            f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.png")
+            f_top.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(Topology).draw(f_top)
+            f_topc = Path(f"./schema/${{ steps.cz.outputs.version }}/topology_case.png")
+            f_topc.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(TopologyCase).draw(f_topc)
+            f_ssc = Path(f"./schema/${{ steps.cz.outputs.version }}/steady_state_case.png")
+            f_ssc.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(SteadystateCase).draw(f_ssc)
+
+      - name: Copy diagrams to docs
+        run: yes | cp -rf ./schema/${{ steps.cz.outputs.version }}/*.png ./docs/
+
+      - name: Stage schema diagram files
+        run: git add ./docs
 
       - name: Generate schema JSON files
         run: pdm run python -c '$COMMAND'
