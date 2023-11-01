@@ -68,7 +68,7 @@ jobs:
             erd.create(SteadystateCase).draw(f_ssc)
 
       - name: Copy diagrams to docs
-        run: yes | cp -rf./schema/1/*.png ./docs/
+        run: cp -rf./schema/1/*.png ./docs/
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
