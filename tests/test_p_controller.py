@@ -12,10 +12,10 @@ from psdm.steadystate_case.controller import ControlPConst
 from psdm.steadystate_case.controller import ControlPF
 from psdm.steadystate_case.controller import ControlQConst
 from psdm.steadystate_case.controller import PController
-from psdm.topology.load import ActivePower as ActivePowerSet
-from psdm.topology.load import Droop
-from psdm.topology.load import Frequency
-from psdm.topology.load import ReactivePower as ReactivePowerSet
+from psdm.topology.quantities import ActivePower as ActivePowerSet
+from psdm.topology.quantities import Droop
+from psdm.topology.quantities import Frequency
+from psdm.topology.quantities import ReactivePower as ReactivePowerSet
 
 
 class TestActivePower:

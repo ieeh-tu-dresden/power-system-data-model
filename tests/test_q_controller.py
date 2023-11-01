@@ -20,12 +20,12 @@ from psdm.steadystate_case.controller import ControlQU
 from psdm.steadystate_case.controller import ControlTanPhiConst
 from psdm.steadystate_case.controller import ControlUConst
 from psdm.steadystate_case.controller import QController
-from psdm.topology.load import ActivePower as ActivePowerSet
-from psdm.topology.load import Droop
-from psdm.topology.load import PowerFactor
-from psdm.topology.load import PowerFactorDirection
-from psdm.topology.load import ReactivePower as ReactivePowerSet
-from psdm.topology.load import Voltage
+from psdm.topology.quantities import ActivePower as ActivePowerSet
+from psdm.topology.quantities import Droop
+from psdm.topology.quantities import PowerFactor
+from psdm.topology.quantities import PowerFactorDirection
+from psdm.topology.quantities import ReactivePower as ReactivePowerSet
+from psdm.topology.quantities import Voltage
 
 
 class TestReactivePower:

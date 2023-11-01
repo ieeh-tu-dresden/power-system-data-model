@@ -13,12 +13,12 @@ import pydantic
 from psdm.base import Base
 from psdm.base import model_validator_before
 from psdm.steadystate_case.characteristic import Characteristic
-from psdm.topology.load import ActivePower
-from psdm.topology.load import Droop
-from psdm.topology.load import Frequency
-from psdm.topology.load import PowerFactor
-from psdm.topology.load import ReactivePower
-from psdm.topology.load import Voltage
+from psdm.topology.quantities import ActivePower
+from psdm.topology.quantities import Droop
+from psdm.topology.quantities import Frequency
+from psdm.topology.quantities import PowerFactor
+from psdm.topology.quantities import ReactivePower
+from psdm.topology.quantities import Voltage
 
 
 class QControlStrategy(enum.Enum):

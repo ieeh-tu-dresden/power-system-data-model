@@ -9,8 +9,8 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import model_validator_after
-from psdm.topology.load import Power
-from psdm.topology.load import Voltage
+from psdm.topology.quantities import Power
+from psdm.topology.quantities import Voltage
 
 
 class LoadModel(Base):
