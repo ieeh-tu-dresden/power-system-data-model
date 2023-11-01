@@ -47,10 +47,7 @@ PhaseConnection = tuple[Phase, Phase] | None
 
 
 def find_decimals(value: float) -> int:
-    if math.isnan(value):
-        return 0
-
-    return len(str(value).split(".")[1])
+    return len(([*str(value).split("."), ""])[1])
 
 
 def round_avg(qty: MultiPhaseQuantity) -> float:
