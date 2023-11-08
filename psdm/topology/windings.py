@@ -7,10 +7,13 @@ from __future__ import annotations
 import enum
 
 from psdm.base import Base
-from psdm.quantities import ApparentPower
-from psdm.quantities import Impedance
-from psdm.quantities import PhaseAngleClock
-from psdm.quantities import Voltage
+from psdm.quantities.single_phase import ApparentPower
+from psdm.quantities.single_phase import ImpedanceNat
+from psdm.quantities.single_phase import ImpedanceNegSeq
+from psdm.quantities.single_phase import ImpedancePosSeq
+from psdm.quantities.single_phase import ImpedanceZerSeq
+from psdm.quantities.single_phase import PhaseAngleClock
+from psdm.quantities.single_phase import Voltage
 
 
 class VectorGroup(enum.Enum):
@@ -32,12 +35,14 @@ class Winding(Base):
     s_r: ApparentPower
     u_n: Voltage  # Nominal Voltage of connected nodes (CIM: BaseVoltage)
     u_r: Voltage  # Rated Voltage of the transformer windings itself (CIM: ratedU)
-    r1: Impedance  # positive sequence values of transformer T-representation
-    x1: Impedance
-    r0: Impedance | None = None  # zero sequence values of transformer T-representation
-    x0: Impedance | None = None
-    re: Impedance | None = None  # earthing of neutral point
-    xe: Impedance | None = None  # earthing of neutral point
+    r1: ImpedancePosSeq  # positive sequence values of transformer T-representation
+    x1: ImpedancePosSeq
+    r2: ImpedanceNegSeq | None = None  # negative sequence values of transformer T-representation
+    x2: ImpedanceNegSeq | None = None
+    r0: ImpedanceZerSeq | None = None  # zero sequence values of transformer T-representation
+    x0: ImpedanceZerSeq | None = None
+    re: ImpedanceNat | None = None  # earthing of neutral point
+    xe: ImpedanceNat | None = None
     phase_angle_clock: PhaseAngleClock | None = None
     vector_group: VectorGroup | None = None
     neutral_connected: bool = False  # indicates if neutral line is connected to winding object

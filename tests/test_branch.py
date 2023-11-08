@@ -3,10 +3,11 @@
 # :license: BSD 3-Clause
 
 from psdm.base import VoltageSystemType
-from psdm.quantities import Admittance
-from psdm.quantities import Current
-from psdm.quantities import Impedance
-from psdm.quantities import Voltage
+from psdm.quantities.single_phase import Admittance
+from psdm.quantities.single_phase import Current
+from psdm.quantities.single_phase import Impedance
+from psdm.quantities.single_phase import SystemType
+from psdm.quantities.single_phase import Voltage
 from psdm.topology.branch import Branch
 from psdm.topology.branch import BranchType
 
@@ -17,12 +18,12 @@ class TestBranch:
             node_1="asd",
             node_2="fgh",
             name="wqertasd",
-            u_n=Voltage(values=(1,)),
-            i_r=Current(values=(1,)),
-            b1=Admittance(value=1),
-            g1=Admittance(value=1),
-            x1=Impedance(value=1),
-            r1=Impedance(value=1),
+            u_n=Voltage(value=1, system_type=SystemType.NATURAL),
+            i_r=Current(value=1, system_type=SystemType.NATURAL),
+            b1=Admittance(value=1, system_type=SystemType.NATURAL),
+            g1=Admittance(value=1, system_type=SystemType.NATURAL),
+            x1=Impedance(value=1, system_type=SystemType.NATURAL),
+            r1=Impedance(value=1, system_type=SystemType.NATURAL),
             type=BranchType.LINE,
             voltage_system_type=VoltageSystemType.AC,
         )

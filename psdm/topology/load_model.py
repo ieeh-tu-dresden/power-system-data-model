@@ -1,6 +1,6 @@
 # :author: Sasan Jacob Rasti <sasan_jacob.rasti@tu-dresden.de>
 # :author: Sebastian Krahmer <sebastian.krahmer@tu-dresden.de>
-# :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2023.
+# :copyright: Copyright (c) Institute of Electrical Power Systems and High VoltagePhasePhase, VoltagePhaseEarth Engineering - TU Dresden, 2022-2023.
 # :license: BSD 3-Clause
 
 from __future__ import annotations
@@ -9,8 +9,8 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import model_validator_after
-from psdm.quantities import Power
-from psdm.quantities import Voltage
+from psdm.quantities.multi_phase import Power
+from psdm.quantities.multi_phase import Voltage
 
 
 class LoadModel(Base):
@@ -45,13 +45,13 @@ class LoadModel(Base):
         return 1 - self.c_p - self.c_i
 
     def calc_power(self, u: Voltage, power: Power) -> Power:
-        values = tuple(
+        value = tuple(
             p
             * (
-                self.c_p * (_u / self.u_0) ** self.exp_p
-                + self.c_i * (_u / self.u_0) ** self.exp_i
-                + self.c_z * (_u / self.u_0) ** self.exp_z
+                self.c_p * (_u / _u_0) ** self.exp_p
+                + self.c_i * (_u / _u_0) ** self.exp_i
+                + self.c_z * (_u / _u_0) ** self.exp_z
             )
-            for p, _u in zip(power.values, u.values, strict=True)
+            for p, _u, _u_0 in zip(power.value, u.value, self.u_0.value, strict=True)
         )
-        return Power(power_type=power.power_type, values=values)
+        return Power(power_type=power.power_type, system_type=power.system_type, value=value)

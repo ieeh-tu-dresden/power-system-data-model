@@ -8,12 +8,12 @@ from enum import Enum
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
-from psdm.quantities import Admittance
-from psdm.quantities import Current
-from psdm.quantities import Frequency
-from psdm.quantities import Impedance
-from psdm.quantities import Length
-from psdm.quantities import Voltage
+from psdm.quantities.single_phase import Admittance
+from psdm.quantities.single_phase import Current
+from psdm.quantities.single_phase import Frequency
+from psdm.quantities.single_phase import Impedance
+from psdm.quantities.single_phase import Length
+from psdm.quantities.single_phase import Voltage
 
 
 class BranchType(Enum):

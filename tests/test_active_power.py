@@ -8,8 +8,9 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.quantities import ActivePower as ActivePowerSet
-from psdm.quantities import ReactivePower as ReactivePowerSet
+from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
+from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
+from psdm.quantities.single_phase import SystemType
 from psdm.steadystate_case.active_power import ActivePower
 from psdm.steadystate_case.controller import ControlPConst
 from psdm.steadystate_case.controller import ControlQConst
@@ -29,7 +30,8 @@ class TestActivePower:
                     node_target="Node_A",
                     control_type=ControlPConst(
                         p_set=ActivePowerSet(
-                            values=(0, 0, 0),
+                            value=(0, 0, 0),
+                            system_type=SystemType.NATURAL,
                         ),
                     ),
                 ),
@@ -41,7 +43,8 @@ class TestActivePower:
                     node_target="Node_A",
                     control_type=ControlQConst(
                         q_set=ReactivePowerSet(
-                            values=(0, 0, 0),
+                            value=(0, 0, 0),
+                            system_type=SystemType.NATURAL,
                         ),
                     ),
                 ),
