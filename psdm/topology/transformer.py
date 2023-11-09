@@ -9,8 +9,12 @@ import enum
 
 from psdm.base import Base
 from psdm.base import UniqueTuple
-from psdm.quantities.multi_phase import ActivePower
-from psdm.quantities.multi_phase import Current
+from psdm.quantities.multi_phase import Phase
+from psdm.quantities.single_phase import Angle
+from psdm.quantities.single_phase import ImpedanceNat
+from psdm.quantities.single_phase import ImpedanceZerSeq
+from psdm.quantities.single_phase import Percent
+from psdm.quantities.single_phase import Voltage
 from psdm.topology.windings import Winding
 
 
@@ -73,18 +77,20 @@ class Transformer(Base):
 
     node_1: str
     node_2: str
+    phases_1: UniqueTuple[Phase]
+    phases_2: UniqueTuple[Phase]
     name: str
     number: int  # number of parallel units
-    vector_group: VectorGroup  # specifier for connection of wiring e.g. DYn5
-    i_0: Current  # no-load current in %
-    p_fe: ActivePower  # no-load losses (Iron losses)
-    i_00: Current | None = None  # zero sequence values of PI-representation
-    p_fe0: ActivePower | None = None  # zero sequence values of PI-representation
+    vector_group: VectorGroup  # specifier for wiring connection
+    r_fe: ImpedanceNat  # iron losses resistance
+    x_h: ImpedanceNat  # magnetization reactance
+    r_fe0: ImpedanceZerSeq  # zero sequence iron losses resistance
+    x_h0: ImpedanceZerSeq  # zero sequence magnetization reactance
     windings: UniqueTuple[Winding]  # winding object for each voltage level
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
-    tap_u_abs: float | None = None  # voltage deviation per tap position change in %
-    tap_u_phi: float | None = None  # voltage angle deviation per tap position in °
+    tap_u_mag: Voltage | None = None  # voltage deviation per tap position change
+    tap_u_phi: Angle | None = None  # voltage angle deviation per tap position
     tap_max: int | None = None  # upper position of tap for tap control
     tap_min: int | None = None  # lower position of tap for tap control
     tap_neutral: int | None = None  # initial position where rated transformation ratio is specified

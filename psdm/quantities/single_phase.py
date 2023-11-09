@@ -31,6 +31,9 @@ class SystemType(enum.Enum):
     NEGATIVE_SEQUENCE = "NEGATIVE_SEQUENCE"
     ZERO_SEQUENCE = "ZERO_SEQUENCE"
     NATURAL = "NATURAL"
+    POSITIVE_NEGATIVE_COUPLING = "POSITIVE_NEGATIVE_COUPLING"
+    NEGATIVE_ZERO_COUPLING = "NEGATIVE_ZERO_COUPLING"
+    ZERO_POSITIVE_COUPLING = "ZERO_POSITIVE_COUPLING"
 
 
 class PowerFactorDirection(enum.Enum):
@@ -44,6 +47,12 @@ class Quantity(Base):
 
 
 class SinglePhaseQuantity(Quantity):
+    value: float
+
+
+class Percent(Quantity):
+    """Percent values."""
+
     value: float
 
 
@@ -107,10 +116,94 @@ class ImpedanceNat(SinglePhaseQuantity):
         return value
 
 
+class ImpedancePosNegCoup(SinglePhaseQuantity):
+    """Coupling impedance between positive and negative sequence."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.POSITIVE_NEGATIVE_COUPLING
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.POSITIVE_NEGATIVE_COUPLING.value
+        return value
+
+
+class ImpedanceNegZerCoup(SinglePhaseQuantity):
+    """Coupling impedance between negative and zero sequence."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.NEGATIVE_ZERO_COUPLING
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.NEGATIVE_ZERO_COUPLING.value
+        return value
+
+
+class ImpedanceZerPosCoup(SinglePhaseQuantity):
+    """Coupling impedance between zero and positive sequence."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.ZERO_POSITIVE_COUPLING
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.ZERO_POSITIVE_COUPLING.value
+        return value
+
+
 class Admittance(SinglePhaseQuantity):
     """Admittance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+
+
+class AdmittancePosSeq(SinglePhaseQuantity):
+    """Positive sequence admittance."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.POSITIVE_SEQUENCE
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.POSITIVE_SEQUENCE.value
+        return value
+
+
+class AdmittanceNegSeq(SinglePhaseQuantity):
+    """Negative sequence admittance."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.NEGATIVE_SEQUENCE
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.NEGATIVE_SEQUENCE.value
+        return value
+
+
+class AdmittanceZerSeq(SinglePhaseQuantity):
+    """Zero sequence admittance."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.ZERO_SEQUENCE
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.ZERO_SEQUENCE.value
+        return value
+
+
+class AdmittanceNat(SinglePhaseQuantity):
+    """Natural admittance."""
+
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    system_type: SystemType = SystemType.NATURAL
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.NATURAL.value
+        return value
 
 
 class Length(SinglePhaseQuantity):

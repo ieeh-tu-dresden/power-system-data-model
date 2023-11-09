@@ -3,6 +3,8 @@
 # :license: BSD 3-Clause
 
 from psdm.base import Base
+from psdm.base import UniqueTuple
+from psdm.quantities.multi_phase import Phase
 from psdm.quantities.single_phase import Voltage
 
 
@@ -12,3 +14,4 @@ class Node(Base):
     name: str
     u_n: Voltage
     description: str | None = None
+    phases: UniqueTuple[Phase]
