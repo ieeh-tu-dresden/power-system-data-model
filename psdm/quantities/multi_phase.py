@@ -149,7 +149,7 @@ class ReactivePower(Power):
         return value
 
 
-class PowerFactor(Quantity):
+class PowerFactor(MultiPhaseQuantity):
     """Power factors, e.g. cos(phi), tan(phi)."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
@@ -169,7 +169,7 @@ class PowerFactor(Quantity):
         return self.n_phases
 
 
-class PhaseConnections(Quantity):
+class PhaseConnections(MultiPhaseQuantity):
     """Phases between which elements are connected, e.g. [(A,E). (B,E). (C,E)], [(A,B), (B,C), (C,A)]."""
 
     value: UniqueNonEmptyTuple[PhaseConnection]
