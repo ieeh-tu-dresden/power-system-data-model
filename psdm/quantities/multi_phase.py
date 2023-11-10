@@ -11,6 +11,7 @@ import typing as t
 
 import pydantic
 
+from psdm.base import Base
 from psdm.base import NonEmptyTuple
 from psdm.base import UniqueNonEmptyTuple
 from psdm.base import model_validator_before
@@ -149,7 +150,7 @@ class ReactivePower(Power):
         return value
 
 
-class PowerFactor(MultiPhaseQuantity):
+class PowerFactor(Base):
     """Power factors, e.g. cos(phi), tan(phi)."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
@@ -169,7 +170,7 @@ class PowerFactor(MultiPhaseQuantity):
         return self.n_phases
 
 
-class PhaseConnections(MultiPhaseQuantity):
+class PhaseConnections(Base):
     """Phases between which elements are connected, e.g. [(A,E). (B,E). (C,E)], [(A,B), (B,C), (C,A)]."""
 
     value: UniqueNonEmptyTuple[PhaseConnection]
