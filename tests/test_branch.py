@@ -3,9 +3,10 @@
 # :license: BSD 3-Clause
 
 from psdm.base import VoltageSystemType
-from psdm.quantities.single_phase import Admittance
+from psdm.quantities.multi_phase import Phase
+from psdm.quantities.single_phase import AdmittancePosSeq
 from psdm.quantities.single_phase import Current
-from psdm.quantities.single_phase import Impedance
+from psdm.quantities.single_phase import ImpedancePosSeq
 from psdm.quantities.single_phase import SystemType
 from psdm.quantities.single_phase import Voltage
 from psdm.topology.branch import Branch
@@ -18,12 +19,14 @@ class TestBranch:
             node_1="asd",
             node_2="fgh",
             name="wqertasd",
+            phases_1=(Phase.A, Phase.B),
+            phases_2=(Phase.A, Phase.B),
             u_n=Voltage(value=1, system_type=SystemType.NATURAL),
             i_r=Current(value=1, system_type=SystemType.NATURAL),
-            b1=Admittance(value=1, system_type=SystemType.NATURAL),
-            g1=Admittance(value=1, system_type=SystemType.NATURAL),
-            x1=Impedance(value=1, system_type=SystemType.NATURAL),
-            r1=Impedance(value=1, system_type=SystemType.NATURAL),
+            b1=AdmittancePosSeq(value=1, system_type=SystemType.NATURAL),
+            g1=AdmittancePosSeq(value=1, system_type=SystemType.NATURAL),
+            x1=ImpedancePosSeq(value=1, system_type=SystemType.NATURAL),
+            r1=ImpedancePosSeq(value=1, system_type=SystemType.NATURAL),
             type=BranchType.LINE,
             voltage_system_type=VoltageSystemType.AC,
         )

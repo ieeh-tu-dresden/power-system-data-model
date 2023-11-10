@@ -13,7 +13,6 @@ from psdm.quantities.multi_phase import Phase
 from psdm.quantities.single_phase import Angle
 from psdm.quantities.single_phase import ImpedanceNat
 from psdm.quantities.single_phase import ImpedanceZerSeq
-from psdm.quantities.single_phase import Percent
 from psdm.quantities.single_phase import Voltage
 from psdm.topology.windings import Winding
 

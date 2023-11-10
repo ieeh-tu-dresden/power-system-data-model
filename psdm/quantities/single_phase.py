@@ -50,12 +50,6 @@ class SinglePhaseQuantity(Quantity):
     value: float
 
 
-class Percent(Quantity):
-    """Percent values."""
-
-    value: float
-
-
 class Frequency(SinglePhaseQuantity):
     """Frequency."""
 
