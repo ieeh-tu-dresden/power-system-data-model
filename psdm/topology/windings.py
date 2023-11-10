@@ -9,7 +9,6 @@ import enum
 from psdm.base import Base
 from psdm.quantities.single_phase import ApparentPower
 from psdm.quantities.single_phase import ImpedanceNat
-from psdm.quantities.single_phase import ImpedanceNegSeq
 from psdm.quantities.single_phase import ImpedancePosSeq
 from psdm.quantities.single_phase import ImpedanceZerSeq
 from psdm.quantities.single_phase import PhaseAngleClock
@@ -37,8 +36,6 @@ class Winding(Base):
     u_r: Voltage  # Rated Voltage of the transformer windings itself (CIM: ratedU)
     r1: ImpedancePosSeq  # positive sequence values of transformer T-representation
     x1: ImpedancePosSeq
-    r2: ImpedanceNegSeq | None = None  # negative sequence values of transformer T-representation
-    x2: ImpedanceNegSeq | None = None
     r0: ImpedanceZerSeq | None = None  # zero sequence values of transformer T-representation
     x0: ImpedanceZerSeq | None = None
     re: ImpedanceNat | None = None  # earthing of neutral point

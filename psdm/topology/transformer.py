@@ -11,7 +11,7 @@ from psdm.base import Base
 from psdm.base import UniqueTuple
 from psdm.quantities.multi_phase import Phase
 from psdm.quantities.single_phase import Angle
-from psdm.quantities.single_phase import ImpedanceNat
+from psdm.quantities.single_phase import ImpedancePosSeq
 from psdm.quantities.single_phase import ImpedanceZerSeq
 from psdm.quantities.single_phase import Voltage
 from psdm.topology.windings import Winding
@@ -81,8 +81,8 @@ class Transformer(Base):
     name: str
     number: int  # number of parallel units
     vector_group: VectorGroup  # specifier for wiring connection
-    r_fe: ImpedanceNat  # iron losses resistance
-    x_h: ImpedanceNat  # magnetization reactance
+    r_fe1: ImpedancePosSeq  # positive sequence iron losses resistance
+    x_h1: ImpedancePosSeq  # positive sequence magnetization reactance
     r_fe0: ImpedanceZerSeq  # zero sequence iron losses resistance
     x_h0: ImpedanceZerSeq  # zero sequence magnetization reactance
     windings: UniqueTuple[Winding]  # winding object for each voltage level

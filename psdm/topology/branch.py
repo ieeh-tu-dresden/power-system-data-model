@@ -11,13 +11,11 @@ from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
 from psdm.quantities.multi_phase import Phase
 from psdm.quantities.single_phase import AdmittanceNat
-from psdm.quantities.single_phase import AdmittanceNegSeq
 from psdm.quantities.single_phase import AdmittancePosSeq
 from psdm.quantities.single_phase import AdmittanceZerSeq
 from psdm.quantities.single_phase import Current
 from psdm.quantities.single_phase import Frequency
 from psdm.quantities.single_phase import ImpedanceNat
-from psdm.quantities.single_phase import ImpedanceNegSeq
 from psdm.quantities.single_phase import ImpedancePosSeq
 from psdm.quantities.single_phase import ImpedanceZerSeq
 from psdm.quantities.single_phase import Length
@@ -49,10 +47,6 @@ class Branch(Base):
     x1: ImpedancePosSeq  # positive sequence values of PI-representation
     g1: AdmittancePosSeq  # positive sequence values of PI-representation
     b1: AdmittancePosSeq  # positive sequence values of PI-representation
-    r2: ImpedanceNegSeq | None = None  # negative sequence values of PI-representation
-    x2: ImpedanceNegSeq | None = None  # negative sequence values of PI-representation
-    g2: AdmittanceNegSeq | None = None  # negative sequence values of PI-representation
-    b2: AdmittanceNegSeq | None = None  # negative sequence values of PI-representation
     r0: ImpedanceZerSeq | None = None  # zero sequence values of PI-representation
     x0: ImpedanceZerSeq | None = None  # zero sequence values of PI-representation
     g0: AdmittanceZerSeq | None = None  # zero sequence values of PI-representation
