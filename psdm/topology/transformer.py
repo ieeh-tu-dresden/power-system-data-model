@@ -81,11 +81,11 @@ class Transformer(Base):
     name: str
     number: int  # number of parallel units
     vector_group: VectorGroup  # specifier for wiring connection
+    windings: UniqueTuple[Winding]  # winding object for each voltage leve
     r_fe1: ImpedancePosSeq  # positive sequence iron losses resistance
     x_h1: ImpedancePosSeq  # positive sequence magnetization reactance
-    r_fe0: ImpedanceZerSeq  # zero sequence iron losses resistance
-    x_h0: ImpedanceZerSeq  # zero sequence magnetization reactance
-    windings: UniqueTuple[Winding]  # winding object for each voltage level
+    r_fe0: ImpedanceZerSeq | None = None  # zero sequence iron losses resistance
+    x_h0: ImpedanceZerSeq | None = None  # zero sequence magnetization reactancel
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
     tap_u_mag: Voltage | None = None  # voltage deviation per tap position change
