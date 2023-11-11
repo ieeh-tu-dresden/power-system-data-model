@@ -263,14 +263,14 @@ class ReactivePower(Power):
         return value
 
 
-class PowerFactor(Quantity):
+class PowerFactor(Base):
     """Power factor, e.g. cos(phi), tan(phi)."""
 
     value: pydantic.confloat(ge=0, le=1)  # type: ignore[valid-type]
     direction: PowerFactorDirection = PowerFactorDirection.ND
 
 
-class PhaseAngleClock(Quantity):
+class PhaseAngleClock(Base):
     """Phase shift between two windings in multiples of 30°."""
 
     value: pydantic.confloat(ge=0, lt=12)  # type: ignore[valid-type]
