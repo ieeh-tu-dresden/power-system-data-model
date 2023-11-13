@@ -13,5 +13,5 @@ class Node(Base):
 
     name: str
     u_n: Voltage
-    description: str | None = None
     phases: UniqueTuple[Phase]
+    description: str | None = None
