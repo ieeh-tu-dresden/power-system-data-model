@@ -13,11 +13,12 @@ import pydantic
 from psdm.base import Base
 from psdm.base import VoltageSystemType
 from psdm.base import model_validator_after
-from psdm.quantities import ActivePower
-from psdm.quantities import ApparentPower
-from psdm.quantities import PhaseConnections
-from psdm.quantities import PowerFactor
-from psdm.quantities import ReactivePower
+from psdm.quantities.multi_phase import ActivePower
+from psdm.quantities.multi_phase import ApparentPower
+from psdm.quantities.multi_phase import PhaseConnections
+from psdm.quantities.multi_phase import PowerFactor
+from psdm.quantities.multi_phase import ReactivePower
+from psdm.quantities.single_phase import SystemType as QSystemType
 from psdm.topology.load_model import LoadModel
 
 
@@ -107,8 +108,8 @@ class RatedPower(Base):
     def cos_phi_total(self) -> float:
         try:
             return round(
-                sum(self.active_power.values) / sum(self.apparent_power.values),
-                find_decimals(self.cos_phi.values[0]),  # noqa: PD011
+                sum(self.active_power.value) / sum(self.apparent_power.value),
+                find_decimals(self.cos_phi.value[0]),
             )
         except ZeroDivisionError:
             return float("nan")
@@ -116,13 +117,15 @@ class RatedPower(Base):
     @classmethod
     def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: PowerFactor) -> RatedPower:
         active_power = ActivePower(
-            values=[round(p * c, find_decimals(p)) for p, c in zip(apparent_power.values, cos_phi.values, strict=True)],
+            value=[round(p * c, find_decimals(p)) for p, c in zip(apparent_power.value, cos_phi.value, strict=True)],
+            system_type=QSystemType.NATURAL,
         )
         reactive_power = ReactivePower(
-            values=[
+            value=[
                 round(p * math.sin(math.acos(c)), find_decimals(p))
-                for p, c in zip(apparent_power.values, cos_phi.values, strict=True)
+                for p, c in zip(apparent_power.value, cos_phi.value, strict=True)
             ],
+            system_type=QSystemType.NATURAL,
         )
         return RatedPower(
             apparent_power=apparent_power,
@@ -134,7 +137,7 @@ class RatedPower(Base):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def n_phases(self) -> int:
-        return len(self.cos_phi.values)
+        return len(self.cos_phi)
 
     def __len__(self) -> int:
         return self.n_phases

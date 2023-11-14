@@ -8,12 +8,13 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.quantities import ActivePower as ActivePowerSet
-from psdm.quantities import Frequency
-from psdm.quantities import PowerFactor
-from psdm.quantities import PowerFactorDirection
-from psdm.quantities import ReactivePower as ReactivePowerSet
-from psdm.quantities import Voltage
+from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
+from psdm.quantities.multi_phase import PowerFactor
+from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
+from psdm.quantities.multi_phase import Voltage
+from psdm.quantities.single_phase import Frequency
+from psdm.quantities.single_phase import PowerFactorDirection
+from psdm.quantities.single_phase import SystemType
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import ControlCosPhiConst
 from psdm.steadystate_case.controller import ControlCosPhiP
@@ -32,7 +33,7 @@ from psdm.steadystate_case.controller import Droop
 class TestControlQConst:
     @pytest.mark.parametrize(
         (
-            "values",
+            "value",
             "expectation",
         ),
         [
@@ -46,19 +47,22 @@ class TestControlQConst:
     )
     def test_init(
         self,
-        values,
+        value,
         expectation,
     ) -> None:
         with expectation:
             ControlQConst(
-                q_set=ReactivePowerSet(values=values),
+                q_set=ReactivePowerSet(
+                    value=value,
+                    system_type=SystemType.NATURAL,
+                ),
             )
 
 
 class TestControlUConst:
     @pytest.mark.parametrize(
         (
-            "values",
+            "value",
             "u_meas_ref",
             "expectation",
         ),
@@ -77,14 +81,18 @@ class TestControlUConst:
     )
     def test_init(
         self,
-        values,
+        value,
         u_meas_ref,
         expectation,
     ) -> None:
         with expectation:
             ControlUConst(
-                u_set=Voltage(values=values),
+                u_set=Voltage(
+                    value=value,
+                    system_type=SystemType.NATURAL,
+                ),
                 u_meas_ref=u_meas_ref,
+                system_type=SystemType.NATURAL,
             )
 
 
@@ -92,7 +100,7 @@ class TestControlTanphiConst:
     @pytest.mark.parametrize(
         (
             "direction",
-            "values",
+            "value",
             "expectation",
         ),
         [
@@ -110,14 +118,15 @@ class TestControlTanphiConst:
     def test_init(
         self,
         direction,
-        values,
+        value,
         expectation,
     ) -> None:
         with expectation:
             ControlTanPhiConst(
                 tan_phi_set=PowerFactor(
                     direction=direction,
-                    values=values,
+                    value=value,
+                    system_type=SystemType.NATURAL,
                 ),
             )
 
@@ -126,7 +135,7 @@ class TestControlCosPhiConst:
     @pytest.mark.parametrize(
         (
             "direction",
-            "values",
+            "value",
             "expectation",
         ),
         [
@@ -144,14 +153,15 @@ class TestControlCosPhiConst:
     def test_init(
         self,
         direction,
-        values,
+        value,
         expectation,
     ) -> None:
         with expectation:
             ControlCosPhiConst(
                 cos_phi_set=PowerFactor(
                     direction=direction,
-                    values=values,
+                    value=value,
+                    system_type=SystemType.NATURAL,
                 ),
             )
 
@@ -189,20 +199,24 @@ class TestControlCosPhiP:
     ) -> None:
         with expectation:
             pf_ue = PowerFactor(
-                values=[cos_phi_ue, cos_phi_ue, cos_phi_ue],
+                value=[cos_phi_ue, cos_phi_ue, cos_phi_ue],
                 direction=PowerFactorDirection.UE,
+                system_type=SystemType.NATURAL,
             )
             pf_oe = PowerFactor(
-                values=[cos_phi_oe, cos_phi_oe, cos_phi_oe],
+                value=[cos_phi_oe, cos_phi_oe, cos_phi_oe],
                 direction=PowerFactorDirection.OE,
+                system_type=SystemType.NATURAL,
             )
             if p_threshold_ue is not None:
                 p_threshold_ue = ActivePowerSet(
-                    values=[round(p_threshold_ue / 3, 3), round(p_threshold_ue / 3, 3), round(p_threshold_ue / 3, 3)],
+                    value=[round(p_threshold_ue / 3, 3), round(p_threshold_ue / 3, 3), round(p_threshold_ue / 3, 3)],
+                    system_type=SystemType.NATURAL,
                 )
             if p_threshold_oe is not None:
                 p_threshold_oe = ActivePowerSet(
-                    values=[round(p_threshold_oe / 3, 3), round(p_threshold_oe / 3, 3), round(p_threshold_oe / 3, 3)],
+                    value=[round(p_threshold_oe / 3, 3), round(p_threshold_oe / 3, 3), round(p_threshold_oe / 3, 3)],
+                    system_type=SystemType.NATURAL,
                 )
             ControlCosPhiP(
                 cos_phi_ue=pf_ue,
@@ -246,15 +260,23 @@ class TestControlCosPhiU:
     ) -> None:
         with expectation:
             pf_ue = PowerFactor(
-                values=[cos_phi_ue, cos_phi_ue, cos_phi_ue],
+                value=[cos_phi_ue, cos_phi_ue, cos_phi_ue],
                 direction=PowerFactorDirection.UE,
+                system_type=SystemType.NATURAL,
             )
             pf_oe = PowerFactor(
-                values=[cos_phi_oe, cos_phi_oe, cos_phi_oe],
+                value=[cos_phi_oe, cos_phi_oe, cos_phi_oe],
                 direction=PowerFactorDirection.OE,
+                system_type=SystemType.NATURAL,
             )
-            voltage_ue = Voltage(values=[u_threshold_ue, u_threshold_ue, u_threshold_ue])
-            voltage_oe = Voltage(values=[u_threshold_oe, u_threshold_oe, u_threshold_oe])
+            voltage_ue = Voltage(
+                value=[u_threshold_ue, u_threshold_ue, u_threshold_ue],
+                system_type=SystemType.NATURAL,
+            )
+            voltage_oe = Voltage(
+                value=[u_threshold_oe, u_threshold_oe, u_threshold_oe],
+                system_type=SystemType.NATURAL,
+            )
             ControlCosPhiU(
                 cos_phi_ue=pf_ue,
                 cos_phi_oe=pf_oe,
@@ -305,18 +327,35 @@ class TestControlQU:
         expectation,
     ) -> None:
         with expectation:
-            droop_up = Droop(values=[droop_up, droop_up, droop_up])
-            droop_low = Droop(values=[droop_low, droop_low, droop_low])
-            u_q0 = Voltage(values=[u_q0, u_q0, u_q0])
-            u_deadband_up = Voltage(values=[u_deadband_up, u_deadband_up, u_deadband_up])
-            u_deadband_low = Voltage(values=[u_deadband_low, u_deadband_low, u_deadband_low])
+            droop_up = Droop(
+                value=[droop_up, droop_up, droop_up],
+                system_type=SystemType.NATURAL,
+            )
+            droop_low = Droop(
+                value=[droop_low, droop_low, droop_low],
+                system_type=SystemType.NATURAL,
+            )
+            u_q0 = Voltage(
+                value=[u_q0, u_q0, u_q0],
+                system_type=SystemType.NATURAL,
+            )
+            u_deadband_up = Voltage(
+                value=[u_deadband_up, u_deadband_up, u_deadband_up],
+                system_type=SystemType.NATURAL,
+            )
+            u_deadband_low = Voltage(
+                value=[u_deadband_low, u_deadband_low, u_deadband_low],
+                system_type=SystemType.NATURAL,
+            )
             if q_max_ue is not None:
                 q_max_ue = ReactivePowerSet(
-                    values=[round(q_max_ue / 3, 3), round(q_max_ue / 3, 3), round(q_max_ue / 3, 3)],
+                    value=[round(q_max_ue / 3, 3), round(q_max_ue / 3, 3), round(q_max_ue / 3, 3)],
+                    system_type=SystemType.NATURAL,
                 )
             if q_max_oe is not None:
                 q_max_oe = ReactivePowerSet(
-                    values=[round(q_max_oe / 3, 3), round(q_max_oe / 3, 3), round(q_max_oe / 3, 3)],
+                    value=[round(q_max_oe / 3, 3), round(q_max_oe / 3, 3), round(q_max_oe / 3, 3)],
+                    system_type=SystemType.NATURAL,
                 )
 
             ControlQU(
@@ -358,11 +397,13 @@ class TestControlQP:
         with expectation:
             if q_max_ue is not None:
                 q_max_ue = ReactivePowerSet(
-                    values=[round(q_max_ue / 3, 3), round(q_max_ue / 3, 3), round(q_max_ue / 3, 3)],
+                    value=[round(q_max_ue / 3, 3), round(q_max_ue / 3, 3), round(q_max_ue / 3, 3)],
+                    system_type=SystemType.NATURAL,
                 )
             if q_max_oe is not None:
                 q_max_oe = ReactivePowerSet(
-                    values=[round(q_max_oe / 3, 3), round(q_max_oe / 3, 3), round(q_max_oe / 3, 3)],
+                    value=[round(q_max_oe / 3, 3), round(q_max_oe / 3, 3), round(q_max_oe / 3, 3)],
+                    system_type=SystemType.NATURAL,
                 )
 
             ControlQP(
@@ -404,21 +445,36 @@ class TestControlPF:
         expectation,
     ) -> None:
         with expectation:
-            droop_over_freq = Droop(values=[droop_over_freq, droop_over_freq, droop_over_freq])
-            droop_under_freq = Droop(values=[droop_under_freq, droop_under_freq, droop_under_freq])
+            droop_over_freq = Droop(
+                value=[droop_over_freq, droop_over_freq, droop_over_freq],
+                system_type=SystemType.NATURAL,
+            )
+            droop_under_freq = Droop(
+                value=[droop_under_freq, droop_under_freq, droop_under_freq],
+                system_type=SystemType.NATURAL,
+            )
             ControlPF(
                 droop_up=droop_over_freq,
                 droop_low=droop_under_freq,
-                f_p0=Frequency(value=f_p0),
-                f_deadband_up=Frequency(value=f_deadband_up),
-                f_deadband_low=Frequency(value=f_deadband_low),
+                f_p0=Frequency(
+                    value=f_p0,
+                    system_type=SystemType.NATURAL,
+                ),
+                f_deadband_up=Frequency(
+                    value=f_deadband_up,
+                    system_type=SystemType.NATURAL,
+                ),
+                f_deadband_low=Frequency(
+                    value=f_deadband_low,
+                    system_type=SystemType.NATURAL,
+                ),
             )
 
 
 class TestControlPConst:
     @pytest.mark.parametrize(
         (
-            "values",
+            "value",
             "expectation",
         ),
         [
@@ -432,9 +488,12 @@ class TestControlPConst:
     )
     def test_init(
         self,
-        values,
+        value,
         expectation,
     ) -> None:
         with expectation:
-            p_set = ActivePowerSet(values=values)
+            p_set = ActivePowerSet(
+                value=value,
+                system_type=SystemType.NATURAL,
+            )
             ControlPConst(p_set=p_set)

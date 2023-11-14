@@ -17,14 +17,24 @@ This data model is intended to describe electrical power systems. It provides a 
 
 The data model is structured as the following schema:
 
-- grid topology:
-  - base topology containing all elements of the exported grid
+### Grid Topology
+This is the base topology containing all elements of the exported grid:
+- Branches (symmetrical overhead lines, cables, fuses from type "branch")
+- Nodes
+- Transformers (symmetrical 2- or 3-winding)
+- External grids
+- Loads (consumer, producer, grid assets, fuses from type)
   ![topology relationship diagram](./docs/topology.png)
-- topology case;
-  - information about disabled elements to represent a specific operational case based on the base topology
+
+### Topology Case
+This holds information about disabled elements to represent a specific operational case based on the base topology.
   ![topology case relationship diagram](./docs/topology_case.png)
-- steadystate case
-  - information about power draw/infeed for a specific operational case
+
+### Steadystate Case
+This holds information for a specific operational case such as:
+- power draw/infeed of load
+- tap posistion of transformer
+- operating point of external grid
   ![steadystate case relationship diagram](./docs/steady_state_case.png)
 
 ## <div id="remarks" /> General Remarks
@@ -33,9 +43,9 @@ Please find below some important general remarks and assumptions to consider for
 - The passive sign convention should be used for all types of loads (consumer as well as producer).
 - Numeric values should be set using the SI unit convention.
 - Topology
+  - Only **symmetrical** grid assets, e.g. transformer or line, are supported.
   - The `Rated Power` should always be defined positive (absolute value).
-- SteadyState
-  - The interaction between load models and controllers are depicted in the following schematic:
+- The interaction between load models and controllers are depicted in the following schematic:
   ![active/reactive power schematics](./docs/power_schematics.png)
 
 ## <div id="installation" /> Installation

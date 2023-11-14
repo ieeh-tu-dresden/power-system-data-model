@@ -12,12 +12,12 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import model_validator_before
-from psdm.quantities import ActivePower
-from psdm.quantities import Droop
-from psdm.quantities import Frequency
-from psdm.quantities import PowerFactor
-from psdm.quantities import ReactivePower
-from psdm.quantities import Voltage
+from psdm.quantities.multi_phase import ActivePower
+from psdm.quantities.multi_phase import Droop
+from psdm.quantities.multi_phase import PowerFactor
+from psdm.quantities.multi_phase import ReactivePower
+from psdm.quantities.multi_phase import Voltage
+from psdm.quantities.single_phase import Frequency
 from psdm.steadystate_case.characteristic import Characteristic
 
 
@@ -51,7 +51,7 @@ class ControlledVoltageRef(enum.Enum):
 
 
 def validate_pos(power: ReactivePower | None) -> ReactivePower | None:
-    if power is not None and any(e < 0 for e in power.values):  # noqa: PD011
+    if power is not None and any(e < 0 for e in power.value):
         raise ValueError
 
     return power

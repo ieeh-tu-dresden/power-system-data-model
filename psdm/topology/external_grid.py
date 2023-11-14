@@ -7,8 +7,9 @@ from __future__ import annotations
 from enum import Enum
 
 from psdm.base import Base
-from psdm.quantities import PhaseConnections
-from psdm.quantities import Power
+from psdm.base import UniqueTuple
+from psdm.quantities.multi_phase import Phase
+from psdm.quantities.single_phase import ApparentPower
 
 
 class GridType(Enum):
@@ -26,7 +27,7 @@ class ExternalGrid(Base):
     description: str | None
     name: str
     node: str
-    phase_connections: PhaseConnections
-    short_circuit_power_max: Power
-    short_circuit_power_min: Power
+    phases: UniqueTuple[Phase]
+    short_circuit_power_max: ApparentPower
+    short_circuit_power_min: ApparentPower
     type: GridType  # noqa: A003

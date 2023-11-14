@@ -7,13 +7,19 @@ from __future__ import annotations
 from enum import Enum
 
 from psdm.base import Base
+from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
-from psdm.quantities import Admittance
-from psdm.quantities import Current
-from psdm.quantities import Frequency
-from psdm.quantities import Impedance
-from psdm.quantities import Length
-from psdm.quantities import Voltage
+from psdm.quantities.multi_phase import Phase
+from psdm.quantities.single_phase import AdmittanceNat
+from psdm.quantities.single_phase import AdmittancePosSeq
+from psdm.quantities.single_phase import AdmittanceZerSeq
+from psdm.quantities.single_phase import Current
+from psdm.quantities.single_phase import Frequency
+from psdm.quantities.single_phase import ImpedanceNat
+from psdm.quantities.single_phase import ImpedancePosSeq
+from psdm.quantities.single_phase import ImpedanceZerSeq
+from psdm.quantities.single_phase import Length
+from psdm.quantities.single_phase import Voltage
 
 
 class BranchType(Enum):
@@ -28,30 +34,32 @@ class Branch(Base):
     It is characterized by a branch type (line, cable or fuse).
     """
 
+    name: str
     node_1: str
     node_2: str
-    name: str
+    phases_1: UniqueTuple[Phase]
+    phases_2: UniqueTuple[Phase]
     u_n: Voltage  # nominal voltage of the branch connected nodes
     i_r: Current | None  # rated current of branch (thermal limit in continuous operation)
-    r1: Impedance  # positive sequence values of PI-representation
-    x1: Impedance  # positive sequence values of PI-representation
-    g1: Admittance  # positive sequence values of PI-representation
-    b1: Admittance  # positive sequence values of PI-representation
     type: BranchType  # noqa: A003
     voltage_system_type: VoltageSystemType
-    r0: Impedance | None = None  # zero sequence values of PI-representation
-    x0: Impedance | None = None  # zero sequence values of PI-representation
-    g0: Admittance | None = None  # zero sequence values of PI-representation
-    b0: Admittance | None = None  # zero sequence values of PI-representation
+    r1: ImpedancePosSeq  # positive sequence values of PI-representation
+    x1: ImpedancePosSeq  # positive sequence values of PI-representation
+    g1: AdmittancePosSeq  # positive sequence values of PI-representation
+    b1: AdmittancePosSeq  # positive sequence values of PI-representation
+    r0: ImpedanceZerSeq | None = None  # zero sequence values of PI-representation
+    x0: ImpedanceZerSeq | None = None  # zero sequence values of PI-representation
+    g0: AdmittanceZerSeq | None = None  # zero sequence values of PI-representation
+    b0: AdmittanceZerSeq | None = None  # zero sequence values of PI-representation
     f_n: Frequency | None = None  # nominal frequency the values x and b apply
     description: str | None = None
     energized: bool | None = None
     length: Length | None = None  # length of the line the impedance and admittance values apply
-    rn: Impedance | None = None  # neutral natural values
-    xn: Impedance | None = None  # neutral natural values
-    gn: Admittance | None = None  # neutral natural values
-    bn: Admittance | None = None  # neutral natural values
-    rpn: Impedance | None = None  # neutral-line couple values
-    xpn: Impedance | None = None  # neutral-line couple values
-    gpn: Admittance | None = None  # neutral-line couple values
-    bpn: Admittance | None = None  # neutral-line couple values
+    rn: ImpedanceNat | None = None  # neutral natural values
+    xn: ImpedanceNat | None = None  # neutral natural values
+    gn: AdmittanceNat | None = None  # neutral natural values
+    bn: AdmittanceNat | None = None  # neutral natural values
+    rpn: ImpedanceNat | None = None  # neutral-line couple values
+    xpn: ImpedanceNat | None = None  # neutral-line couple values
+    gpn: AdmittanceNat | None = None  # neutral-line couple values
+    bpn: AdmittanceNat | None = None  # neutral-line couple values

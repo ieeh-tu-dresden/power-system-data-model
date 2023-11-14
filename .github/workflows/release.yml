@@ -62,9 +62,6 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: true
           architecture: x64
-          enable-pep582: true
-        env:
-          PDM_DEPS: "urllib3<2"
 
       - name: Install dependencies
         run: pdm install

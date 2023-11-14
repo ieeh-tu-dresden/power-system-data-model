@@ -8,12 +8,13 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.quantities import ActivePower as ActivePowerSet
-from psdm.quantities import Droop
-from psdm.quantities import PowerFactor
-from psdm.quantities import PowerFactorDirection
-from psdm.quantities import ReactivePower as ReactivePowerSet
-from psdm.quantities import Voltage
+from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
+from psdm.quantities.multi_phase import Droop
+from psdm.quantities.multi_phase import PowerFactor
+from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
+from psdm.quantities.multi_phase import Voltage
+from psdm.quantities.single_phase import PowerFactorDirection
+from psdm.quantities.single_phase import SystemType
 from psdm.steadystate_case.characteristic import Characteristic
 from psdm.steadystate_case.controller import ControlCosPhiConst
 from psdm.steadystate_case.controller import ControlCosPhiP
@@ -39,38 +40,66 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlQConst(
-                    q_set=ReactivePowerSet(values=[0, 0, 0]),
+                    q_set=ReactivePowerSet(
+                        value=[0, 0, 0],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 "Node_A",
                 ControlCosPhiConst(
-                    cos_phi_set=PowerFactor(values=[0.9, 0.9, 0.9], direction=PowerFactorDirection.UE),
+                    cos_phi_set=PowerFactor(
+                        value=[0.9, 0.9, 0.9],
+                        direction=PowerFactorDirection.UE,
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 "Node_A",
                 ControlTanPhiConst(
-                    tan_phi_set=PowerFactor(values=[0.9, 0.9, 0.9], direction=PowerFactorDirection.UE),
+                    tan_phi_set=PowerFactor(
+                        value=[0.9, 0.9, 0.9],
+                        direction=PowerFactorDirection.UE,
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 "Node_A",
                 ControlCosPhiP(
-                    cos_phi_ue=PowerFactor(values=[0.9, 0.9, 0.9], direction=PowerFactorDirection.UE),
-                    cos_phi_oe=PowerFactor(values=[0.9, 0.9, 0.9], direction=PowerFactorDirection.UE),
-                    p_threshold_ue=ActivePowerSet(values=[3, 3, 3]),
-                    p_threshold_oe=ActivePowerSet(values=[3, 3, 3]),
+                    cos_phi_ue=PowerFactor(
+                        value=[0.9, 0.9, 0.9],
+                        direction=PowerFactorDirection.UE,
+                        system_type=SystemType.NATURAL,
+                    ),
+                    cos_phi_oe=PowerFactor(
+                        value=[0.9, 0.9, 0.9],
+                        direction=PowerFactorDirection.UE,
+                        system_type=SystemType.NATURAL,
+                    ),
+                    p_threshold_ue=ActivePowerSet(
+                        value=[3, 3, 3],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    p_threshold_oe=ActivePowerSet(
+                        value=[3, 3, 3],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 "Node_A",
                 ControlUConst(
-                    u_set=Voltage(values=[20000, 20000, 20000]),
+                    u_set=Voltage(
+                        value=[20000, 20000, 20000],
+                        system_type=SystemType.NATURAL,
+                    ),
                     u_meas_ref=ControlledVoltageRef.POS_SEQ,
                 ),
                 does_not_raise(),
@@ -78,10 +107,24 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlCosPhiU(
-                    cos_phi_ue=PowerFactor(values=[0.9, 0.9, 0.9], direction=PowerFactorDirection.UE),
-                    cos_phi_oe=PowerFactor(values=[0.9, 0.9, 0.9], direction=PowerFactorDirection.UE),
-                    u_threshold_ue=Voltage(values=[20000, 20000, 20000]),
-                    u_threshold_oe=Voltage(values=[20000, 20000, 20000]),
+                    cos_phi_ue=PowerFactor(
+                        value=[0.9, 0.9, 0.9],
+                        direction=PowerFactorDirection.UE,
+                        system_type=SystemType.NATURAL,
+                    ),
+                    cos_phi_oe=PowerFactor(
+                        value=[0.9, 0.9, 0.9],
+                        direction=PowerFactorDirection.UE,
+                        system_type=SystemType.NATURAL,
+                    ),
+                    u_threshold_ue=Voltage(
+                        value=[20000, 20000, 20000],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    u_threshold_oe=Voltage(
+                        value=[20000, 20000, 20000],
+                        system_type=SystemType.NATURAL,
+                    ),
                     node_ref_u="Node_B",
                 ),
                 does_not_raise(),
@@ -98,20 +141,44 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlQU(
-                    droop_low=Droop(values=[8, 8, 8]),
-                    droop_up=Droop(values=[8, 8, 8]),
-                    u_q0=Voltage(values=[20000, 20000, 20000]),
-                    u_deadband_low=Voltage(values=[500, 500, 500]),
-                    u_deadband_up=Voltage(values=[500, 500, 500]),
-                    q_max_ue=ReactivePowerSet(values=[3000, 3000, 3000]),
-                    q_max_oe=ReactivePowerSet(values=[3000, 3000, 3000]),
+                    droop_low=Droop(
+                        value=[8, 8, 8],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    droop_up=Droop(
+                        value=[8, 8, 8],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    u_q0=Voltage(
+                        value=[20000, 20000, 20000],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    u_deadband_low=Voltage(
+                        value=[500, 500, 500],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    u_deadband_up=Voltage(
+                        value=[500, 500, 500],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    q_max_ue=ReactivePowerSet(
+                        value=[3000, 3000, 3000],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    q_max_oe=ReactivePowerSet(
+                        value=[3000, 3000, 3000],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 None,
                 ControlUConst(
-                    u_set=Voltage(values=[20000, 20000, 20000]),
+                    u_set=Voltage(
+                        value=[20000, 20000, 20000],
+                        system_type=SystemType.NATURAL,
+                    ),
                     u_meas_ref=ControlledVoltageRef.POS_SEQ,
                 ),
                 pytest.raises(pydantic.ValidationError),
@@ -120,7 +187,10 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlPConst(
-                    p_set=ActivePowerSet(values=[0, 0, 0]),
+                    p_set=ActivePowerSet(
+                        value=[0, 0, 0],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 pytest.raises(TypeError),
             ),

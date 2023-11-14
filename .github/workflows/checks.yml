@@ -23,9 +23,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: true
           architecture: x64
-          enable-pep582: true
-        env:
-          PDM_DEPS: "urllib3<2"
 
       - name: Check lockfile
         run: pdm lock --check

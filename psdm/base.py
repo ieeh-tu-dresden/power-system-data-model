@@ -36,6 +36,12 @@ UniqueTuple = t.Annotated[
     pydantic.AfterValidator(_validate_unique_list),
     pydantic.Field(json_schema_extra={"uniqueItems": True}),
 ]
+UniqueNonEmptyTuple = t.Annotated[
+    tuple[U, ...],
+    annotated_types.Len(1, 2**126),
+    pydantic.AfterValidator(_validate_unique_list),
+    pydantic.Field(json_schema_extra={"uniqueItems": True}),
+]
 NonEmptyTuple = t.Annotated[tuple[T, ...], annotated_types.Len(1, 2**126)]
 
 

@@ -8,10 +8,11 @@ from contextlib import nullcontext as does_not_raise
 import pydantic
 import pytest
 
-from psdm.quantities import ActivePower as ActivePowerSet
-from psdm.quantities import Droop
-from psdm.quantities import Frequency
-from psdm.quantities import ReactivePower as ReactivePowerSet
+from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
+from psdm.quantities.multi_phase import Droop
+from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
+from psdm.quantities.single_phase import Frequency
+from psdm.quantities.single_phase import SystemType
 from psdm.steadystate_case.controller import ControlPConst
 from psdm.steadystate_case.controller import ControlPF
 from psdm.steadystate_case.controller import ControlQConst
@@ -29,25 +30,46 @@ class TestActivePower:
             (
                 "Node_A",
                 ControlPConst(
-                    p_set=ActivePowerSet(values=[0, 0, 0]),
+                    p_set=ActivePowerSet(
+                        value=[0, 0, 0],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 "Node_A",
                 ControlPF(
-                    droop_up=Droop(values=[2, 2, 2]),
-                    droop_low=Droop(values=[3, 3, 3]),
-                    f_p0=Frequency(value=50),
-                    f_deadband_up=Frequency(value=0.1),
-                    f_deadband_low=Frequency(value=0.2),
+                    droop_up=Droop(
+                        value=[2, 2, 2],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    droop_low=Droop(
+                        value=[3, 3, 3],
+                        system_type=SystemType.NATURAL,
+                    ),
+                    f_p0=Frequency(
+                        value=50,
+                        system_type=SystemType.NATURAL,
+                    ),
+                    f_deadband_up=Frequency(
+                        value=0.1,
+                        system_type=SystemType.NATURAL,
+                    ),
+                    f_deadband_low=Frequency(
+                        value=0.2,
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
             (
                 None,
                 ControlPConst(
-                    p_set=ActivePowerSet(values=[0, 0, 0]),
+                    p_set=ActivePowerSet(
+                        value=[0, 0, 0],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 pytest.raises(pydantic.ValidationError),
             ),
@@ -59,7 +81,10 @@ class TestActivePower:
             (
                 "Node_A",
                 ControlQConst(
-                    q_set=ReactivePowerSet(values=[0, 0, 0]),
+                    q_set=ReactivePowerSet(
+                        value=[0, 0, 0],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 pytest.raises(TypeError),
             ),
