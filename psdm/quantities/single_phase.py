@@ -57,6 +57,7 @@ class Unit(enum.Enum):
     HOUR = "HOUR"
     DAY = "DAY"
     KELVIN = "KELVIN"
+    UNITLESS = "UNITLESS"
 
 
 class Quantity(Base):
@@ -77,15 +78,12 @@ class Frequency(SinglePhaseQuantity):
     """Frequency."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    precision: int = 3
+    unit: Unit = Unit.HERTZ
 
     @model_validator_before
     def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
         value["unit"] = Unit.HERTZ.value
-        return value
-
-    @model_validator_before
-    def set_precision(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["precision"] = 3
         return value
 
 
@@ -158,7 +156,7 @@ class Admittance(SinglePhaseQuantity):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
 
 
-class AdmittancePosSeq(SinglePhaseQuantity):
+class AdmittancePosSeq(Admittance):
     """Positive sequence admittance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
@@ -170,7 +168,7 @@ class AdmittancePosSeq(SinglePhaseQuantity):
         return value
 
 
-class AdmittanceNegSeq(SinglePhaseQuantity):
+class AdmittanceNegSeq(Admittance):
     """Negative sequence admittance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
@@ -182,7 +180,7 @@ class AdmittanceNegSeq(SinglePhaseQuantity):
         return value
 
 
-class AdmittanceZerSeq(SinglePhaseQuantity):
+class AdmittanceZerSeq(Admittance):
     """Zero sequence admittance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
@@ -194,7 +192,7 @@ class AdmittanceZerSeq(SinglePhaseQuantity):
         return value
 
 
-class AdmittanceNat(SinglePhaseQuantity):
+class AdmittanceNat(Admittance):
     """Natural admittance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]

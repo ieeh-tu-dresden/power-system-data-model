@@ -7,9 +7,11 @@ from __future__ import annotations
 
 import enum
 import itertools
+import math
 import typing as t
 
 import pydantic
+from pydantic import functional_serializers
 
 from psdm.base import Base
 from psdm.base import NonEmptyTuple
@@ -19,6 +21,7 @@ from psdm.quantities.single_phase import PowerFactorDirection
 from psdm.quantities.single_phase import PowerType
 from psdm.quantities.single_phase import Quantity
 from psdm.quantities.single_phase import SystemType
+from psdm.quantities.single_phase import Unit
 
 
 class Phase(enum.Enum):
@@ -38,18 +41,16 @@ class Phase(enum.Enum):
 PhaseConnection = tuple[Phase, Phase] | None
 
 
-def find_decimals(value: float) -> int:
-    return len(([*str(value).split("."), ""])[1])
-
-
-def round_avg(qty: MultiPhaseQuantity) -> float:
-    return round(sum(qty.value) / qty.n_phases, find_decimals(qty.value[0]))
-
-
 class MultiPhaseQuantity(Quantity):
     """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
 
     value: NonEmptyTuple[float]  # value (starting at first phase)
+    system_type: SystemType = SystemType.NATURAL
+
+    @model_validator_before
+    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["system_type"] = SystemType.NATURAL.value
+        return value
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -64,7 +65,7 @@ class MultiPhaseQuantity(Quantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round_avg(self)
+        return round(sum(self.value) / self.n_phases, self.precision)
 
     def __len__(self) -> int:
         return self.n_phases
@@ -102,12 +103,6 @@ class Impedance(MultiPhaseQuantity):
     """Natural impedance."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
-    system_type: SystemType = SystemType.NATURAL
-
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NATURAL.value
-        return value
 
 
 class Power(MultiPhaseQuantity):
@@ -118,11 +113,18 @@ class Power(MultiPhaseQuantity):
     """
 
     power_type: PowerType
+    precision: int = 9
+    unit: Unit = Unit.WATT
+
+    @model_validator_before
+    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["unit"] = Unit.WATT.value
+        return value
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return round(sum(self.value), find_decimals(self.value[0]))
+        return round(sum(self.value), self.precision)
 
 
 class ActivePower(Power):
@@ -158,24 +160,64 @@ class ReactivePower(Power):
         return value
 
 
-class PowerFactor(Base):
+class PowerFactor(MultiPhaseQuantity):
     """Power factors, e.g. cos(phi), tan(phi)."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
     direction: PowerFactorDirection = PowerFactorDirection.ND
+    precision: int = 3
+    unit: Unit = Unit.UNITLESS
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def is_symmetrical(self) -> bool:
-        return len(list(itertools.groupby(self.value))) in (0, 1)
+    @model_validator_before
+    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["unit"] = Unit.UNITLESS.value
+        return value
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def n_phases(self) -> int:
-        return len(self.value)
 
-    def __len__(self) -> int:
-        return self.n_phases
+class CosPhi(PowerFactor):
+    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[override,valid-type]
+        match power.power_type:
+            case PowerType.AC_ACTIVE.value:
+                return round(
+                    power.total / sum(pw / cp for pw, cp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case PowerType.AC_APPARENT.value:
+                return round(
+                    sum(pw * cp for pw, cp in zip(power.value, self.value, strict=True)) / power.total,
+                    self.precision,
+                )
+            case PowerType.AC_REACTIVE.value:
+                return round(
+                    sum(pw / math.tan(math.acos(cp)) for pw, cp in zip(power.value, self.value, strict=True))
+                    / sum(pw / math.sin(math.acos(cp)) for pw, cp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case _:
+                return float("nan")
+
+
+class TanPhi(PowerFactor):
+    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[override,valid-type]
+        match power.power_type:
+            case PowerType.AC_ACTIVE:
+                return round(
+                    sum(pw * tp for pw, tp in zip(power.value, self.value, strict=True)) / power.total,
+                    self.precision,
+                )
+            case PowerType.AC_APPARENT:
+                return round(
+                    sum(pw * math.sin(math.atan(cp)) for pw, cp in zip(power.value, self.value, strict=True))
+                    / sum(pw * math.cos(math.atan(cp)) for pw, cp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case PowerType.AC_REACTIVE:
+                return round(
+                    power.total / sum(pw / tp for pw, tp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case _:
+                return float("nan")
 
 
 class PhaseConnections(Base):
