@@ -69,6 +69,14 @@ class MultiPhaseQuantity(Quantity):
     def __len__(self) -> int:
         return self.n_phases
 
+    @pydantic.field_serializer("value")
+    def serialize_value(
+        self,
+        value: NonEmptyTuple[float],
+        _info: pydantic.FieldSerializationInfo,
+    ) -> NonEmptyTuple[float]:
+        return tuple(round(e, self.precision) for e in value)
+
 
 class Voltage(MultiPhaseQuantity):
     """Electrical Voltage."""

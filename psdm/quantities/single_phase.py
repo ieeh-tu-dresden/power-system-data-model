@@ -42,12 +42,35 @@ class PowerFactorDirection(enum.Enum):
     ND = "ND"
 
 
+class Unit(enum.Enum):
+    WATT = "WATT"
+    VOLT = "VOLT"
+    AMPERE = "AMPERE"
+    HERTZ = "HERTZ"
+    OHM = "OHM"
+    SIEMENS = "SIEMENS"
+    METER = "METER"
+    DEGREE = "DEGREE"
+    PERCENT = "PERCENT"
+    SECOND = "SECOND"
+    MINUTE = "MINUTE"
+    HOUR = "HOUR"
+    DAY = "DAY"
+    KELVIN = "KELVIN"
+
+
 class Quantity(Base):
     system_type: SystemType
+    precision: int = pydantic.Field(exclude=True)
+    unit: Unit
 
 
 class SinglePhaseQuantity(Quantity):
     value: float
+
+    @pydantic.field_serializer("value")
+    def serialize_value(self, value: float, _info: pydantic.FieldSerializationInfo) -> float:
+        return round(value, self.precision)
 
 
 class Frequency(SinglePhaseQuantity):
@@ -55,17 +78,36 @@ class Frequency(SinglePhaseQuantity):
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
 
+    @model_validator_before
+    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["unit"] = Unit.HERTZ.value
+        return value
+
+    @model_validator_before
+    def set_precision(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["precision"] = 3
+        return value
+
 
 class Impedance(SinglePhaseQuantity):
     """Impedance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
 
+    @model_validator_before
+    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["unit"] = Unit.OHM.value
+        return value
 
-class ImpedancePosSeq(SinglePhaseQuantity):
+    @model_validator_before
+    def set_precision(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
+        value["precision"] = 6
+        return value
+
+
+class ImpedancePosSeq(Impedance):
     """Positive sequence impedance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.POSITIVE_SEQUENCE
 
     @model_validator_before
@@ -74,7 +116,7 @@ class ImpedancePosSeq(SinglePhaseQuantity):
         return value
 
 
-class ImpedanceNegSeq(SinglePhaseQuantity):
+class ImpedanceNegSeq(Impedance):
     """Negative sequence impedance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
@@ -86,7 +128,7 @@ class ImpedanceNegSeq(SinglePhaseQuantity):
         return value
 
 
-class ImpedanceZerSeq(SinglePhaseQuantity):
+class ImpedanceZerSeq(Impedance):
     """Zero sequence impedance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
@@ -98,7 +140,7 @@ class ImpedanceZerSeq(SinglePhaseQuantity):
         return value
 
 
-class ImpedanceNat(SinglePhaseQuantity):
+class ImpedanceNat(Impedance):
     """Natural impedance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
@@ -107,42 +149,6 @@ class ImpedanceNat(SinglePhaseQuantity):
     @model_validator_before
     def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
         value["system_type"] = SystemType.NATURAL.value
-        return value
-
-
-class ImpedancePosNegCoup(SinglePhaseQuantity):
-    """Coupling impedance between positive and negative sequence."""
-
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
-    system_type: SystemType = SystemType.POSITIVE_NEGATIVE_COUPLING
-
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.POSITIVE_NEGATIVE_COUPLING.value
-        return value
-
-
-class ImpedanceNegZerCoup(SinglePhaseQuantity):
-    """Coupling impedance between negative and zero sequence."""
-
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
-    system_type: SystemType = SystemType.NEGATIVE_ZERO_COUPLING
-
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NEGATIVE_ZERO_COUPLING.value
-        return value
-
-
-class ImpedanceZerPosCoup(SinglePhaseQuantity):
-    """Coupling impedance between zero and positive sequence."""
-
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
-    system_type: SystemType = SystemType.ZERO_POSITIVE_COUPLING
-
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.ZERO_POSITIVE_COUPLING.value
         return value
 
 
