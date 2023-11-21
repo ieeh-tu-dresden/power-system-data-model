@@ -11,7 +11,6 @@ import math
 import typing as t
 
 import pydantic
-from pydantic import functional_serializers
 
 from psdm.base import Base
 from psdm.base import NonEmptyTuple
@@ -19,6 +18,7 @@ from psdm.base import UniqueNonEmptyTuple
 from psdm.base import model_validator_before
 from psdm.quantities.single_phase import PowerFactorDirection
 from psdm.quantities.single_phase import PowerType
+from psdm.quantities.single_phase import Precision
 from psdm.quantities.single_phase import Quantity
 from psdm.quantities.single_phase import SystemType
 from psdm.quantities.single_phase import Unit
@@ -42,7 +42,7 @@ PhaseConnection = tuple[Phase, Phase] | None
 
 
 class MultiPhaseQuantity(Quantity):
-    """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
+    """Base class for multi phase quantities like voltage, current, power or characteristic droops."""
 
     value: NonEmptyTuple[float]  # value (starting at first phase)
     system_type: SystemType = SystemType.NATURAL
@@ -83,26 +83,39 @@ class Voltage(MultiPhaseQuantity):
     """Electrical Voltage."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
+    precision: int = Precision.VOLTAGE
+    unit: Unit = Unit.VOLT
 
 
 class Current(MultiPhaseQuantity):
     """Electrical currents."""
+
+    precision: int = Precision.CURRENT
+    unit: Unit = Unit.AMPERE
 
 
 class Angle(MultiPhaseQuantity):
     """Angles of complex quantity."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=360)]  # type: ignore[valid-type]
+    precision: int = Precision.ANGLE
+    unit: Unit = Unit.DEGREE
 
 
 class Droop(MultiPhaseQuantity):
     """Droops of characteristics curves."""
+
+    precision: int = Precision.PU
+    unit: Unit = Unit.UNITLESS
 
 
 class Impedance(MultiPhaseQuantity):
     """Natural impedance."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
+
+    precision: int = Precision.IMPEDANCE
+    unit: Unit = Unit.OHM
 
 
 class Power(MultiPhaseQuantity):
@@ -113,8 +126,8 @@ class Power(MultiPhaseQuantity):
     """
 
     power_type: PowerType
-    precision: int = 9
-    unit: Unit = Unit.WATT
+    precision: int = Precision.POWER
+    unit: Unit = Unit.VOLT_AMPERE
 
     @model_validator_before
     def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -131,6 +144,7 @@ class ActivePower(Power):
     """Electrical active powers."""
 
     power_type: PowerType = PowerType.AC_ACTIVE
+    unit: Unit = Unit.WATT
 
     @model_validator_before
     def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -142,6 +156,7 @@ class ApparentPower(Power):
     """Electrical apparent powers."""
 
     power_type: PowerType = PowerType.AC_APPARENT
+    unit: Unit = Unit.VOLT_AMPERE
 
     @model_validator_before
     def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -153,6 +168,7 @@ class ReactivePower(Power):
     """Electrical reactive powers."""
 
     power_type: PowerType = PowerType.AC_REACTIVE
+    unit: Unit = Unit.VOLT_AMPERE_REACTIVE
 
     @model_validator_before
     def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -163,9 +179,9 @@ class ReactivePower(Power):
 class PowerFactor(MultiPhaseQuantity):
     """Power factors, e.g. cos(phi), tan(phi)."""
 
-    value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
+    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
     direction: PowerFactorDirection = PowerFactorDirection.ND
-    precision: int = 3
+    precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
 
     @model_validator_before
@@ -175,7 +191,10 @@ class PowerFactor(MultiPhaseQuantity):
 
 
 class CosPhi(PowerFactor):
-    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[override,valid-type]
+    value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
+
+    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[valid-type]
+        """Calculate the weighted average power factor depending of the power type of the provided power."""
         match power.power_type:
             case PowerType.AC_ACTIVE.value:
                 return round(
@@ -198,20 +217,23 @@ class CosPhi(PowerFactor):
 
 
 class TanPhi(PowerFactor):
-    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[override,valid-type]
+    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
+
+    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0):  # type: ignore[valid-type]
+        """Calculate the weighted average power factor depending of the power type of the provided power."""
         match power.power_type:
-            case PowerType.AC_ACTIVE:
+            case PowerType.AC_ACTIVE.value:
                 return round(
                     sum(pw * tp for pw, tp in zip(power.value, self.value, strict=True)) / power.total,
                     self.precision,
                 )
-            case PowerType.AC_APPARENT:
+            case PowerType.AC_APPARENT.value:
                 return round(
                     sum(pw * math.sin(math.atan(cp)) for pw, cp in zip(power.value, self.value, strict=True))
                     / sum(pw * math.cos(math.atan(cp)) for pw, cp in zip(power.value, self.value, strict=True)),
                     self.precision,
                 )
-            case PowerType.AC_REACTIVE:
+            case PowerType.AC_REACTIVE.value:
                 return round(
                     power.total / sum(pw / tp for pw, tp in zip(power.value, self.value, strict=True)),
                     self.precision,

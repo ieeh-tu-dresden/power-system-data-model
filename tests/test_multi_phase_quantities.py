@@ -238,8 +238,7 @@ class TestPowerFactor:
             ((1, 1, 1), True, does_not_raise()),
             ((0.9, 1, 1), False, does_not_raise()),
             ((1, 1, 1), False, pytest.raises(AssertionError)),
-            ((1, 2, 1), False, pytest.raises(pydantic.ValidationError)),
-            ((1, 2, 1), True, pytest.raises(pydantic.ValidationError)),
+            ((1, 0.9, 1), True, pytest.raises(AssertionError)),
             ((1, -1, 1), True, pytest.raises(pydantic.ValidationError)),
         ],
     )

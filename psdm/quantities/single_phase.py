@@ -43,21 +43,38 @@ class PowerFactorDirection(enum.Enum):
 
 
 class Unit(enum.Enum):
-    WATT = "WATT"
-    VOLT = "VOLT"
     AMPERE = "AMPERE"
-    HERTZ = "HERTZ"
-    OHM = "OHM"
-    SIEMENS = "SIEMENS"
-    METER = "METER"
+    DAY = "DAY"
     DEGREE = "DEGREE"
+    HERTZ = "HERTZ"
+    HOUR = "HOUR"
+    KELVIN = "KELVIN"
+    METER = "METER"
+    MINUTE = "MINUTE"
+    OHM = "OHM"
+    VOLT = "VOLT"
+    VOLT_AMPERE = "VA"
+    VOLT_AMPERE_REACTIVE = "VAR"
+    WATT = "WATT"
     PERCENT = "PERCENT"
     SECOND = "SECOND"
-    MINUTE = "MINUTE"
-    HOUR = "HOUR"
-    DAY = "DAY"
-    KELVIN = "KELVIN"
+    SIEMENS = "SIEMENS"
     UNITLESS = "UNITLESS"
+
+
+class Precision:
+    """Count of decimal digits."""
+
+    ADMITTANCE: int = 13
+    ANGLE: int = 5
+    CURRENT: int = 2
+    FREQUENCY: int = 4
+    IMPEDANCE: int = 7
+    LENGTH: int = 0
+    POWER: int = 1
+    POWERFACTOR: int = 7
+    PU: int = 5
+    VOLTAGE: int = 2
 
 
 class Quantity(Base):
@@ -78,7 +95,7 @@ class Frequency(SinglePhaseQuantity):
     """Frequency."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
-    precision: int = 3
+    precision: int = Precision.FREQUENCY
     unit: Unit = Unit.HERTZ
 
     @model_validator_before
@@ -91,6 +108,8 @@ class Impedance(SinglePhaseQuantity):
     """Impedance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    precision: int = Precision.IMPEDANCE
+    unit: Unit = Unit.OHM
 
     @model_validator_before
     def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -154,6 +173,8 @@ class Admittance(SinglePhaseQuantity):
     """Admittance."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    precision: int = Precision.ADMITTANCE
+    unit: Unit = Unit.SIEMENS
 
 
 class AdmittancePosSeq(Admittance):
@@ -208,36 +229,51 @@ class Length(SinglePhaseQuantity):
     """Length."""
 
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    precision: int = Precision.LENGTH
+    unit: Unit = Unit.METER
 
 
 class Voltage(SinglePhaseQuantity):
     """Electrical Voltage."""
 
+    precision: int = Precision.VOLTAGE
+    unit: Unit = Unit.VOLT
+
 
 class Current(SinglePhaseQuantity):
     """Electrical current."""
+
+    precision: int = Precision.CURRENT
+    unit: Unit = Unit.AMPERE
 
 
 class Angle(SinglePhaseQuantity):
     """Angle of complex quantity."""
 
     value: pydantic.confloat(ge=0, le=360)  # type: ignore[valid-type]
+    precision: int = Precision.ANGLE
+    unit: Unit = Unit.DEGREE
 
 
 class Droop(SinglePhaseQuantity):
     """Droop of characteristics curves."""
+
+    precision: int = Precision.PU
+    unit: Unit = Unit.UNITLESS
 
 
 class Power(SinglePhaseQuantity):
     """Base class for power quantities."""
 
     power_type: PowerType
+    precision: int = Precision.POWER
 
 
 class ActivePower(Power):
     """Electrical active power."""
 
     power_type: PowerType = PowerType.AC_ACTIVE
+    unit: Unit = Unit.WATT
 
     @model_validator_before
     def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -249,6 +285,7 @@ class ApparentPower(Power):
     """Electrical apparent power."""
 
     power_type: PowerType = PowerType.AC_APPARENT
+    unit: Unit = Unit.VOLT_AMPERE
 
     @model_validator_before
     def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -260,6 +297,7 @@ class ReactivePower(Power):
     """Electrical reactive power."""
 
     power_type: PowerType = PowerType.AC_REACTIVE
+    unit: Unit = Unit.VOLT_AMPERE_REACTIVE
 
     @model_validator_before
     def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
@@ -272,6 +310,8 @@ class PowerFactor(Base):
 
     value: pydantic.confloat(ge=0, le=1)  # type: ignore[valid-type]
     direction: PowerFactorDirection = PowerFactorDirection.ND
+    precision: int = Precision.POWERFACTOR
+    unit: Unit = Unit.UNITLESS
 
 
 class PhaseAngleClock(Base):
