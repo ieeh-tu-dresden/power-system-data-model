@@ -108,7 +108,8 @@ class RatedPower(Base):
     def cos_phi_average(self) -> float:
         """A simple phase count based average of cos(phi).
 
-        Only a true value, if cos_phi is symmetrical as well as the related phase power."""
+        Only a true value, if cos_phi is symmetrical as well as the related phase power.
+        """
         try:
             return round(sum(self.cos_phi.value) / self.cos_phi.n_phases, self.cos_phi.precision)
 
