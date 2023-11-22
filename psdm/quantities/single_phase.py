@@ -308,10 +308,18 @@ class ReactivePower(Power):
 class PowerFactor(Base):
     """Power factor, e.g. cos(phi), tan(phi)."""
 
-    value: pydantic.confloat(ge=0, le=1)  # type: ignore[valid-type]
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     direction: PowerFactorDirection = PowerFactorDirection.ND
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
+
+
+class CosPhi(PowerFactor):
+    value: pydantic.confloat(ge=0, le=1)  # type: ignore[valid-type]
+
+
+class TanPhi(PowerFactor):
+    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
 
 
 class PhaseAngleClock(Base):
