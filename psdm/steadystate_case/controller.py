@@ -13,9 +13,10 @@ import pydantic
 from psdm.base import Base
 from psdm.base import model_validator_before
 from psdm.quantities.multi_phase import ActivePower
+from psdm.quantities.multi_phase import CosPhi
 from psdm.quantities.multi_phase import Droop
-from psdm.quantities.multi_phase import PowerFactor
 from psdm.quantities.multi_phase import ReactivePower
+from psdm.quantities.multi_phase import TanPhi
 from psdm.quantities.multi_phase import Voltage
 from psdm.quantities.single_phase import Frequency
 from psdm.steadystate_case.characteristic import Characteristic
@@ -84,7 +85,7 @@ class ControlUConst(Base):
 
 class ControlTanPhiConst(Base):
     # tan(phi) control mode
-    tan_phi_set: PowerFactor  # set point of tan(phi)
+    tan_phi_set: TanPhi  # set point of tan(phi)
 
     control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
 
@@ -96,7 +97,7 @@ class ControlTanPhiConst(Base):
 
 class ControlCosPhiConst(Base):
     # cos(phi) control mode
-    cos_phi_set: PowerFactor  # set point of cos(phi)
+    cos_phi_set: CosPhi  # set point of cos(phi)
 
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
 
@@ -108,8 +109,8 @@ class ControlCosPhiConst(Base):
 
 class ControlCosPhiP(Base):
     # cos(phi(P)) control mode
-    cos_phi_ue: PowerFactor  # under excited: cos(phi) for calculation of Q in relation to P.
-    cos_phi_oe: PowerFactor  # over excited: cos(phi) for calculation of Q in relation to P.
+    cos_phi_ue: CosPhi  # under excited: cos(phi) for calculation of Q in relation to P.
+    cos_phi_oe: CosPhi  # over excited: cos(phi) for calculation of Q in relation to P.
     p_threshold_ue: ActivePower  # under excited: threshold for P.
     p_threshold_oe: ActivePower  # over excited: threshold for P.
 
@@ -123,8 +124,8 @@ class ControlCosPhiP(Base):
 
 class ControlCosPhiU(Base):
     # cos(phi(U)) control mode
-    cos_phi_ue: PowerFactor  # under excited: cos(phi) for calculation of Q in relation to P
-    cos_phi_oe: PowerFactor  # over excited: cos(phi) for calculation of Q in relation to P
+    cos_phi_ue: CosPhi  # under excited: cos(phi) for calculation of Q in relation to P
+    cos_phi_oe: CosPhi  # over excited: cos(phi) for calculation of Q in relation to P
     u_threshold_ue: Voltage  # under excited: threshold for U
     u_threshold_oe: Voltage  # over excited: threshold for U
     node_ref_u: str  # reference node at which the voltage is measured
