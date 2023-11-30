@@ -6,12 +6,10 @@
 from __future__ import annotations
 
 import enum
-import typing as t
 
 import pydantic
 
 from psdm.base import Base
-from psdm.base import model_validator_before
 
 
 class PowerType(enum.Enum):
@@ -98,10 +96,10 @@ class Frequency(SinglePhaseQuantity):
     precision: int = Precision.FREQUENCY
     unit: Unit = Unit.HERTZ
 
-    @model_validator_before
-    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["unit"] = Unit.HERTZ.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def unit(self) -> Unit:
+        return Unit.HERTZ
 
 
 class Impedance(SinglePhaseQuantity):
@@ -111,15 +109,10 @@ class Impedance(SinglePhaseQuantity):
     precision: int = Precision.IMPEDANCE
     unit: Unit = Unit.OHM
 
-    @model_validator_before
-    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["unit"] = Unit.OHM.value
-        return value
-
-    @model_validator_before
-    def set_precision(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["precision"] = 6
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def unit(self) -> Unit:
+        return Unit.OHM
 
 
 class ImpedancePosSeq(Impedance):
@@ -127,10 +120,10 @@ class ImpedancePosSeq(Impedance):
 
     system_type: SystemType = SystemType.POSITIVE_SEQUENCE
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.POSITIVE_SEQUENCE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.POSITIVE_SEQUENCE
 
 
 class ImpedanceNegSeq(Impedance):
@@ -139,10 +132,10 @@ class ImpedanceNegSeq(Impedance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NEGATIVE_SEQUENCE
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NEGATIVE_SEQUENCE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.NEGATIVE_SEQUENCE
 
 
 class ImpedanceZerSeq(Impedance):
@@ -151,10 +144,10 @@ class ImpedanceZerSeq(Impedance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.ZERO_SEQUENCE
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.ZERO_SEQUENCE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.ZERO_SEQUENCE
 
 
 class ImpedanceNat(Impedance):
@@ -163,10 +156,10 @@ class ImpedanceNat(Impedance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NATURAL
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NATURAL.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.NATURAL
 
 
 class Admittance(SinglePhaseQuantity):
@@ -183,10 +176,10 @@ class AdmittancePosSeq(Admittance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.POSITIVE_SEQUENCE
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.POSITIVE_SEQUENCE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.POSITIVE_SEQUENCE
 
 
 class AdmittanceNegSeq(Admittance):
@@ -195,10 +188,10 @@ class AdmittanceNegSeq(Admittance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NEGATIVE_SEQUENCE
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NEGATIVE_SEQUENCE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.NEGATIVE_SEQUENCE
 
 
 class AdmittanceZerSeq(Admittance):
@@ -207,10 +200,10 @@ class AdmittanceZerSeq(Admittance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.ZERO_SEQUENCE
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.ZERO_SEQUENCE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.ZERO_SEQUENCE
 
 
 class AdmittanceNat(Admittance):
@@ -219,10 +212,10 @@ class AdmittanceNat(Admittance):
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NATURAL
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NATURAL.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.NATURAL
 
 
 class Length(SinglePhaseQuantity):
@@ -275,10 +268,10 @@ class ActivePower(Power):
     power_type: PowerType = PowerType.AC_ACTIVE
     unit: Unit = Unit.WATT
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_ACTIVE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_ACTIVE
 
 
 class ApparentPower(Power):
@@ -287,10 +280,10 @@ class ApparentPower(Power):
     power_type: PowerType = PowerType.AC_APPARENT
     unit: Unit = Unit.VOLT_AMPERE
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_APPARENT.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_APPARENT
 
 
 class ReactivePower(Power):
@@ -299,10 +292,10 @@ class ReactivePower(Power):
     power_type: PowerType = PowerType.AC_REACTIVE
     unit: Unit = Unit.VOLT_AMPERE_REACTIVE
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_REACTIVE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_REACTIVE
 
 
 class PowerFactor(Base):

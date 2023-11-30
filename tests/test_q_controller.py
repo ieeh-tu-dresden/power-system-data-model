@@ -184,7 +184,7 @@ class TestReactivePower:
                 ),
                 pytest.raises(pydantic.ValidationError),
             ),
-            ("Node_A", None, pytest.raises(TypeError)),
+            ("Node_A", None, pytest.raises(pydantic.ValidationError)),
             (
                 "Node_A",
                 ControlPConst(
@@ -193,7 +193,7 @@ class TestReactivePower:
                         system_type=SystemType.NATURAL,
                     ),
                 ),
-                pytest.raises(TypeError),
+                pytest.raises(pydantic.ValidationError),
             ),
         ],
     )

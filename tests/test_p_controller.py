@@ -76,7 +76,7 @@ class TestActivePower:
             (
                 "Node_A",
                 None,
-                pytest.raises(TypeError),
+                pytest.raises(pydantic.ValidationError),
             ),
             (
                 "Node_A",
@@ -86,7 +86,7 @@ class TestActivePower:
                         system_type=SystemType.NATURAL,
                     ),
                 ),
-                pytest.raises(TypeError),
+                pytest.raises(pydantic.ValidationError),
             ),
         ],
     )

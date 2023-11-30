@@ -15,7 +15,6 @@ import pydantic
 from psdm.base import Base
 from psdm.base import NonEmptyTuple
 from psdm.base import UniqueNonEmptyTuple
-from psdm.base import model_validator_before
 from psdm.quantities.single_phase import PowerFactorDirection
 from psdm.quantities.single_phase import PowerType
 from psdm.quantities.single_phase import Precision
@@ -47,10 +46,10 @@ class MultiPhaseQuantity(Quantity):
     value: NonEmptyTuple[float]  # value (starting at first phase)
     system_type: SystemType = SystemType.NATURAL
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NATURAL.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def system_type(self) -> SystemType:
+        return SystemType.NATURAL
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -129,10 +128,10 @@ class Power(MultiPhaseQuantity):
     precision: int = Precision.POWER
     unit: Unit = Unit.VOLT_AMPERE
 
-    @model_validator_before
-    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["unit"] = Unit.WATT.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def unit(self) -> Unit:
+        return Unit.VOLT_AMPERE
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -146,10 +145,10 @@ class ActivePower(Power):
     power_type: PowerType = PowerType.AC_ACTIVE
     unit: Unit = Unit.WATT
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_ACTIVE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_ACTIVE
 
 
 class ApparentPower(Power):
@@ -158,10 +157,10 @@ class ApparentPower(Power):
     power_type: PowerType = PowerType.AC_APPARENT
     unit: Unit = Unit.VOLT_AMPERE
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_APPARENT.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_APPARENT
 
 
 class ReactivePower(Power):
@@ -170,10 +169,10 @@ class ReactivePower(Power):
     power_type: PowerType = PowerType.AC_REACTIVE
     unit: Unit = Unit.VOLT_AMPERE_REACTIVE
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_REACTIVE.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def power_type(self) -> PowerType:
+        return PowerType.AC_REACTIVE
 
 
 class PowerFactor(MultiPhaseQuantity):
@@ -184,10 +183,10 @@ class PowerFactor(MultiPhaseQuantity):
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
 
-    @model_validator_before
-    def set_unit(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["unit"] = Unit.UNITLESS.value
-        return value
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def unit(self) -> Unit:
+        return Unit.UNITLESS
 
 
 class CosPhi(PowerFactor):

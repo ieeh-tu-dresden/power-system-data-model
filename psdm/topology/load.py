@@ -12,7 +12,6 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
-from psdm.base import model_validator_after
 from psdm.quantities.multi_phase import ActivePower
 from psdm.quantities.multi_phase import ApparentPower
 from psdm.quantities.multi_phase import CosPhi
@@ -85,7 +84,7 @@ class RatedPower(Base):
     reactive_power: ReactivePower
     cos_phi: CosPhi
 
-    @model_validator_after
+    @pydantic.model_validator(mode="after")  # type: ignore[type-var]
     def validate_length(self) -> RatedPower:
         if (
             self.apparent_power.n_phases
@@ -159,7 +158,7 @@ class Load(Base):  # including assets of type load and generator
     voltage_system_type: VoltageSystemType
     description: str | None = None
 
-    @model_validator_after
+    @pydantic.model_validator(mode="after")  # type: ignore[type-var]
     def validate_length(self) -> Load:
         if self.rated_power.n_phases == self.phase_connections.n_phases:
             return self
