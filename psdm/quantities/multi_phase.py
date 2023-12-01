@@ -8,7 +8,6 @@ from __future__ import annotations
 import enum
 import itertools
 import math
-import typing as t
 
 import pydantic
 
@@ -46,10 +45,13 @@ class MultiPhaseQuantity(Quantity):
     value: NonEmptyTuple[float]  # value (starting at first phase)
     system_type: SystemType = SystemType.NATURAL
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def system_type(self) -> SystemType:
-        return SystemType.NATURAL
+    @pydantic.field_validator("system_type")
+    def check_system_type(cls, v: SystemType) -> SystemType:
+        if v is not SystemType.NATURAL.value:
+            msg = "Only SystemType.NATURAL is supported."
+            raise ValueError(msg)
+
+        return v
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -126,12 +128,6 @@ class Power(MultiPhaseQuantity):
 
     power_type: PowerType
     precision: int = Precision.POWER
-    unit: Unit = Unit.VOLT_AMPERE
-
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def unit(self) -> Unit:
-        return Unit.VOLT_AMPERE
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -145,10 +141,21 @@ class ActivePower(Power):
     power_type: PowerType = PowerType.AC_ACTIVE
     unit: Unit = Unit.WATT
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def power_type(self) -> PowerType:
-        return PowerType.AC_ACTIVE
+    @pydantic.field_validator("power_type")
+    def check_power_type(cls, v: PowerType) -> PowerType:
+        if v is not PowerType.AC_ACTIVE.value:
+            msg = "Only PowerType.AC_ACTIVE is supported."
+            raise ValueError(msg)
+
+        return v
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.WATT.value:
+            msg = "Only Unit.WATT is supported."
+            raise ValueError(msg)
+
+        return v
 
 
 class ApparentPower(Power):
@@ -157,22 +164,44 @@ class ApparentPower(Power):
     power_type: PowerType = PowerType.AC_APPARENT
     unit: Unit = Unit.VOLT_AMPERE
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def power_type(self) -> PowerType:
-        return PowerType.AC_APPARENT
+    @pydantic.field_validator("power_type")
+    def check_power_type(cls, v: PowerType) -> PowerType:
+        if v is not PowerType.AC_APPARENT.value:
+            msg = "Only PowerType.AC_APPARENT is supported."
+            raise ValueError(msg)
+
+        return v
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.VOLT_AMPERE.value:
+            msg = "Only Unit.VOLT_AMPERE is supported."
+            raise ValueError(msg)
+
+        return v
 
 
 class ReactivePower(Power):
     """Electrical reactive powers."""
 
     power_type: PowerType = PowerType.AC_REACTIVE
-    unit: Unit = Unit.VOLT_AMPERE_REACTIVE
+    unit: Unit = Unit.VOLTAMPERE_REACTIVE
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def power_type(self) -> PowerType:
-        return PowerType.AC_REACTIVE
+    @pydantic.field_validator("power_type")
+    def check_power_type(cls, v: PowerType) -> PowerType:
+        if v is not PowerType.AC_REACTIVE.value:
+            msg = "Only PowerType.AC_REACTIVE is supported."
+            raise ValueError(msg)
+
+        return v
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.VOLTAMPERE_REACTIVE.value:
+            msg = "Only Unit.VOLTAMPERE_REACTIVE is supported."
+            raise ValueError(msg)
+
+        return v
 
 
 class PowerFactor(MultiPhaseQuantity):
@@ -183,10 +212,13 @@ class PowerFactor(MultiPhaseQuantity):
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def unit(self) -> Unit:
-        return Unit.UNITLESS
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.UNITLESS.value:
+            msg = "Only Unit.UNITLESS is supported."
+            raise ValueError(msg)
+
+        return v
 
 
 class CosPhi(PowerFactor):

@@ -49,6 +49,7 @@ class Base(pydantic.BaseModel):
     model_config = {
         "frozen": True,
         "use_enum_values": True,
+        "validate_default": True,
     }
 
     @classmethod

@@ -8,7 +8,6 @@ from __future__ import annotations
 import pydantic
 
 from psdm.base import Base
-from psdm.base import model_validator_after
 from psdm.quantities.multi_phase import Power
 from psdm.quantities.multi_phase import Voltage
 
@@ -28,7 +27,7 @@ class LoadModel(Base):
     exp_i: int = 1
     exp_z: int = 2
 
-    @model_validator_after
+    @pydantic.model_validator(mode="after")
     def validate_range_c(self) -> LoadModel:
         name = self.name
         c_p = self.c_p
@@ -54,4 +53,4 @@ class LoadModel(Base):
             )
             for p, _u, _u_0 in zip(power.value, u.value, self.u_0.value, strict=True)
         )
-        return Power(power_type=power.power_type, system_type=power.system_type, value=value)
+        return Power(power_type=power.power_type, system_type=power.system_type, value=value, unit=power.unit)

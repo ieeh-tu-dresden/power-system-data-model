@@ -10,6 +10,7 @@ from psdm.quantities.multi_phase import Power
 from psdm.quantities.multi_phase import ReactivePower
 from psdm.quantities.multi_phase import TanPhi
 from psdm.quantities.single_phase import PowerType
+from psdm.quantities.single_phase import Unit
 
 
 class TestCosPhi:
@@ -30,7 +31,7 @@ class TestCosPhi:
 
     def test_average_power_type_mismatch(self) -> None:
         cp = CosPhi(value=(0.9, 0.8, 0.7))
-        p = Power(value=(100, 200, 300), power_type=PowerType.DC)
+        p = Power(value=(100, 200, 300), power_type=PowerType.DC, unit=Unit.WATT)
         assert math.isnan(cp.weighted_average(p))
 
     def test_average_dimension_mismatch(self) -> None:
@@ -61,17 +62,17 @@ class TestTanPhi:
 
     def test_average_ac_apparent_power(self) -> None:
         tp = TanPhi(value=(0.4843, 0.75, 1.0202))
-        p = Power(value=(100, 200, 300), power_type=PowerType.AC_APPARENT)
+        p = Power(value=(100, 200, 300), power_type=PowerType.AC_APPARENT, unit=Unit.VOLT_AMPERE)
         assert tp.weighted_average(p) == 0.8213670  # noqa: PLR2004
 
     def test_average_ac_reactive_power(self) -> None:
         tp = TanPhi(value=(0.4843, 0.75, 1.0202))
-        p = Power(value=(100, 200, 300), power_type=PowerType.AC_REACTIVE)
+        p = Power(value=(100, 200, 300), power_type=PowerType.AC_REACTIVE, unit=Unit.VOLTAMPERE_REACTIVE)
         assert tp.weighted_average(p) == 0.7820542  # noqa: PLR2004
 
     def test_average_power_type_mismatch(self) -> None:
         tp = TanPhi(value=(0.4843, 0.75, 1.0202))
-        p = Power(value=(100, 200, 300), power_type=PowerType.DC)
+        p = Power(value=(100, 200, 300), power_type=PowerType.DC, unit=Unit.WATT)
         assert math.isnan(tp.weighted_average(p))
 
     def test_average_dimension_mismatch(self) -> None:

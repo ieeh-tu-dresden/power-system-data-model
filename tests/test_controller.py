@@ -185,8 +185,8 @@ class TestControlCosPhiP:
             (0.9, -0.9, -6, -3, pytest.raises(pydantic.ValidationError)),
             (None, 0.9, -3, -6, pytest.raises(pydantic.ValidationError)),
             (0.9, None, -3, -6, pytest.raises(pydantic.ValidationError)),
-            (0.9, 0.9, None, -6, pytest.raises(TypeError)),
-            (0.9, 0.9, -3, None, pytest.raises(TypeError)),
+            (0.9, 0.9, None, -6, pytest.raises(pydantic.ValidationError)),
+            (0.9, 0.9, -3, None, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
@@ -311,8 +311,8 @@ class TestControlQU:
             (5, 6, None, 1000, 2000, 20000, 10000, pytest.raises(pydantic.ValidationError)),
             (5, 6, 110000, None, 2000, 20000, 10000, pytest.raises(pydantic.ValidationError)),
             (5, 6, 110000, 1000, None, 20000, 10000, pytest.raises(pydantic.ValidationError)),
-            (5, 6, 110000, 1000, 2000, None, 10000, pytest.raises(TypeError)),
-            (5, 6, 110000, 1000, 2000, 20000, None, pytest.raises(TypeError)),
+            (5, 6, 110000, 1000, 2000, None, 10000, pytest.raises(pydantic.ValidationError)),
+            (5, 6, 110000, 1000, 2000, 20000, None, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
