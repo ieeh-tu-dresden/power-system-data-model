@@ -105,15 +105,7 @@ class RatedPower(Base):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def cos_phi_average(self) -> float:
-        """A simple phase count based average of cos(phi).
-
-        Only a true value, if cos_phi is symmetrical as well as the related phase power.
-        """
-        try:
-            return round(sum(self.cos_phi.value) / self.cos_phi.n_phases, self.cos_phi.precision)
-
-        except ZeroDivisionError:
-            return float("nan")
+        return self.cos_phi(power=self.apparent_power)
 
     @classmethod
     def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: CosPhi) -> RatedPower:
