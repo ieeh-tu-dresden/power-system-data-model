@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import enum
+import functools
 import itertools
 import math
 
@@ -66,7 +67,7 @@ class MultiPhaseQuantity(Quantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round(sum(self.value) / self.n_phases, self.precision)
+        return sum(self.rounded) / self.n_phases
 
     def __len__(self) -> int:
         return self.n_phases
@@ -74,10 +75,14 @@ class MultiPhaseQuantity(Quantity):
     @pydantic.field_serializer("value")
     def serialize_value(
         self,
-        value: NonEmptyTuple[float],
+        _value: pydantic.FieldSerializationInfo,
         _info: pydantic.FieldSerializationInfo,
     ) -> NonEmptyTuple[float]:
-        return tuple(round(e, self.precision) for e in value)
+        return self.rounded
+
+    @functools.cached_property
+    def rounded(self) -> NonEmptyTuple[float]:
+        return tuple(round(e, self.precision) for e in self.value)
 
 
 class Voltage(MultiPhaseQuantity):
@@ -181,7 +186,7 @@ class Power(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return round(sum(self.value), self.precision)
+        return sum(self.rounded)
 
 
 class ActivePower(Power):
