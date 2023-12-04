@@ -62,7 +62,7 @@ class TestTanPhi:
 
     def test_average_ac_apparent_power(self) -> None:
         tp = TanPhi(value=(0.4843, 0.75, 1.0202))
-        p = Power(value=(100, 200, 300), power_type=PowerType.AC_APPARENT, unit=Unit.VOLT_AMPERE)
+        p = Power(value=(100, 200, 300), power_type=PowerType.AC_APPARENT, unit=Unit.VOLTAMPERE)
         assert tp.weighted_average(p) == 0.8213670  # noqa: PLR2004
 
     def test_average_ac_reactive_power(self) -> None:

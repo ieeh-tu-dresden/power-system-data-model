@@ -204,7 +204,7 @@ class TestPower:
                 value=value,
                 power_type=power_type,
                 system_type=SystemType.NATURAL,
-                unit=Unit.VOLT_AMPERE,
+                unit=Unit.VOLTAMPERE,
             )
             assert p.is_symmetrical == is_symmetrical
             assert p.total == value_total

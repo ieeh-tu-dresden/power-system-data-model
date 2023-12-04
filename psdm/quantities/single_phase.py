@@ -48,7 +48,7 @@ class Unit(enum.Enum):
     MINUTE = "MINUTE"
     OHM = "OHM"
     VOLT = "VOLT"
-    VOLT_AMPERE = "VA"
+    VOLTAMPERE = "VA"
     VOLTAMPERE_REACTIVE = "VAR"
     WATT = "WATT"
     PERCENT = "PERCENT"
@@ -366,7 +366,7 @@ class ApparentPower(Power):
     """Electrical apparent power."""
 
     power_type: PowerType = PowerType.AC_APPARENT
-    unit: Unit = Unit.VOLT_AMPERE
+    unit: Unit = Unit.VOLTAMPERE
 
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
@@ -378,8 +378,8 @@ class ApparentPower(Power):
 
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
-        if v is not Unit.VOLT_AMPERE.value:
-            msg = "Input should be Unit.VOLT_AMPERE."
+        if v is not Unit.VOLTAMPERE.value:
+            msg = "Input should be Unit.VOLTAMPERE."
             raise ValueError(msg)
 
         return v

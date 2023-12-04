@@ -5,10 +5,10 @@
 
 from __future__ import annotations
 
-import collections.abc as cabc
 import enum
 import itertools
 import math
+from typing import TYPE_CHECKING
 
 import pydantic
 
@@ -21,6 +21,9 @@ from psdm.quantities.single_phase import Precision
 from psdm.quantities.single_phase import Quantity
 from psdm.quantities.single_phase import SystemType
 from psdm.quantities.single_phase import Unit
+
+if TYPE_CHECKING:
+    import collections.abc as cabc
 
 
 class Phase(enum.Enum):
@@ -81,7 +84,7 @@ class MultiPhaseQuantity(Quantity):
         return tuple(self.rounded)
 
     @property
-    def rounded(self) -> cabc.Generator[float]:
+    def rounded(self) -> cabc.Generator[float, None, None]:
         return (round(e, self.precision) for e in self.value)
 
 
@@ -177,8 +180,8 @@ class Power(MultiPhaseQuantity):
 
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
-        if v not in (Unit.WATT.value, Unit.VOLT_AMPERE.value, Unit.VOLTAMPERE_REACTIVE.value):
-            msg = "Input should be Unit.WATT, Unit.VOLT_AMPERE or Unit.VOLTAMPERE_REACTIVE."
+        if v not in (Unit.WATT.value, Unit.VOLTAMPERE.value, Unit.VOLTAMPERE_REACTIVE.value):
+            msg = "Input should be Unit.WATT, Unit.VOLTAMPERE or Unit.VOLTAMPERE_REACTIVE."
             raise ValueError(msg)
 
         return v
@@ -216,7 +219,7 @@ class ApparentPower(Power):
     """Electrical apparent powers."""
 
     power_type: PowerType = PowerType.AC_APPARENT
-    unit: Unit = Unit.VOLT_AMPERE
+    unit: Unit = Unit.VOLTAMPERE
 
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
@@ -228,8 +231,8 @@ class ApparentPower(Power):
 
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
-        if v is not Unit.VOLT_AMPERE.value:
-            msg = "Input should be Unit.VOLT_AMPERE."
+        if v is not Unit.VOLTAMPERE.value:
+            msg = "Input should be Unit.VOLTAMPERE."
             raise ValueError(msg)
 
         return v
