@@ -5,8 +5,8 @@
 
 from __future__ import annotations
 
+import collections.abc as cabc
 import enum
-import functools
 import itertools
 import math
 
@@ -78,11 +78,11 @@ class MultiPhaseQuantity(Quantity):
         _value: pydantic.FieldSerializationInfo,
         _info: pydantic.FieldSerializationInfo,
     ) -> NonEmptyTuple[float]:
-        return self.rounded
+        return tuple(self.rounded)
 
-    @functools.cached_property
-    def rounded(self) -> NonEmptyTuple[float]:
-        return tuple(round(e, self.precision) for e in self.value)
+    @property
+    def rounded(self) -> cabc.Generator[float]:
+        return (round(e, self.precision) for e in self.value)
 
 
 class Voltage(MultiPhaseQuantity):
