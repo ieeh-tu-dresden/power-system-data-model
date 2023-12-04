@@ -67,7 +67,7 @@ class MultiPhaseQuantity(Quantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return sum(self.rounded) / self.n_phases
+        return round(sum(self.rounded) / self.n_phases, self.precision)
 
     def __len__(self) -> int:
         return self.n_phases
@@ -186,7 +186,7 @@ class Power(MultiPhaseQuantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return sum(self.rounded)
+        return round(sum(self.rounded), self.precision)
 
 
 class ActivePower(Power):
