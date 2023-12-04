@@ -48,7 +48,7 @@ class MultiPhaseQuantity(Quantity):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.NATURAL.value:
-            msg = "Only SystemType.NATURAL is supported."
+            msg = "Input should be SystemType.NATURAL."
             raise ValueError(msg)
 
         return v
@@ -87,12 +87,28 @@ class Voltage(MultiPhaseQuantity):
     precision: int = Precision.VOLTAGE
     unit: Unit = Unit.VOLT
 
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.VOLT.value:
+            msg = "Input should be Unit.VOLT."
+            raise ValueError(msg)
+
+        return v
+
 
 class Current(MultiPhaseQuantity):
     """Electrical currents."""
 
     precision: int = Precision.CURRENT
     unit: Unit = Unit.AMPERE
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.AMPERE.value:
+            msg = "Input should be Unit.AMPERE."
+            raise ValueError(msg)
+
+        return v
 
 
 class Angle(MultiPhaseQuantity):
@@ -102,12 +118,28 @@ class Angle(MultiPhaseQuantity):
     precision: int = Precision.ANGLE
     unit: Unit = Unit.DEGREE
 
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.DEGREE.value:
+            msg = "Input should be Unit.DEGREE."
+            raise ValueError(msg)
+
+        return v
+
 
 class Droop(MultiPhaseQuantity):
     """Droops of characteristics curves."""
 
     precision: int = Precision.PU
     unit: Unit = Unit.UNITLESS
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.UNITLESS.value:
+            msg = "Input should be Unit.UNITLESS."
+            raise ValueError(msg)
+
+        return v
 
 
 class Impedance(MultiPhaseQuantity):
@@ -117,6 +149,14 @@ class Impedance(MultiPhaseQuantity):
 
     precision: int = Precision.IMPEDANCE
     unit: Unit = Unit.OHM
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.OHM.value:
+            msg = "Input should be Unit.OHM."
+            raise ValueError(msg)
+
+        return v
 
 
 class Power(MultiPhaseQuantity):
@@ -128,6 +168,15 @@ class Power(MultiPhaseQuantity):
 
     power_type: PowerType
     precision: int = Precision.POWER
+    unit: Unit = Unit.WATT
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v not in (Unit.WATT.value, Unit.VOLT_AMPERE.value, Unit.VOLTAMPERE_REACTIVE.value):
+            msg = "Input should be Unit.WATT, Unit.VOLT_AMPERE or Unit.VOLTAMPERE_REACTIVE."
+            raise ValueError(msg)
+
+        return v
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -144,7 +193,7 @@ class ActivePower(Power):
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
         if v is not PowerType.AC_ACTIVE.value:
-            msg = "Only PowerType.AC_ACTIVE is supported."
+            msg = "Input should be PowerType.AC_ACTIVE."
             raise ValueError(msg)
 
         return v
@@ -152,7 +201,7 @@ class ActivePower(Power):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.WATT.value:
-            msg = "Only Unit.WATT is supported."
+            msg = "Input should be Unit.WATT."
             raise ValueError(msg)
 
         return v
@@ -167,7 +216,7 @@ class ApparentPower(Power):
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
         if v is not PowerType.AC_APPARENT.value:
-            msg = "Only PowerType.AC_APPARENT is supported."
+            msg = "Input should be PowerType.AC_APPARENT."
             raise ValueError(msg)
 
         return v
@@ -175,7 +224,7 @@ class ApparentPower(Power):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.VOLT_AMPERE.value:
-            msg = "Only Unit.VOLT_AMPERE is supported."
+            msg = "Input should be Unit.VOLT_AMPERE."
             raise ValueError(msg)
 
         return v
@@ -190,7 +239,7 @@ class ReactivePower(Power):
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
         if v is not PowerType.AC_REACTIVE.value:
-            msg = "Only PowerType.AC_REACTIVE is supported."
+            msg = "Input should be PowerType.AC_REACTIVE."
             raise ValueError(msg)
 
         return v
@@ -198,7 +247,7 @@ class ReactivePower(Power):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.VOLTAMPERE_REACTIVE.value:
-            msg = "Only Unit.VOLTAMPERE_REACTIVE is supported."
+            msg = "Input should be Unit.VOLTAMPERE_REACTIVE."
             raise ValueError(msg)
 
         return v
@@ -215,7 +264,7 @@ class PowerFactor(MultiPhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.UNITLESS.value:
-            msg = "Only Unit.UNITLESS is supported."
+            msg = "Input should be Unit.UNITLESS."
             raise ValueError(msg)
 
         return v

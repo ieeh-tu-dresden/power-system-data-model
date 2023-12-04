@@ -29,9 +29,6 @@ class SystemType(enum.Enum):
     NEGATIVE_SEQUENCE = "NEGATIVE_SEQUENCE"
     ZERO_SEQUENCE = "ZERO_SEQUENCE"
     NATURAL = "NATURAL"
-    POSITIVE_NEGATIVE_COUPLING = "POSITIVE_NEGATIVE_COUPLING"
-    NEGATIVE_ZERO_COUPLING = "NEGATIVE_ZERO_COUPLING"
-    ZERO_POSITIVE_COUPLING = "ZERO_POSITIVE_COUPLING"
 
 
 class PowerFactorDirection(enum.Enum):
@@ -92,6 +89,7 @@ class SinglePhaseQuantity(Quantity):
 class Frequency(SinglePhaseQuantity):
     """Frequency."""
 
+    system_type: SystemType = SystemType.NATURAL
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     precision: int = Precision.FREQUENCY
     unit: Unit = Unit.HERTZ
@@ -99,7 +97,7 @@ class Frequency(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.HERTZ.value:
-            msg = "Only Unit.HERTZ is supported."
+            msg = "Input should be Unit.HERTZ."
             raise ValueError(msg)
 
         return v
@@ -108,6 +106,7 @@ class Frequency(SinglePhaseQuantity):
 class Impedance(SinglePhaseQuantity):
     """Impedance."""
 
+    system_type: SystemType = SystemType.NATURAL
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     precision: int = Precision.IMPEDANCE
     unit: Unit = Unit.OHM
@@ -115,7 +114,7 @@ class Impedance(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.OHM.value:
-            msg = "Only Unit.OHM is supported."
+            msg = "Input should be Unit.OHM."
             raise ValueError(msg)
 
         return v
@@ -129,7 +128,7 @@ class ImpedancePosSeq(Impedance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.POSITIVE_SEQUENCE.value:
-            msg = "Only SystemType.POSITIVE_SEQUENCE is supported."
+            msg = "Input should be SystemType.POSITIVE_SEQUENCE."
             raise ValueError(msg)
 
         return v
@@ -144,7 +143,7 @@ class ImpedanceNegSeq(Impedance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.NEGATIVE_SEQUENCE.value:
-            msg = "Only SystemType.NEGATIVE_SEQUENCE is supported."
+            msg = "Input should be SystemType.NEGATIVE_SEQUENCE."
             raise ValueError(msg)
 
         return v
@@ -159,7 +158,7 @@ class ImpedanceZerSeq(Impedance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.ZERO_SEQUENCE.value:
-            msg = "Only SystemType.ZERO_SEQUENCE is supported."
+            msg = "Input should be SystemType.ZERO_SEQUENCE."
             raise ValueError(msg)
 
         return v
@@ -174,7 +173,7 @@ class ImpedanceNat(Impedance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.NATURAL.value:
-            msg = "Only SystemType.NATURAL is supported."
+            msg = "Input should be SystemType.NATURAL."
             raise ValueError(msg)
 
         return v
@@ -190,7 +189,7 @@ class Admittance(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.SIEMENS.value:
-            msg = "Only Unit.SIEMENS is supported."
+            msg = "Input should be Unit.SIEMENS."
             raise ValueError(msg)
 
         return v
@@ -205,7 +204,7 @@ class AdmittancePosSeq(Admittance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.POSITIVE_SEQUENCE.value:
-            msg = "Only SystemType.POSITIVE_SEQUENCE is supported."
+            msg = "Input should be SystemType.POSITIVE_SEQUENCE."
             raise ValueError(msg)
 
         return v
@@ -220,7 +219,7 @@ class AdmittanceNegSeq(Admittance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.NEGATIVE_SEQUENCE.value:
-            msg = "Only SystemType.NEGATIVE_SEQUENCE is supported."
+            msg = "Input should be SystemType.NEGATIVE_SEQUENCE."
             raise ValueError(msg)
 
         return v
@@ -235,7 +234,7 @@ class AdmittanceZerSeq(Admittance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.ZERO_SEQUENCE.value:
-            msg = "Only SystemType.ZERO_SEQUENCE is supported."
+            msg = "Input should be SystemType.ZERO_SEQUENCE."
             raise ValueError(msg)
 
         return v
@@ -250,7 +249,7 @@ class AdmittanceNat(Admittance):
     @pydantic.field_validator("system_type")
     def check_system_type(cls, v: SystemType) -> SystemType:
         if v is not SystemType.NATURAL.value:
-            msg = "Only SystemType.NATURAL is supported."
+            msg = "Input should be SystemType.NATURAL."
             raise ValueError(msg)
 
         return v
@@ -266,7 +265,7 @@ class Length(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.METER.value:
-            msg = "Only Unit.METER is supported."
+            msg = "Input should be Unit.METER."
             raise ValueError(msg)
 
         return v
@@ -281,7 +280,7 @@ class Voltage(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.VOLT.value:
-            msg = "Only Unit.VOLT is supported."
+            msg = "Input should be Unit.VOLT."
             raise ValueError(msg)
 
         return v
@@ -296,7 +295,7 @@ class Current(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.AMPERE.value:
-            msg = "Only Unit.AMPERE is supported."
+            msg = "Input should be Unit.AMPERE."
             raise ValueError(msg)
 
         return v
@@ -312,7 +311,7 @@ class Angle(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.DEGREE.value:
-            msg = "Only Unit.DEGREE is supported."
+            msg = "Input should be Unit.DEGREE."
             raise ValueError(msg)
 
         return v
@@ -327,7 +326,7 @@ class Droop(SinglePhaseQuantity):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.UNITLESS.value:
-            msg = "Only Unit.UNITLESS is supported."
+            msg = "Input should be Unit.UNITLESS."
             raise ValueError(msg)
 
         return v
@@ -349,7 +348,7 @@ class ActivePower(Power):
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
         if v is not PowerType.AC_ACTIVE.value:
-            msg = "Only PowerType.AC_ACTIVE is supported."
+            msg = "Input should be PowerType.AC_ACTIVE."
             raise ValueError(msg)
 
         return v
@@ -357,7 +356,7 @@ class ActivePower(Power):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.WATT.value:
-            msg = "Only Unit.WATT is supported."
+            msg = "Input should be Unit.WATT."
             raise ValueError(msg)
 
         return v
@@ -372,7 +371,7 @@ class ApparentPower(Power):
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
         if v is not PowerType.AC_APPARENT.value:
-            msg = "Only PowerType.AC_APPARENT is supported."
+            msg = "Input should be PowerType.AC_APPARENT."
             raise ValueError(msg)
 
         return v
@@ -380,7 +379,7 @@ class ApparentPower(Power):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.VOLT_AMPERE.value:
-            msg = "Only Unit.VOLT_AMPERE is supported."
+            msg = "Input should be Unit.VOLT_AMPERE."
             raise ValueError(msg)
 
         return v
@@ -395,7 +394,7 @@ class ReactivePower(Power):
     @pydantic.field_validator("power_type")
     def check_power_type(cls, v: PowerType) -> PowerType:
         if v is not PowerType.AC_REACTIVE.value:
-            msg = "Only PowerType.AC_REACTIVE is supported."
+            msg = "Input should be PowerType.AC_REACTIVE."
             raise ValueError(msg)
 
         return v
@@ -403,7 +402,7 @@ class ReactivePower(Power):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.VOLTAMPERE_REACTIVE.value:
-            msg = "Only Unit.VOLTAMPERE_REACTIVE is supported."
+            msg = "Input should be Unit.VOLTAMPERE_REACTIVE."
             raise ValueError(msg)
 
         return v
@@ -420,7 +419,7 @@ class PowerFactor(Base):
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.UNITLESS.value:
-            msg = "Only Unit.UNITLESS is supported."
+            msg = "Input should be Unit.UNITLESS."
             raise ValueError(msg)
 
         return v
