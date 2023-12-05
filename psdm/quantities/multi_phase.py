@@ -8,7 +8,7 @@ from __future__ import annotations
 import enum
 import itertools
 import math
-from typing import TYPE_CHECKING
+import typing as t
 
 import pydantic
 
@@ -22,7 +22,7 @@ from psdm.quantities.single_phase import Quantity
 from psdm.quantities.single_phase import SystemType
 from psdm.quantities.single_phase import Unit
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     import collections.abc as cabc
 
 
