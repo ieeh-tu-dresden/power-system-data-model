@@ -49,6 +49,7 @@ class Base(pydantic.BaseModel):
     model_config = {
         "frozen": True,
         "use_enum_values": True,
+        "validate_default": True,
     }
 
     @classmethod
@@ -76,7 +77,3 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
 
     return self
-
-
-model_validator_after = pydantic.model_validator(mode="after")
-model_validator_before = pydantic.model_validator(mode="before")

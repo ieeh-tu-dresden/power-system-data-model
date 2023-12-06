@@ -19,9 +19,9 @@ The data model is structured as the following schema:
 
 ### Grid Topology
 This is the base topology containing all elements of the exported grid:
-- Branches (symmetrical overhead lines, cables, fuses from type "branch")
+- Branches (symmetrical: overhead lines, cables, fuses from type "branch")
 - Nodes
-- Transformers (symmetrical 2- or 3-winding)
+- Transformers (symmetrical: 2- or 3-winding)
 - External grids
 - Loads (consumer, producer, grid assets, fuses from type)
   ![topology relationship diagram](./docs/topology.png)

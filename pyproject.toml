@@ -83,11 +83,7 @@
   convention = "pep257"
 
 [tool.ruff.pep8-naming]
-  classmethod-decorators = [
-    "classmethod",
-    "psdm.base.model_validator_before",
-    "pydantic.field_validator",
-  ]
+  classmethod-decorators = ["classmethod", "pydantic.field_validator"]
 
 [tool.black]
   line_length = 120
@@ -115,7 +111,7 @@
   warn_unused_ignores    = true
 
 [tool.pytest.ini_options]
-  addopts      = "-ra --strict-markers -p pytester --cov=psdm --cov-report xml --cov-report term"
+  # addopts      = "-ra --strict-markers -p pytester --cov=psdm --cov-report xml --cov-report term"
   python_files = "test_*.py"
   testpaths    = ["tests"]
 

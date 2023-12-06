@@ -9,9 +9,10 @@ import pydantic
 import pytest
 
 from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
+from psdm.quantities.multi_phase import CosPhi
 from psdm.quantities.multi_phase import Droop
-from psdm.quantities.multi_phase import PowerFactor
 from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
+from psdm.quantities.multi_phase import TanPhi
 from psdm.quantities.multi_phase import Voltage
 from psdm.quantities.single_phase import PowerFactorDirection
 from psdm.quantities.single_phase import SystemType
@@ -50,7 +51,7 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlCosPhiConst(
-                    cos_phi_set=PowerFactor(
+                    cos_phi_set=CosPhi(
                         value=[0.9, 0.9, 0.9],
                         direction=PowerFactorDirection.UE,
                         system_type=SystemType.NATURAL,
@@ -61,7 +62,7 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlTanPhiConst(
-                    tan_phi_set=PowerFactor(
+                    tan_phi_set=TanPhi(
                         value=[0.9, 0.9, 0.9],
                         direction=PowerFactorDirection.UE,
                         system_type=SystemType.NATURAL,
@@ -72,12 +73,12 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlCosPhiP(
-                    cos_phi_ue=PowerFactor(
+                    cos_phi_ue=CosPhi(
                         value=[0.9, 0.9, 0.9],
                         direction=PowerFactorDirection.UE,
                         system_type=SystemType.NATURAL,
                     ),
-                    cos_phi_oe=PowerFactor(
+                    cos_phi_oe=CosPhi(
                         value=[0.9, 0.9, 0.9],
                         direction=PowerFactorDirection.UE,
                         system_type=SystemType.NATURAL,
@@ -107,12 +108,12 @@ class TestReactivePower:
             (
                 "Node_A",
                 ControlCosPhiU(
-                    cos_phi_ue=PowerFactor(
+                    cos_phi_ue=CosPhi(
                         value=[0.9, 0.9, 0.9],
                         direction=PowerFactorDirection.UE,
                         system_type=SystemType.NATURAL,
                     ),
-                    cos_phi_oe=PowerFactor(
+                    cos_phi_oe=CosPhi(
                         value=[0.9, 0.9, 0.9],
                         direction=PowerFactorDirection.UE,
                         system_type=SystemType.NATURAL,
@@ -183,7 +184,7 @@ class TestReactivePower:
                 ),
                 pytest.raises(pydantic.ValidationError),
             ),
-            ("Node_A", None, pytest.raises(TypeError)),
+            ("Node_A", None, pytest.raises(pydantic.ValidationError)),
             (
                 "Node_A",
                 ControlPConst(
@@ -192,7 +193,7 @@ class TestReactivePower:
                         system_type=SystemType.NATURAL,
                     ),
                 ),
-                pytest.raises(TypeError),
+                pytest.raises(pydantic.ValidationError),
             ),
         ],
     )

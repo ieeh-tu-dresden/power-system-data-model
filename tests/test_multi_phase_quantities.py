@@ -21,6 +21,7 @@ from psdm.quantities.multi_phase import ReactivePower
 from psdm.quantities.multi_phase import Voltage
 from psdm.quantities.single_phase import PowerType
 from psdm.quantities.single_phase import SystemType
+from psdm.quantities.single_phase import Unit
 
 N_PHASES = 3
 
@@ -49,7 +50,7 @@ class TestVoltage:
         expectation,
     ) -> None:
         with expectation:
-            v = Voltage(value=value, system_type=SystemType.POSITIVE_SEQUENCE)
+            v = Voltage(value=value, system_type=SystemType.NATURAL)
             assert v.is_symmetrical == is_symmetrical
             assert v.n_phases == N_PHASES
             assert len(v) == N_PHASES
@@ -79,7 +80,7 @@ class TestCurrent:
         expectation,
     ) -> None:
         with expectation:
-            c = Current(value=value, system_type=SystemType.POSITIVE_SEQUENCE)
+            c = Current(value=value, system_type=SystemType.NATURAL)
             assert c.is_symmetrical == is_symmetrical
 
 
@@ -108,7 +109,7 @@ class TestAngle:
         expectation,
     ) -> None:
         with expectation:
-            a = Angle(value=value, system_type=SystemType.POSITIVE_SEQUENCE)
+            a = Angle(value=value, system_type=SystemType.NATURAL)
             assert a.is_symmetrical == is_symmetrical
 
 
@@ -136,7 +137,7 @@ class TestDroop:
         expectation,
     ) -> None:
         with expectation:
-            d = Droop(value=value, system_type=SystemType.POSITIVE_SEQUENCE)
+            d = Droop(value=value, system_type=SystemType.NATURAL)
             assert d.is_symmetrical == is_symmetrical
 
 
@@ -164,7 +165,7 @@ class TestImpedance:
         expectation,
     ) -> None:
         with expectation:
-            i = Impedance(value=value, system_type=SystemType.POSITIVE_SEQUENCE)
+            i = Impedance(value=value, system_type=SystemType.NATURAL)
             assert i.is_symmetrical == is_symmetrical
             assert i.system_type == SystemType.NATURAL.value
 
@@ -203,6 +204,7 @@ class TestPower:
                 value=value,
                 power_type=power_type,
                 system_type=SystemType.NATURAL,
+                unit=Unit.VOLTAMPERE,
             )
             assert p.is_symmetrical == is_symmetrical
             assert p.total == value_total
@@ -238,8 +240,7 @@ class TestPowerFactor:
             ((1, 1, 1), True, does_not_raise()),
             ((0.9, 1, 1), False, does_not_raise()),
             ((1, 1, 1), False, pytest.raises(AssertionError)),
-            ((1, 2, 1), False, pytest.raises(pydantic.ValidationError)),
-            ((1, 2, 1), True, pytest.raises(pydantic.ValidationError)),
+            ((1, 0.9, 1), True, pytest.raises(AssertionError)),
             ((1, -1, 1), True, pytest.raises(pydantic.ValidationError)),
         ],
     )

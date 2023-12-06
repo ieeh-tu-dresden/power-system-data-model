@@ -12,11 +12,10 @@ import pydantic
 
 from psdm.base import Base
 from psdm.base import VoltageSystemType
-from psdm.base import model_validator_after
 from psdm.quantities.multi_phase import ActivePower
 from psdm.quantities.multi_phase import ApparentPower
+from psdm.quantities.multi_phase import CosPhi
 from psdm.quantities.multi_phase import PhaseConnections
-from psdm.quantities.multi_phase import PowerFactor
 from psdm.quantities.multi_phase import ReactivePower
 from psdm.quantities.single_phase import SystemType as QSystemType
 from psdm.topology.load_model import LoadModel
@@ -83,9 +82,9 @@ class RatedPower(Base):
     apparent_power: ApparentPower
     active_power: ActivePower
     reactive_power: ReactivePower
-    cos_phi: PowerFactor
+    cos_phi: CosPhi
 
-    @model_validator_after
+    @pydantic.model_validator(mode="after")
     def validate_length(self) -> RatedPower:
         if (
             self.apparent_power.n_phases
@@ -105,26 +104,17 @@ class RatedPower(Base):
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
-    def cos_phi_total(self) -> float:
-        try:
-            return round(
-                sum(self.active_power.value) / sum(self.apparent_power.value),
-                find_decimals(self.cos_phi.value[0]),
-            )
-        except ZeroDivisionError:
-            return float("nan")
+    def cos_phi_average(self) -> float:
+        return self.cos_phi.weighted_average(power=self.apparent_power)
 
     @classmethod
-    def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: PowerFactor) -> RatedPower:
+    def from_apparent_power(cls, apparent_power: ApparentPower, cos_phi: CosPhi) -> RatedPower:
         active_power = ActivePower(
-            value=[round(p * c, find_decimals(p)) for p, c in zip(apparent_power.value, cos_phi.value, strict=True)],
+            value=[p * c for p, c in zip(apparent_power.value, cos_phi.value, strict=True)],
             system_type=QSystemType.NATURAL,
         )
         reactive_power = ReactivePower(
-            value=[
-                round(p * math.sin(math.acos(c)), find_decimals(p))
-                for p, c in zip(apparent_power.value, cos_phi.value, strict=True)
-            ],
+            value=[p * math.sin(math.acos(c)) for p, c in zip(apparent_power.value, cos_phi.value, strict=True)],
             system_type=QSystemType.NATURAL,
         )
         return RatedPower(
@@ -160,7 +150,7 @@ class Load(Base):  # including assets of type load and generator
     voltage_system_type: VoltageSystemType
     description: str | None = None
 
-    @model_validator_after
+    @pydantic.model_validator(mode="after")
     def validate_length(self) -> Load:
         if self.rated_power.n_phases == self.phase_connections.n_phases:
             return self

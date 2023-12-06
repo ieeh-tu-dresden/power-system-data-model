@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import enum
 import itertools
+import math
 import typing as t
 
 import pydantic
@@ -14,11 +15,15 @@ import pydantic
 from psdm.base import Base
 from psdm.base import NonEmptyTuple
 from psdm.base import UniqueNonEmptyTuple
-from psdm.base import model_validator_before
 from psdm.quantities.single_phase import PowerFactorDirection
 from psdm.quantities.single_phase import PowerType
+from psdm.quantities.single_phase import Precision
 from psdm.quantities.single_phase import Quantity
 from psdm.quantities.single_phase import SystemType
+from psdm.quantities.single_phase import Unit
+
+if t.TYPE_CHECKING:
+    import collections.abc as cabc
 
 
 class Phase(enum.Enum):
@@ -38,18 +43,19 @@ class Phase(enum.Enum):
 PhaseConnection = tuple[Phase, Phase] | None
 
 
-def find_decimals(value: float) -> int:
-    return len(([*str(value).split("."), ""])[1])
-
-
-def round_avg(qty: MultiPhaseQuantity) -> float:
-    return round(sum(qty.value) / qty.n_phases, find_decimals(qty.value[0]))
-
-
 class MultiPhaseQuantity(Quantity):
-    """Base class for multi phase quantities like voltage, current, power or charcteristic droops."""
+    """Base class for multi phase quantities like voltage, current, power or characteristic droops."""
 
     value: NonEmptyTuple[float]  # value (starting at first phase)
+    system_type: SystemType = SystemType.NATURAL
+
+    @pydantic.field_validator("system_type")
+    def check_system_type(cls, v: SystemType) -> SystemType:
+        if v is not SystemType.NATURAL.value:
+            msg = "Input should be SystemType.NATURAL."
+            raise ValueError(msg)
+
+        return v
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
@@ -64,42 +70,101 @@ class MultiPhaseQuantity(Quantity):
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def average(self) -> float:
-        return round_avg(self)
+        return round(sum(self.rounded) / self.n_phases, self.precision)
 
     def __len__(self) -> int:
         return self.n_phases
+
+    @pydantic.field_serializer("value")
+    def serialize_value(
+        self,
+        _value: pydantic.FieldSerializationInfo,
+        _info: pydantic.FieldSerializationInfo,
+    ) -> NonEmptyTuple[float]:
+        return tuple(self.rounded)
+
+    @property
+    def rounded(self) -> cabc.Generator[float, None, None]:
+        return (round(e, self.precision) for e in self.value)
 
 
 class Voltage(MultiPhaseQuantity):
     """Electrical Voltage."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
+    precision: int = Precision.VOLTAGE
+    unit: Unit = Unit.VOLT
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.VOLT.value:
+            msg = "Input should be Unit.VOLT."
+            raise ValueError(msg)
+
+        return v
 
 
 class Current(MultiPhaseQuantity):
     """Electrical currents."""
+
+    precision: int = Precision.CURRENT
+    unit: Unit = Unit.AMPERE
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.AMPERE.value:
+            msg = "Input should be Unit.AMPERE."
+            raise ValueError(msg)
+
+        return v
 
 
 class Angle(MultiPhaseQuantity):
     """Angles of complex quantity."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=360)]  # type: ignore[valid-type]
+    precision: int = Precision.ANGLE
+    unit: Unit = Unit.DEGREE
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.DEGREE.value:
+            msg = "Input should be Unit.DEGREE."
+            raise ValueError(msg)
+
+        return v
 
 
 class Droop(MultiPhaseQuantity):
     """Droops of characteristics curves."""
+
+    precision: int = Precision.PU
+    unit: Unit = Unit.UNITLESS
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.UNITLESS.value:
+            msg = "Input should be Unit.UNITLESS."
+            raise ValueError(msg)
+
+        return v
 
 
 class Impedance(MultiPhaseQuantity):
     """Natural impedance."""
 
     value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
-    system_type: SystemType = SystemType.NATURAL
 
-    @model_validator_before
-    def set_system_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["system_type"] = SystemType.NATURAL.value
-        return value
+    precision: int = Precision.IMPEDANCE
+    unit: Unit = Unit.OHM
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.OHM.value:
+            msg = "Input should be Unit.OHM."
+            raise ValueError(msg)
+
+        return v
 
 
 class Power(MultiPhaseQuantity):
@@ -110,64 +175,167 @@ class Power(MultiPhaseQuantity):
     """
 
     power_type: PowerType
+    precision: int = Precision.POWER
+    unit: Unit = Unit.WATT
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v not in (Unit.WATT.value, Unit.VOLTAMPERE.value, Unit.VOLTAMPERE_REACTIVE.value):
+            msg = "Input should be Unit.WATT, Unit.VOLTAMPERE or Unit.VOLTAMPERE_REACTIVE."
+            raise ValueError(msg)
+
+        return v
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def total(self) -> float:
-        return round(sum(self.value), find_decimals(self.value[0]))
+        return round(sum(self.rounded), self.precision)
 
 
 class ActivePower(Power):
     """Electrical active powers."""
 
     power_type: PowerType = PowerType.AC_ACTIVE
+    unit: Unit = Unit.WATT
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_ACTIVE.value
-        return value
+    @pydantic.field_validator("power_type")
+    def check_power_type(cls, v: PowerType) -> PowerType:
+        if v is not PowerType.AC_ACTIVE.value:
+            msg = "Input should be PowerType.AC_ACTIVE."
+            raise ValueError(msg)
+
+        return v
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.WATT.value:
+            msg = "Input should be Unit.WATT."
+            raise ValueError(msg)
+
+        return v
 
 
 class ApparentPower(Power):
     """Electrical apparent powers."""
 
     power_type: PowerType = PowerType.AC_APPARENT
+    unit: Unit = Unit.VOLTAMPERE
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_APPARENT.value
-        return value
+    @pydantic.field_validator("power_type")
+    def check_power_type(cls, v: PowerType) -> PowerType:
+        if v is not PowerType.AC_APPARENT.value:
+            msg = "Input should be PowerType.AC_APPARENT."
+            raise ValueError(msg)
+
+        return v
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.VOLTAMPERE.value:
+            msg = "Input should be Unit.VOLTAMPERE."
+            raise ValueError(msg)
+
+        return v
 
 
 class ReactivePower(Power):
     """Electrical reactive powers."""
 
     power_type: PowerType = PowerType.AC_REACTIVE
+    unit: Unit = Unit.VOLTAMPERE_REACTIVE
 
-    @model_validator_before
-    def set_power_type(cls, value: dict[str, t.Any]) -> dict[str, t.Any]:
-        value["power_type"] = PowerType.AC_REACTIVE.value
-        return value
+    @pydantic.field_validator("power_type")
+    def check_power_type(cls, v: PowerType) -> PowerType:
+        if v is not PowerType.AC_REACTIVE.value:
+            msg = "Input should be PowerType.AC_REACTIVE."
+            raise ValueError(msg)
+
+        return v
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.VOLTAMPERE_REACTIVE.value:
+            msg = "Input should be Unit.VOLTAMPERE_REACTIVE."
+            raise ValueError(msg)
+
+        return v
 
 
-class PowerFactor(Base):
+class PowerFactor(MultiPhaseQuantity):
     """Power factors, e.g. cos(phi), tan(phi)."""
 
-    value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
+    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
     direction: PowerFactorDirection = PowerFactorDirection.ND
+    precision: int = Precision.POWERFACTOR
+    unit: Unit = Unit.UNITLESS
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.UNITLESS.value:
+            msg = "Input should be Unit.UNITLESS."
+            raise ValueError(msg)
+
+        return v
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
-    def is_symmetrical(self) -> bool:
-        return len(list(itertools.groupby(self.value))) in (0, 1)
+    def average(self) -> float:
+        if not self.is_symmetrical:
+            return float("nan")
 
-    @pydantic.computed_field  # type: ignore[misc]
-    @property
-    def n_phases(self) -> int:
-        return len(self.value)
+        return round(sum(self.rounded) / self.n_phases, self.precision)
 
-    def __len__(self) -> int:
-        return self.n_phases
+
+class CosPhi(PowerFactor):
+    value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
+
+    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[valid-type]
+        """Calculate the weighted average power factor depending of the power type of the provided power."""
+        match power.power_type:
+            case PowerType.AC_ACTIVE.value:
+                return round(
+                    power.total / sum(pw / cp for pw, cp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case PowerType.AC_APPARENT.value:
+                return round(
+                    sum(pw * cp for pw, cp in zip(power.value, self.value, strict=True)) / power.total,
+                    self.precision,
+                )
+            case PowerType.AC_REACTIVE.value:
+                return round(
+                    sum(pw / math.tan(math.acos(cp)) for pw, cp in zip(power.value, self.value, strict=True))
+                    / sum(pw / math.sin(math.acos(cp)) for pw, cp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case _:
+                return float("nan")
+
+
+class TanPhi(PowerFactor):
+    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
+
+    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0):  # type: ignore[valid-type]
+        """Calculate the weighted average power factor depending of the power type of the provided power."""
+        match power.power_type:
+            case PowerType.AC_ACTIVE.value:
+                return round(
+                    sum(pw * tp for pw, tp in zip(power.value, self.value, strict=True)) / power.total,
+                    self.precision,
+                )
+            case PowerType.AC_APPARENT.value:
+                return round(
+                    sum(pw * math.sin(math.atan(cp)) for pw, cp in zip(power.value, self.value, strict=True))
+                    / sum(pw * math.cos(math.atan(cp)) for pw, cp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case PowerType.AC_REACTIVE.value:
+                return round(
+                    power.total / sum(pw / tp for pw, tp in zip(power.value, self.value, strict=True)),
+                    self.precision,
+                )
+            case _:
+                return float("nan")
 
 
 class PhaseConnections(Base):

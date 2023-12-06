@@ -9,8 +9,9 @@ import pydantic
 import pytest
 
 from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
-from psdm.quantities.multi_phase import PowerFactor
+from psdm.quantities.multi_phase import CosPhi
 from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
+from psdm.quantities.multi_phase import TanPhi
 from psdm.quantities.multi_phase import Voltage
 from psdm.quantities.single_phase import Frequency
 from psdm.quantities.single_phase import PowerFactorDirection
@@ -96,7 +97,7 @@ class TestControlUConst:
             )
 
 
-class TestControlTanphiConst:
+class TestControlTanPhiConst:
     @pytest.mark.parametrize(
         (
             "direction",
@@ -111,7 +112,6 @@ class TestControlTanphiConst:
             (PowerFactorDirection.OE, (-0.9, -0.9, -0.9), pytest.raises(pydantic.ValidationError)),
             (PowerFactorDirection.OE, (-0.9, 0.9, 0.9), pytest.raises(pydantic.ValidationError)),
             (PowerFactorDirection.OE, (-0.6, 0.9, 0.9), pytest.raises(pydantic.ValidationError)),
-            (PowerFactorDirection.OE, (2, 2, 2), pytest.raises(pydantic.ValidationError)),
             (PowerFactorDirection.OE, (None, None, None), pytest.raises(pydantic.ValidationError)),
         ],
     )
@@ -123,7 +123,7 @@ class TestControlTanphiConst:
     ) -> None:
         with expectation:
             ControlTanPhiConst(
-                tan_phi_set=PowerFactor(
+                tan_phi_set=TanPhi(
                     direction=direction,
                     value=value,
                     system_type=SystemType.NATURAL,
@@ -158,7 +158,7 @@ class TestControlCosPhiConst:
     ) -> None:
         with expectation:
             ControlCosPhiConst(
-                cos_phi_set=PowerFactor(
+                cos_phi_set=CosPhi(
                     direction=direction,
                     value=value,
                     system_type=SystemType.NATURAL,
@@ -185,8 +185,8 @@ class TestControlCosPhiP:
             (0.9, -0.9, -6, -3, pytest.raises(pydantic.ValidationError)),
             (None, 0.9, -3, -6, pytest.raises(pydantic.ValidationError)),
             (0.9, None, -3, -6, pytest.raises(pydantic.ValidationError)),
-            (0.9, 0.9, None, -6, pytest.raises(TypeError)),
-            (0.9, 0.9, -3, None, pytest.raises(TypeError)),
+            (0.9, 0.9, None, -6, pytest.raises(pydantic.ValidationError)),
+            (0.9, 0.9, -3, None, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
@@ -198,12 +198,12 @@ class TestControlCosPhiP:
         expectation,
     ) -> None:
         with expectation:
-            pf_ue = PowerFactor(
+            pf_ue = CosPhi(
                 value=[cos_phi_ue, cos_phi_ue, cos_phi_ue],
                 direction=PowerFactorDirection.UE,
                 system_type=SystemType.NATURAL,
             )
-            pf_oe = PowerFactor(
+            pf_oe = CosPhi(
                 value=[cos_phi_oe, cos_phi_oe, cos_phi_oe],
                 direction=PowerFactorDirection.OE,
                 system_type=SystemType.NATURAL,
@@ -259,12 +259,12 @@ class TestControlCosPhiU:
         expectation,
     ) -> None:
         with expectation:
-            pf_ue = PowerFactor(
+            pf_ue = CosPhi(
                 value=[cos_phi_ue, cos_phi_ue, cos_phi_ue],
                 direction=PowerFactorDirection.UE,
                 system_type=SystemType.NATURAL,
             )
-            pf_oe = PowerFactor(
+            pf_oe = CosPhi(
                 value=[cos_phi_oe, cos_phi_oe, cos_phi_oe],
                 direction=PowerFactorDirection.OE,
                 system_type=SystemType.NATURAL,
@@ -311,8 +311,8 @@ class TestControlQU:
             (5, 6, None, 1000, 2000, 20000, 10000, pytest.raises(pydantic.ValidationError)),
             (5, 6, 110000, None, 2000, 20000, 10000, pytest.raises(pydantic.ValidationError)),
             (5, 6, 110000, 1000, None, 20000, 10000, pytest.raises(pydantic.ValidationError)),
-            (5, 6, 110000, 1000, 2000, None, 10000, pytest.raises(TypeError)),
-            (5, 6, 110000, 1000, 2000, 20000, None, pytest.raises(TypeError)),
+            (5, 6, 110000, 1000, 2000, None, 10000, pytest.raises(pydantic.ValidationError)),
+            (5, 6, 110000, 1000, 2000, 20000, None, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
