@@ -1,3 +1,10 @@
+## 2.1.0 (2023-12-06)
+
+### Feat
+
+- rework quantity rounding (contributors: @sasanjac, @SebastianDD)
+- specify system for quantities (contributors: @sasanjac, @SebastianDD)
+
 ## 2.0.1 (2023-11-01)
 
 ### Fix
