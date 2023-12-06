@@ -104,7 +104,7 @@ class RatedPower(Base):
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
-    def cos_phi_average(self) -> float:
+    def cos_phi_weighted_average(self) -> float:
         return self.cos_phi.weighted_average(power=self.apparent_power)
 
     @classmethod
