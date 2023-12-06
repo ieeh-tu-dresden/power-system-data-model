@@ -277,6 +277,14 @@ class PowerFactor(MultiPhaseQuantity):
 
         return v
 
+    @pydantic.computed_field  # type: ignore[misc]
+    @property
+    def average(self) -> float:
+        if not self.is_symmetrical:
+            return float("nan")
+
+        return round(sum(self.rounded) / self.n_phases, self.precision)
+
 
 class CosPhi(PowerFactor):
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
