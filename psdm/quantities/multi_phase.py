@@ -269,7 +269,7 @@ class PowerFactor(MultiPhaseQuantity):
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
 
-    @pydantic.field_validator("unit")
+    @pydantic.field_validator("value")
     def check_value(cls, value: NonEmptyTuple[float]) -> NonEmptyTuple[float]:
         for v in value:
             if not math.isnan(v) and v < 0:
@@ -298,7 +298,7 @@ class PowerFactor(MultiPhaseQuantity):
 class CosPhi(PowerFactor):
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
 
-    @pydantic.field_validator("unit")
+    @pydantic.field_validator("value")
     def check_value(cls, value: NonEmptyTuple[float]) -> NonEmptyTuple[float]:
         for v in value:
             if not math.isnan(v) and not (0 <= v <= 1):
