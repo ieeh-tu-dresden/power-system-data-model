@@ -270,6 +270,15 @@ class PowerFactor(MultiPhaseQuantity):
     unit: Unit = Unit.UNITLESS
 
     @pydantic.field_validator("unit")
+    def check_value(cls, value: NonEmptyTuple[float]) -> NonEmptyTuple[float]:
+        for v in value:
+            if not math.isnan(v) and v < 0:
+                msg = "Input should be greater than 0."
+                raise ValueError(msg)
+
+        return value
+
+    @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.UNITLESS.value:
             msg = "Input should be Unit.UNITLESS."
@@ -289,7 +298,16 @@ class PowerFactor(MultiPhaseQuantity):
 class CosPhi(PowerFactor):
     value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
 
-    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0, le=1):  # type: ignore[valid-type]
+    @pydantic.field_validator("unit")
+    def check_value(cls, value: NonEmptyTuple[float]) -> NonEmptyTuple[float]:
+        for v in value:
+            if not math.isnan(v) and not (0 <= v <= 1):
+                msg = "Input should be between 0 and 1."
+                raise ValueError(msg)
+
+        return value
+
+    def weighted_average(self, power: Power) -> float:  # type: ignore[valid-type]
         """Calculate the weighted average power factor depending of the power type of the provided power."""
         match power.power_type:
             case PowerType.AC_ACTIVE.value:
@@ -313,9 +331,7 @@ class CosPhi(PowerFactor):
 
 
 class TanPhi(PowerFactor):
-    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
-
-    def weighted_average(self, power: Power) -> pydantic.confloat(ge=0):  # type: ignore[valid-type]
+    def weighted_average(self, power: Power) -> float:  # type: ignore[valid-type]
         """Calculate the weighted average power factor depending of the power type of the provided power."""
         match power.power_type:
             case PowerType.AC_ACTIVE.value:
