@@ -307,7 +307,7 @@ class CosPhi(PowerFactor):
 
         return value
 
-    def weighted_average(self, power: Power) -> float:  # type: ignore[valid-type]
+    def weighted_average(self, power: Power) -> float:
         """Calculate the weighted average power factor depending of the power type of the provided power."""
         match power.power_type:
             case PowerType.AC_ACTIVE.value:
@@ -331,7 +331,7 @@ class CosPhi(PowerFactor):
 
 
 class TanPhi(PowerFactor):
-    def weighted_average(self, power: Power) -> float:  # type: ignore[valid-type]
+    def weighted_average(self, power: Power) -> float:
         """Calculate the weighted average power factor depending of the power type of the provided power."""
         match power.power_type:
             case PowerType.AC_ACTIVE.value:
