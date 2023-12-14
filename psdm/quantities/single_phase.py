@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import enum
+import math
 
 import pydantic
 
@@ -416,6 +417,14 @@ class PowerFactor(Base):
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
 
+    @pydantic.field_validator("value")
+    def check_value(cls, value: float) -> float:
+        if not math.isnan(value) and value < 0:
+            msg = "Input should be greater than 0."
+            raise ValueError(msg)
+
+        return value
+
     @pydantic.field_validator("unit")
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.UNITLESS.value:
@@ -428,9 +437,17 @@ class PowerFactor(Base):
 class CosPhi(PowerFactor):
     value: pydantic.confloat(ge=0, le=1)  # type: ignore[valid-type]
 
+    @pydantic.field_validator("value")
+    def check_value(cls, value: float) -> float:
+        if not math.isnan(value) and not (0 <= value <= 1):
+            msg = "Input should be between 0 and 1."
+            raise ValueError(msg)
+
+        return value
+
 
 class TanPhi(PowerFactor):
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    ...
 
 
 class PhaseAngleClock(Base):
