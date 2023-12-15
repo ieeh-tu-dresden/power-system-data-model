@@ -412,7 +412,7 @@ class ReactivePower(Power):
 class PowerFactor(Base):
     """Power factor, e.g. cos(phi), tan(phi)."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
+    value: float
     direction: PowerFactorDirection = PowerFactorDirection.ND
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
@@ -435,7 +435,7 @@ class PowerFactor(Base):
 
 
 class CosPhi(PowerFactor):
-    value: pydantic.confloat(ge=0, le=1)  # type: ignore[valid-type]
+    value: float
 
     @pydantic.field_validator("value")
     def check_value(cls, value: float) -> float:

@@ -264,7 +264,7 @@ class ReactivePower(Power):
 class PowerFactor(MultiPhaseQuantity):
     """Power factors, e.g. cos(phi), tan(phi)."""
 
-    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
+    value: NonEmptyTuple[float]
     direction: PowerFactorDirection = PowerFactorDirection.ND
     precision: int = Precision.POWERFACTOR
     unit: Unit = Unit.UNITLESS
@@ -296,8 +296,6 @@ class PowerFactor(MultiPhaseQuantity):
 
 
 class CosPhi(PowerFactor):
-    value: NonEmptyTuple[pydantic.confloat(ge=0, le=1)]  # type: ignore[valid-type]
-
     @pydantic.field_validator("value")
     def check_value(cls, value: NonEmptyTuple[float]) -> NonEmptyTuple[float]:
         for v in value:
