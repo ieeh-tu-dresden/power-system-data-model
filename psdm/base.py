@@ -50,6 +50,7 @@ class Base(pydantic.BaseModel):
         "frozen": True,
         "use_enum_values": True,
         "validate_default": True,
+        "ser_json_inf_nan": "constants",
     }
 
     @classmethod
