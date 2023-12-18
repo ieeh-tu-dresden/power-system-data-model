@@ -1,6 +1,5 @@
 import math
 
-import pydantic
 import pytest
 
 from psdm.quantities.multi_phase import ActivePower
@@ -46,8 +45,9 @@ class TestCosPhi:
             cp.weighted_average(p)
 
     def test_average_nan(self) -> None:
-        with pytest.raises(pydantic.ValidationError):
-            CosPhi(value=(0.9, 0.8, float("nan")))
+        cp = CosPhi(value=(0.9, 0.8, float("nan")))
+        p = ActivePower(value=(100, 200, 300))
+        assert math.isnan(cp.weighted_average(p))
 
         cp = CosPhi(value=(0.9, 0.8, 0.7))
         p = ActivePower(value=(100, float("nan"), 300))
@@ -87,8 +87,9 @@ class TestTanPhi:
             tp.weighted_average(p)
 
     def test_average_nan(self) -> None:
-        with pytest.raises(pydantic.ValidationError):
-            TanPhi(value=(0.4843, 0.75, float("nan")))
+        tp = TanPhi(value=(0.4843, 0.75, float("nan")))
+        p = ActivePower(value=(100, 200, 300))
+        assert math.isnan(tp.weighted_average(p))
 
         tp = TanPhi(value=(0.4843, 0.75, 1.0202))
         p = ActivePower(value=(100, float("nan"), 300))
