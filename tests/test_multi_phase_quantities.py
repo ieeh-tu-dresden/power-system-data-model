@@ -10,6 +10,7 @@ import pytest
 from psdm.quantities.multi_phase import ActivePower
 from psdm.quantities.multi_phase import Angle
 from psdm.quantities.multi_phase import ApparentPower
+from psdm.quantities.multi_phase import CosPhi
 from psdm.quantities.multi_phase import Current
 from psdm.quantities.multi_phase import Droop
 from psdm.quantities.multi_phase import Impedance
@@ -239,6 +240,9 @@ class TestPowerFactor:
             ((0, 0, 0), True, does_not_raise()),
             ((1, 1, 1), True, does_not_raise()),
             ((0.9, 1, 1), False, does_not_raise()),
+            ((float("nan"), float("nan"), float("nan")), False, does_not_raise()),
+            ((1, float("nan"), 1), False, does_not_raise()),
+            ((1, float("nan"), 1), True, pytest.raises(AssertionError)),
             ((1, 1, 1), False, pytest.raises(AssertionError)),
             ((1, 0.9, 1), True, pytest.raises(AssertionError)),
             ((1, -1, 1), True, pytest.raises(pydantic.ValidationError)),
@@ -252,6 +256,29 @@ class TestPowerFactor:
     ) -> None:
         with expectation:
             pf = PowerFactor(value=value, system_type=SystemType.NATURAL)
+            assert pf.is_symmetrical == is_symmetrical
+            assert len(pf) == N_PHASES
+
+
+class TestCosPhi:
+    @pytest.mark.parametrize(
+        (
+            "value",
+            "is_symmetrical",
+            "expectation",
+        ),
+        [
+            ((1, 1.1, 1), False, pytest.raises(pydantic.ValidationError)),
+        ],
+    )
+    def test_init(
+        self,
+        value,
+        is_symmetrical,
+        expectation,
+    ) -> None:
+        with expectation:
+            pf = CosPhi(value=value, system_type=SystemType.NATURAL)
             assert pf.is_symmetrical == is_symmetrical
             assert len(pf) == N_PHASES
 

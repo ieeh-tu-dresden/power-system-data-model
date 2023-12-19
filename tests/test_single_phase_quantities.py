@@ -19,6 +19,7 @@ from psdm.quantities.single_phase import ImpedancePosSeq
 from psdm.quantities.single_phase import ImpedanceZerSeq
 from psdm.quantities.single_phase import Length
 from psdm.quantities.single_phase import PhaseAngleClock
+from psdm.quantities.single_phase import PowerFactor
 from psdm.quantities.single_phase import PowerType
 from psdm.quantities.single_phase import ReactivePower
 from psdm.quantities.single_phase import SystemType
@@ -329,3 +330,26 @@ class TestPhaseAngleClock:
         with expectation:
             p = PhaseAngleClock(value=value, system_type=SystemType.NATURAL)
             assert round(p.angle) == angle
+
+
+class TestPowerFactor:
+    @pytest.mark.parametrize(
+        (
+            "value",
+            "expectation",
+        ),
+        [
+            (0, does_not_raise()),
+            (0.5, does_not_raise()),
+            (1, does_not_raise()),
+            (float("nan"), does_not_raise()),
+            (-1, pytest.raises(pydantic.ValidationError)),
+        ],
+    )
+    def test_init(
+        self,
+        value,
+        expectation,
+    ) -> None:
+        with expectation:
+            PowerFactor(value=value, system_type=SystemType.NATURAL)
