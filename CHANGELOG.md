@@ -1,3 +1,9 @@
+## 2.1.1 (2023-12-19)
+
+### Fix
+
+- allow NaN for powerfactor import (contributors: @sasanjac, @SebastianDD)
+
 ## 2.1.0 (2023-12-06)
 
 ### Feat
