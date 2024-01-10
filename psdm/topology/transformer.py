@@ -85,7 +85,7 @@ class Transformer(Base):
     r_fe1: ImpedancePosSeq  # positive sequence iron losses resistance
     x_h1: ImpedancePosSeq  # positive sequence magnetization reactance
     r_fe0: ImpedanceZerSeq | None = None  # zero sequence iron losses resistance
-    x_h0: ImpedanceZerSeq | None = None  # zero sequence magnetization reactancel
+    x_h0: ImpedanceZerSeq | None = None  # zero sequence magnetisation reactance
     phase_technology_type: TransformerPhaseTechnologyType | None = None  # three- or single-phase-transformer
     description: str | None = None
     tap_u_mag: Voltage | None = None  # voltage deviation per tap position change
