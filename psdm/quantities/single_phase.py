@@ -33,9 +33,9 @@ class SystemType(enum.Enum):
 
 
 class PowerFactorDirection(enum.Enum):
-    UE = "UE"
-    OE = "OE"
-    ND = "ND"
+    UE = "UE"  # under excited
+    OE = "OE"  # over excited
+    ND = "ND"  # not defined
 
 
 class Unit(enum.Enum):
