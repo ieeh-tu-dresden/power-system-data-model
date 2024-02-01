@@ -259,6 +259,7 @@ class AdmittanceNat(Admittance):
 class Length(SinglePhaseQuantity):
     """Length."""
 
+    system_type: SystemType = SystemType.NATURAL
     value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     precision: int = Precision.LENGTH
     unit: Unit = Unit.METER
