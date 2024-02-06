@@ -3,9 +3,8 @@
 
 [metadata]
 groups = ["default", "deployment", "formatting", "linter", "prototype", "test", "typing"]
-cross_platform = true
-static_urls = false
-lock_version = "4.3"
+strategy = ["cross_platform"]
+lock_version = "4.4.1"
 content_hash = "sha256:f0bb9e9519ea3c360dec4ab3cc9c511c75b65eea80004163c09fc77e875e32a0"
 
 [[package]]
@@ -747,7 +746,6 @@ files = [
 [[package]]
 name = "pycparser"
 version = "2.21"
-requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 summary = "C parser in Python"
 files = [
     {file = "pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},

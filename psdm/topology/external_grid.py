@@ -30,4 +30,4 @@ class ExternalGrid(Base):
     phases: UniqueTuple[Phase]
     short_circuit_power_max: ApparentPower
     short_circuit_power_min: ApparentPower
-    type: GridType  # noqa: A003
+    type: GridType

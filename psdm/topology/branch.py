@@ -41,7 +41,7 @@ class Branch(Base):
     phases_2: UniqueTuple[Phase]
     u_n: Voltage  # nominal voltage of the branch connected nodes
     i_r: Current | None  # rated current of branch (thermal limit in continuous operation)
-    type: BranchType  # noqa: A003
+    type: BranchType
     voltage_system_type: VoltageSystemType
     r1: ImpedancePosSeq  # positive sequence values of PI-representation
     x1: ImpedancePosSeq  # positive sequence values of PI-representation

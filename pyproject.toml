@@ -34,55 +34,57 @@
       typing     = ["mypy"]
 
 [tool.ruff]
-  ignore = [
-    "ANN002",
-    "ANN003",
-    "ANN101",
-    "ANN102",
-    "C901",
-    "D100",
-    "D101",
-    "D102",
-    "D103",
-    "D104",
-    "D105",
-    "D106",
-    "D107",
-    "D202",
-    "D203",
-    "D401",
-    "E402",
-    "E501",
-  ]
   line-length = 120
-  select = ["ALL"]
 
-  [tool.ruff.extend-per-file-ignores]
-    "tests/*" = ["ANN001", "ANN201", "INP001", "PLR0913", "S101"]
+  [tool.ruff.lint]
+    ignore = [
+      "ANN002",
+      "ANN003",
+      "ANN101",
+      "ANN102",
+      "C901",
+      "D100",
+      "D101",
+      "D102",
+      "D103",
+      "D104",
+      "D105",
+      "D106",
+      "D107",
+      "D202",
+      "D203",
+      "D401",
+      "E402",
+      "E501",
+    ]
+    select = ["ALL"]
 
-  [tool.ruff.flake8-import-conventions.extend-aliases]
-    "collections.abc"  = "cabc"
-    "datetime"         = "dt"
-    "geopandas"        = "gpd"
-    "numpy.typing"     = "npt"
-    "rasterio"         = "rio"
-    "shapely.geometry" = "shg"
-    "typing"           = "t"
+    [tool.ruff.lint.extend-per-file-ignores]
+      "tests/*" = ["ANN001", "ANN201", "INP001", "PLR0913", "S101"]
 
-[tool.ruff.flake8-type-checking]
+    [tool.ruff.lint.flake8-import-conventions.extend-aliases]
+      "collections.abc"  = "cabc"
+      "datetime"         = "dt"
+      "geopandas"        = "gpd"
+      "numpy.typing"     = "npt"
+      "rasterio"         = "rio"
+      "shapely.geometry" = "shg"
+      "typing"           = "t"
+
+[tool.ruff.lint.flake8-type-checking]
   runtime-evaluated-base-classes = [
     "psdm.base.Base",
     "psdm.topology.load.PowerBase",
     "pydantic.BaseModel",
   ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
   force-single-line = true
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
   convention = "pep257"
 
-[tool.ruff.pep8-naming]
+[tool.ruff.lint.pep8-naming]
   classmethod-decorators = ["classmethod", "pydantic.field_validator"]
 
 [tool.black]
