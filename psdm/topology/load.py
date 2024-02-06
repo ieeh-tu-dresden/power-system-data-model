@@ -148,7 +148,7 @@ class Load(Base):  # including assets of type load and generator
     active_power_model: LoadModel
     reactive_power_model: LoadModel
     phase_connections: PhaseConnections
-    type: LoadType  # noqa: A003
+    type: LoadType
     system_type: SystemType
     voltage_system_type: VoltageSystemType
     description: str | None = None

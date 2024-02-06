@@ -447,8 +447,7 @@ class CosPhi(PowerFactor):
         return value
 
 
-class TanPhi(PowerFactor):
-    ...
+class TanPhi(PowerFactor): ...
 
 
 class PhaseAngleClock(Base):
