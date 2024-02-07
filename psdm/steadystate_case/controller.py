@@ -57,7 +57,8 @@ def validate_pos(power: ReactivePower | None) -> ReactivePower | None:
 
 
 class ControlQConst(Base):
-    # q-setpoint control mode
+    """Constant Q-setpoint control mode."""
+
     q_set: ReactivePower  # set point of reactive power
     control_strategy: QControlStrategy = QControlStrategy.Q_CONST
 
@@ -71,7 +72,11 @@ class ControlQConst(Base):
 
 
 class ControlUConst(Base):
-    # u-setpoint control mode
+    """Constant U-setpoint control mode.
+
+    The controller tries to keep the voltage at the setpoint via providing reactive power within the rated limits.
+    """
+
     u_set: Voltage  # Setpoint of voltage.
     u_meas_ref: ControlledVoltageRef = ControlledVoltageRef.POS_SEQ  # voltage reference
     control_strategy: QControlStrategy = QControlStrategy.U_CONST
@@ -86,7 +91,8 @@ class ControlUConst(Base):
 
 
 class ControlTanPhiConst(Base):
-    # tan(phi) control mode
+    """Constant tan(phi) control mode."""
+
     tan_phi_set: TanPhi  # set point of tan(phi)
     control_strategy: QControlStrategy = QControlStrategy.TANPHI_CONST
 
@@ -100,7 +106,8 @@ class ControlTanPhiConst(Base):
 
 
 class ControlCosPhiConst(Base):
-    # cos(phi) control mode
+    """Constant cos(phi) control mode."""
+
     cos_phi_set: CosPhi  # set point of cos(phi)
     control_strategy: QControlStrategy = QControlStrategy.COSPHI_CONST
 
@@ -114,7 +121,13 @@ class ControlCosPhiConst(Base):
 
 
 class ControlCosPhiP(Base):
-    # cos(phi(P)) control mode
+    """cos(phi(P)) control mode.
+
+    p >= p_threshold_oe: cos_phi = cos_phi_oe
+    p_threshold_oe > u > p_threshold_ue: cos_phi is lineary interpolated between cos_phi_oe and cos_phi_ue
+    p <= u_threshold_ue: cos_phi = cos_phi_ue
+    """
+
     cos_phi_ue: CosPhi  # under excited: cos(phi) for calculation of Q in relation to P.
     cos_phi_oe: CosPhi  # over excited: cos(phi) for calculation of Q in relation to P.
     p_threshold_ue: ActivePower  # under excited: threshold for P.
@@ -131,7 +144,13 @@ class ControlCosPhiP(Base):
 
 
 class ControlCosPhiU(Base):
-    # cos(phi(U)) control mode
+    """cos(phi(U)) control mode.
+
+    u >= u_threshold_ue: cos_phi = cos_phi_ue
+    u_threshold_ue > u > u_threshold_oe: cos_phi is lineary interpolated between cos_phi_ue and cos_phi_oe
+    u <= u_threshold_oe: cos_phi = cos_phi_oe
+    """
+
     cos_phi_ue: CosPhi  # under excited: cos(phi) for calculation of Q in relation to P
     cos_phi_oe: CosPhi  # over excited: cos(phi) for calculation of Q in relation to P
     u_threshold_ue: Voltage  # under excited: threshold for U
@@ -149,9 +168,15 @@ class ControlCosPhiU(Base):
 
 
 class ControlQU(Base):
-    # Q(U) characteristic control mode
-    droop_up: Droop  # Droop/Slope for voltage above the u_deadband_up
-    droop_low: Droop  # Droop/Slope for voltage above the u_deadband_low
+    """Q(U) characteristic control mode.
+
+    u >= (u_q0 + u_deadband_up): q has to be increased with droop_up until q_max_ue is reached
+    (u_q0 + u_deadband_up) > u > (u_q0 - u_deadband_low): q = 0
+    u <= (u_q0 - u_deadband_low): q has to be decreased with droop_low until q_max_oe is reached
+    """
+
+    droop_up: Droop  # Droop/Slope for q if voltage is above the u_deadband_up
+    droop_low: Droop  # Droop/Slope for q if voltage is below the u_deadband_low
     u_q0: Voltage  # Voltage value, where Q=0: absolut value in V
     u_deadband_up: Voltage  # Width of upper deadband (U_1_up - U_Q0): absolut value in V
     u_deadband_low: Voltage  # Width of lower deadband (U_Q0 - U_1_low): absolut value in V
@@ -177,7 +202,11 @@ class ControlQU(Base):
 
 
 class ControlQP(Base):
-    # Q(P) characteristic control mode
+    """Q(P) characteristic control mode.
+
+    This is the general case of ControlCosPhiP, ControlCosPhiConst, ControlTanPhiConst.
+    """
+
     q_p_characteristic: Characteristic
     q_max_ue: ReactivePower | None  # Under excited limit of Q: absolut value
     q_max_oe: ReactivePower | None  # Over excited limit of Q: absolut value
@@ -201,7 +230,8 @@ class ControlQP(Base):
 
 
 class ControlPConst(Base):
-    # p-setpoint control mode
+    """Constant P-setpoint control mode."""
+
     p_set: ActivePower  # set point of active power
     control_strategy: PControlStrategy = PControlStrategy.P_CONST
 
@@ -215,7 +245,13 @@ class ControlPConst(Base):
 
 
 class ControlPF(Base):
-    # P(f) characteristic control mode
+    """P(f) characteristic control mode.
+
+    f >= (f_p0+ f_deadband_up): p_set has to be decreased with droop_up
+    (f_p0+ f_deadband_up) > f > (f_p0 - f_deadband_low): p = p_set
+    f <= (f_p0 - f_deadband_low): p_set has to be increased with droop_low
+    """
+
     droop_up: Droop  # Droop/Slope of power infeed reduction if frequency is above f_deadband_up: '%/Hz'
     droop_low: Droop  # Droop/Slope of power infeed increase if frequency is below f_deadband_low: '%/Hz'
     f_p0: Frequency  # Nominal frequency value: absolut value in Hz
