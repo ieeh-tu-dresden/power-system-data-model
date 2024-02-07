@@ -60,6 +60,10 @@ class TestActivePower:
                         value=0.2,
                         system_type=SystemType.NATURAL,
                     ),
+                    p_set=ActivePowerSet(
+                        value=[0, 0, 0],
+                        system_type=SystemType.NATURAL,
+                    ),
                 ),
                 does_not_raise(),
             ),
