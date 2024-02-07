@@ -221,6 +221,7 @@ class ControlPF(Base):
     f_p0: Frequency  # Nominal frequency value: absolut value in Hz
     f_deadband_up: Frequency  # Width of upper deadband (f_up - f_P0): absolut value in Hz
     f_deadband_low: Frequency  # Width of lower deadband (f_P0 - f_low): absolut value in Hz
+    p_set: ActivePower  # set point of active power
     control_strategy: PControlStrategy = PControlStrategy.P_F
 
     @pydantic.field_validator("control_strategy")

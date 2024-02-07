@@ -421,18 +421,20 @@ class TestControlPF:
             "f_p0",
             "f_deadband_up",
             "f_deadband_low",
+            "p_set",
             "expectation",
         ),
         [
-            (40, 40, 50, 0.2, 0.2, does_not_raise()),
-            (40, 40, -50, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
-            (40, 40, 50, -0.2, 0.2, pytest.raises(pydantic.ValidationError)),
-            (40, 40, 50, 0.2, -0.2, pytest.raises(pydantic.ValidationError)),
-            (None, 40, 50, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
-            (40, None, 50, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
-            (40, 40, None, 0.2, 0.2, pytest.raises(pydantic.ValidationError)),
-            (40, 40, 50, None, 0.2, pytest.raises(pydantic.ValidationError)),
-            (40, 40, 50, 0.2, None, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, 0.2, 0.2, 1, does_not_raise()),
+            (40, 40, -50, 0.2, 0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, -0.2, 0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, 0.2, -0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (None, 40, 50, 0.2, 0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (40, None, 50, 0.2, 0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (40, 40, None, 0.2, 0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, None, 0.2, 1, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, 0.2, None, 1, pytest.raises(pydantic.ValidationError)),
+            (40, 40, 50, 0.2, 0.2, None, pytest.raises(pydantic.ValidationError)),
         ],
     )
     def test_init(
@@ -442,20 +444,19 @@ class TestControlPF:
         f_p0,
         f_deadband_up,
         f_deadband_low,
+        p_set,
         expectation,
     ) -> None:
         with expectation:
-            droop_over_freq = Droop(
-                value=[droop_over_freq, droop_over_freq, droop_over_freq],
-                system_type=SystemType.NATURAL,
-            )
-            droop_under_freq = Droop(
-                value=[droop_under_freq, droop_under_freq, droop_under_freq],
-                system_type=SystemType.NATURAL,
-            )
             ControlPF(
-                droop_up=droop_over_freq,
-                droop_low=droop_under_freq,
+                droop_up=Droop(
+                    value=[droop_over_freq, droop_over_freq, droop_over_freq],
+                    system_type=SystemType.NATURAL,
+                ),
+                droop_low=Droop(
+                    value=[droop_under_freq, droop_under_freq, droop_under_freq],
+                    system_type=SystemType.NATURAL,
+                ),
                 f_p0=Frequency(
                     value=f_p0,
                     system_type=SystemType.NATURAL,
@@ -466,6 +467,10 @@ class TestControlPF:
                 ),
                 f_deadband_low=Frequency(
                     value=f_deadband_low,
+                    system_type=SystemType.NATURAL,
+                ),
+                p_set=ActivePowerSet(
+                    value=[p_set, p_set, p_set],
                     system_type=SystemType.NATURAL,
                 ),
             )
