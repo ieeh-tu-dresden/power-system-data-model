@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "ElementState": {
+      "description": "This class represents the state of an element which is (partly) disconnected or out of service.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "disabled": {
+          "default": false,
+          "title": "Disabled",
+          "type": "boolean"
+        },
+        "open_switches": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Open Switches",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ElementState",
+      "type": "object"
+    },
+    "Meta": {
+      "description": "This class represents the meta data related to the grid export.",
+      "properties": {
+        "grid": {
+          "title": "Grid",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "sign_convention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignConvention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        }
+      },
+      "required": [
+        "grid",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "SignConvention": {
+      "enum": [
+        "PASSIVE",
+        "ACTIVE"
+      ],
+      "title": "SignConvention",
+      "type": "string"
+    }
+  },
+  "description": "This class represents a unique topology case of the grid.\n\nIt is characterized by a list of element which are out of service.",
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "elements": {
+      "items": {
+        "$ref": "#/$defs/ElementState"
+      },
+      "title": "Elements",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "elements"
+  ],
+  "title": "Case",
+  "type": "object"
+}

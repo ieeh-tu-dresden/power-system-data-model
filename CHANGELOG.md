@@ -1,3 +1,11 @@
+## 2.1.2 (2024-02-08)
+
+### Fix
+
+- add `p_set` for `ControlPF` (contributors: @SebastianDD)
+- freeze `pydantic` version to 2.5.3 (contributors: @SebastianDD, @sasanjac)
+- add default `system_type` for Length (contributors: @SebastianDD)
+
 ## 2.1.1 (2023-12-19)
 
 ### Fix
