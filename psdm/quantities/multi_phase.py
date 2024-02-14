@@ -153,8 +153,6 @@ class Droop(MultiPhaseQuantity):
 class Impedance(MultiPhaseQuantity):
     """Natural impedance."""
 
-    value: NonEmptyTuple[pydantic.confloat(ge=0)]  # type: ignore[valid-type]
-
     precision: int = Precision.IMPEDANCE
     unit: Unit = Unit.OHM
 
@@ -162,6 +160,21 @@ class Impedance(MultiPhaseQuantity):
     def check_unit(cls, v: Unit) -> Unit:
         if v is not Unit.OHM.value:
             msg = "Input should be Unit.OHM."
+            raise ValueError(msg)
+
+        return v
+
+
+class Admittance(MultiPhaseQuantity):
+    """Natural admittance."""
+
+    precision: int = Precision.ADMITTANCE
+    unit: Unit = Unit.SIEMENS
+
+    @pydantic.field_validator("unit")
+    def check_unit(cls, v: Unit) -> Unit:
+        if v is not Unit.SIEMENS.value:
+            msg = "Input should be Unit.SIEMENS."
             raise ValueError(msg)
 
         return v
