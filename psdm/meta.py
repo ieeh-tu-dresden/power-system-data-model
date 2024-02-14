@@ -27,9 +27,10 @@ class Meta(Base):
     date: dt.date
 
     id: uuid.UUID = pydantic.Field(default_factory=uuid.uuid4)
+    case: str | None = None  # optional information about the study case
+    creator: str | None = None  # optional information about the JSON creation process, e.g. "powerfactory-tools v2.1.0"
+    project: str | None = None  # optional information about the project, the grid is related to
     sign_convention: SignConvention | None = None
-    project: str | None = None
-    case: str | None = None
 
     @pydantic.computed_field  # type: ignore[misc]
     @property
