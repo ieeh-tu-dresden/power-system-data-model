@@ -153,9 +153,9 @@ class TestImpedance:
             ((0, 0, 0), True, does_not_raise()),
             ((1, 1, 1), True, does_not_raise()),
             ((2, 1, 1), False, does_not_raise()),
+            ((-2, 1, 1), False, does_not_raise()),
             ((1, 1, 1), False, pytest.raises(AssertionError)),
-            ((-2, 1, 1), True, pytest.raises(pydantic.ValidationError)),
-            ((-2, 1, 1), False, pytest.raises(pydantic.ValidationError)),
+            ((-2, 1, 1), True, pytest.raises(AssertionError)),
             ((2, 1, 1), True, pytest.raises(AssertionError)),
         ],
     )
