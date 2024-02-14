@@ -1,3 +1,13 @@
+## 2.2.0 (2024-02-14)
+
+### Feat
+
+- extend Meta with attribute `creator` (contributors: @SebastianDD)
+
+### Fix
+
+- remove constraints for value of Impedance and Admittance (contributors: @SebastianDD)
+
 ## 2.1.2 (2024-02-08)
 
 ### Fix
