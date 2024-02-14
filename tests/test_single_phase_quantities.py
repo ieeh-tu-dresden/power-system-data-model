@@ -56,7 +56,7 @@ class TestImpedance:
         [
             (0, does_not_raise()),
             (1, does_not_raise()),
-            (-2, pytest.raises(pydantic.ValidationError)),
+            (-2, does_not_raise()),
         ],
     )
     def test_init(
@@ -68,7 +68,7 @@ class TestImpedance:
             Impedance(value=value, system_type=SystemType.NATURAL)
 
 
-class TestImpedancePS:
+class TestImpedancePosSeq:
     @pytest.mark.parametrize(
         (
             "value",
@@ -77,7 +77,7 @@ class TestImpedancePS:
         [
             (0, does_not_raise()),
             (1, does_not_raise()),
-            (-2, pytest.raises(pydantic.ValidationError)),
+            (-2, does_not_raise()),
         ],
     )
     def test_init(
@@ -90,7 +90,7 @@ class TestImpedancePS:
             assert i.system_type == SystemType.POSITIVE_SEQUENCE.value
 
 
-class TestImpedanceNS:
+class TestImpedanceNegSeq:
     @pytest.mark.parametrize(
         (
             "value",
@@ -99,7 +99,7 @@ class TestImpedanceNS:
         [
             (0, does_not_raise()),
             (1, does_not_raise()),
-            (-2, pytest.raises(pydantic.ValidationError)),
+            (-2, does_not_raise()),
         ],
     )
     def test_init(
@@ -112,7 +112,7 @@ class TestImpedanceNS:
             assert i.system_type == SystemType.NEGATIVE_SEQUENCE.value
 
 
-class TestImpedanceZS:
+class TestImpedanceZerSeq:
     @pytest.mark.parametrize(
         (
             "value",
@@ -121,7 +121,7 @@ class TestImpedanceZS:
         [
             (0, does_not_raise()),
             (1, does_not_raise()),
-            (-2, pytest.raises(pydantic.ValidationError)),
+            (-2, does_not_raise()),
         ],
     )
     def test_init(
@@ -134,7 +134,7 @@ class TestImpedanceZS:
             assert i.system_type == SystemType.ZERO_SEQUENCE.value
 
 
-class TestImpedanceN:
+class TestImpedanceNat:
     @pytest.mark.parametrize(
         (
             "value",
@@ -143,7 +143,7 @@ class TestImpedanceN:
         [
             (0, does_not_raise()),
             (1, does_not_raise()),
-            (-2, pytest.raises(pydantic.ValidationError)),
+            (-2, does_not_raise()),
         ],
     )
     def test_init(
@@ -165,7 +165,7 @@ class TestAdmittance:
         [
             (0, does_not_raise()),
             (1, does_not_raise()),
-            (-2, pytest.raises(pydantic.ValidationError)),
+            (-2, does_not_raise()),
         ],
     )
     def test_init(

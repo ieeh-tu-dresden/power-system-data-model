@@ -108,7 +108,6 @@ class Impedance(SinglePhaseQuantity):
     """Impedance."""
 
     system_type: SystemType = SystemType.NATURAL
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     precision: int = Precision.IMPEDANCE
     unit: Unit = Unit.OHM
 
@@ -138,7 +137,6 @@ class ImpedancePosSeq(Impedance):
 class ImpedanceNegSeq(Impedance):
     """Negative sequence impedance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NEGATIVE_SEQUENCE
 
     @pydantic.field_validator("system_type")
@@ -153,7 +151,6 @@ class ImpedanceNegSeq(Impedance):
 class ImpedanceZerSeq(Impedance):
     """Zero sequence impedance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.ZERO_SEQUENCE
 
     @pydantic.field_validator("system_type")
@@ -168,7 +165,6 @@ class ImpedanceZerSeq(Impedance):
 class ImpedanceNat(Impedance):
     """Natural impedance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NATURAL
 
     @pydantic.field_validator("system_type")
@@ -183,7 +179,6 @@ class ImpedanceNat(Impedance):
 class Admittance(SinglePhaseQuantity):
     """Admittance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     precision: int = Precision.ADMITTANCE
     unit: Unit = Unit.SIEMENS
 
@@ -199,7 +194,6 @@ class Admittance(SinglePhaseQuantity):
 class AdmittancePosSeq(Admittance):
     """Positive sequence admittance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.POSITIVE_SEQUENCE
 
     @pydantic.field_validator("system_type")
@@ -214,7 +208,6 @@ class AdmittancePosSeq(Admittance):
 class AdmittanceNegSeq(Admittance):
     """Negative sequence admittance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.NEGATIVE_SEQUENCE
 
     @pydantic.field_validator("system_type")
@@ -229,7 +222,6 @@ class AdmittanceNegSeq(Admittance):
 class AdmittanceZerSeq(Admittance):
     """Zero sequence admittance."""
 
-    value: pydantic.confloat(ge=0)  # type: ignore[valid-type]
     system_type: SystemType = SystemType.ZERO_SEQUENCE
 
     @pydantic.field_validator("system_type")
