@@ -173,6 +173,23 @@ class ControlQU(Base):
     u >= (u_q0 + u_deadband_up): q has to be increased with droop_up until q_max_ue is reached
     (u_q0 + u_deadband_up) > u > (u_q0 - u_deadband_low): q = 0
     u <= (u_q0 - u_deadband_low): q has to be decreased with droop_low until q_max_oe is reached
+
+    The droop is defined as percentage of the rated actice power infeed per percentage of voltage deviation (as per unit).
+    Example:
+    * Rated active power of generator: 10 MW
+    * Rated line-line-voltage U_n: 110 kV (1 p.u.)
+    * A droop of 6 % means that the reactive power is increased by 6 % of 10 MW per 1.1 kV of voltage deviation (1 % U_n = 0.01 p.u.).
+    * Consider given u_q0 = 110000 V, u_deadband_up = 1000 V, droop_up = 6 and the actual voltage is 112100 V:
+    -> so q = 10 MW * 0.06 * (112100 V - (110000 V + 1000 V)) / 110000 V * 100 = 0.6 MW
+
+      q_max_ue -|             =======
+                |            /
+                | u_q0      / - droop_up (cfg. german grid code VDE AR-N 4120:2018)
+    ____________|/_________/____________
+            /   |     |
+           /    |  deadband_up
+          /     |
+    ======      |- q_max_oe
     """
 
     droop_up: Droop  # Droop/Slope for q if voltage is above the u_deadband_up
