@@ -10,7 +10,9 @@ import math
 
 import pydantic
 
+from psdm.base import AttributeData
 from psdm.base import Base
+from psdm.base import UniqueNonEmptyTuple
 from psdm.base import VoltageSystemType
 from psdm.quantities.multi_phase import ActivePower
 from psdm.quantities.multi_phase import ApparentPower
@@ -152,6 +154,7 @@ class Load(Base):  # including assets of type load and generator
     system_type: SystemType
     voltage_system_type: VoltageSystemType
     description: str | None = None
+    meta: UniqueNonEmptyTuple[AttributeData] | None = None
 
     @pydantic.model_validator(mode="after")
     def validate_length(self) -> Load:

@@ -6,7 +6,9 @@ from __future__ import annotations
 
 from enum import Enum
 
+from psdm.base import AttributeData
 from psdm.base import Base
+from psdm.base import UniqueNonEmptyTuple
 from psdm.base import UniqueTuple
 from psdm.base import VoltageSystemType
 from psdm.quantities.multi_phase import Phase
@@ -63,3 +65,4 @@ class Branch(Base):
     xpn: ImpedanceNat | None = None  # neutral-line couple values
     gpn: AdmittanceNat | None = None  # neutral-line couple values
     bpn: AdmittanceNat | None = None  # neutral-line couple values
+    meta: UniqueNonEmptyTuple[AttributeData] | None = None

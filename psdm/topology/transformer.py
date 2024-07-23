@@ -7,7 +7,9 @@ from __future__ import annotations
 
 import enum
 
+from psdm.base import AttributeData
 from psdm.base import Base
+from psdm.base import UniqueNonEmptyTuple
 from psdm.base import UniqueTuple
 from psdm.quantities.multi_phase import Phase
 from psdm.quantities.single_phase import Angle
@@ -94,3 +96,4 @@ class Transformer(Base):
     tap_min: int | None = None  # lower position of tap for tap control
     tap_neutral: int | None = None  # initial position where rated transformation ratio is specified
     tap_side: TapSide | None = None  # transformer side of where tap changer is installed
+    meta: UniqueNonEmptyTuple[AttributeData] | None = None

@@ -18,11 +18,6 @@ T = t.TypeVar("T")
 U = t.TypeVar("U", bound=t.Hashable)
 
 
-class VoltageSystemType(enum.Enum):
-    AC = "AC"
-    DC = "DC"
-
-
 def _validate_unique_list(v: tuple[U]) -> tuple[U]:
     if len(v) != len(set(v)):
         error_type = "unique_list"
@@ -78,3 +73,14 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
 
     return self
+
+
+class VoltageSystemType(enum.Enum):
+    AC = "AC"
+    DC = "DC"
+
+
+class AttributeData(Base):
+    name: str  # attribute key
+    value: str | bool | int | float | UniqueTuple[t.Any]
+    description: str | None = None
