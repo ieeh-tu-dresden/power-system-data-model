@@ -4,9 +4,7 @@
 
 from __future__ import annotations
 
-from psdm.base import AttributeData
 from psdm.base import Base
-from psdm.base import UniqueNonEmptyTuple
 
 
 class Switch(Base):
@@ -15,4 +13,3 @@ class Switch(Base):
     element: str
     node: str
     state: bool  # 0:opened; 1:closed
-    meta: UniqueNonEmptyTuple[AttributeData] | None = None
