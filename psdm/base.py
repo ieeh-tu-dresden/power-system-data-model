@@ -77,7 +77,7 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
 
 class AttributeData(_Base):
     name: str  # attribute key
-    value: str | bool | int | float | UniqueTuple[t.Any]
+    value: str | bool | int | float | UniqueTuple[AttributeData]
     description: str | None = None
 
 class Base(_Base):
