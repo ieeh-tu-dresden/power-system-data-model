@@ -6,9 +6,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from psdm.base import AttributeData
 from psdm.base import Base
-from psdm.base import UniqueNonEmptyTuple
 from psdm.base import UniqueTuple
 from psdm.quantities.multi_phase import Phase
 from psdm.quantities.single_phase import ApparentPower
@@ -33,4 +31,3 @@ class ExternalGrid(Base):
     short_circuit_power_max: ApparentPower
     short_circuit_power_min: ApparentPower
     type: GridType
-    meta: UniqueNonEmptyTuple[AttributeData] | None = None

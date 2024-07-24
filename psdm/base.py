@@ -40,7 +40,7 @@ UniqueNonEmptyTuple = t.Annotated[
 NonEmptyTuple = t.Annotated[tuple[T, ...], annotated_types.Len(1, 2**126)]
 
 
-class Base(pydantic.BaseModel):
+class _Base(pydantic.BaseModel):
     model_config = {
         "frozen": True,
         "use_enum_values": True,
@@ -75,12 +75,14 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
     return self
 
 
-class VoltageSystemType(enum.Enum):
-    AC = "AC"
-    DC = "DC"
-
-
-class AttributeData(Base):
+class AttributeData(_Base):
     name: str  # attribute key
     value: str | bool | int | float | UniqueTuple[t.Any]
     description: str | None = None
+
+class Base(_Base):
+    meta: UniqueNonEmptyTuple[AttributeData] | None = None
+
+class VoltageSystemType(enum.Enum):
+    AC = "AC"
+    DC = "DC"
