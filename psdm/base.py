@@ -22,7 +22,7 @@ def _validate_unique_list(v: tuple[U]) -> tuple[U]:
     if len(v) != len(set(v)):
         error_type = "unique_list"
         message_template = "List must be unique"
-        raise PydanticCustomError(error_type=error_type, message_template=message_template)
+        raise PydanticCustomError(error_type, message_template)
     return v
 
 
