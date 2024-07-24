@@ -49,7 +49,7 @@ class _Base(pydantic.BaseModel):
     }
 
     @classmethod
-    def from_file(cls, file_path: str | pathlib.Path) -> Base:
+    def from_file(cls, file_path: str | pathlib.Path) -> _Base:
         file_path = pathlib.Path(file_path)
         with file_path.open("r", encoding="utf-8") as file_handle:
             return cls.model_validate_json(file_handle.read())
@@ -63,7 +63,7 @@ class _Base(pydantic.BaseModel):
             json.dump(_data, file_handle, indent=indent, sort_keys=True)
 
     @classmethod
-    def from_json(cls, json_str: str) -> Base:
+    def from_json(cls, json_str: str) -> _Base:
         return cls.model_validate_json(json_str)
 
 
@@ -82,7 +82,7 @@ class AttributeData(_Base):
 
 
 class Base(_Base):
-    meta: UniqueNonEmptyTuple[AttributeData] | None = None
+    optional_data: UniqueNonEmptyTuple[AttributeData] | None = None
 
 
 class VoltageSystemType(enum.Enum):
