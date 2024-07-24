@@ -80,8 +80,10 @@ class AttributeData(_Base):
     value: str | bool | int | float | UniqueTuple[AttributeData]
     description: str | None = None
 
+
 class Base(_Base):
     meta: UniqueNonEmptyTuple[AttributeData] | None = None
+
 
 class VoltageSystemType(enum.Enum):
     AC = "AC"
