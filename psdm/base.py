@@ -16,6 +16,7 @@ from pydantic_core import PydanticCustomError
 
 T = t.TypeVar("T")
 U = t.TypeVar("U", bound=t.Hashable)
+PrimitiveTypes = str | bool | int | float
 
 
 def _validate_unique_list(v: tuple[U]) -> tuple[U]:
@@ -77,7 +78,9 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
 
 class AttributeData(_Base):
     name: str  # attribute key
-    value: str | bool | int | float | UniqueTuple[AttributeData]
+    value: (
+        PrimitiveTypes | NonEmptyTuple[PrimitiveTypes] | UniqueTuple[AttributeData]
+    )  # either single primitive type value or vector of primitive type values or list of nested AttributeData objects
     description: str | None = None
 
 
