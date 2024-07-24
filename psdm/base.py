@@ -16,18 +16,14 @@ from pydantic_core import PydanticCustomError
 
 T = t.TypeVar("T")
 U = t.TypeVar("U", bound=t.Hashable)
-
-
-class VoltageSystemType(enum.Enum):
-    AC = "AC"
-    DC = "DC"
+PrimitiveTypes = str | bool | int | float
 
 
 def _validate_unique_list(v: tuple[U]) -> tuple[U]:
     if len(v) != len(set(v)):
         error_type = "unique_list"
         message_template = "List must be unique"
-        raise PydanticCustomError(error_type=error_type, message_template=message_template)
+        raise PydanticCustomError(error_type, message_template)
     return v
 
 
@@ -45,7 +41,7 @@ UniqueNonEmptyTuple = t.Annotated[
 NonEmptyTuple = t.Annotated[tuple[T, ...], annotated_types.Len(1, 2**126)]
 
 
-class Base(pydantic.BaseModel):
+class _Base(pydantic.BaseModel):
     model_config = {
         "frozen": True,
         "use_enum_values": True,
@@ -54,7 +50,7 @@ class Base(pydantic.BaseModel):
     }
 
     @classmethod
-    def from_file(cls, file_path: str | pathlib.Path) -> Base:
+    def from_file(cls, file_path: str | pathlib.Path) -> _Base:
         file_path = pathlib.Path(file_path)
         with file_path.open("r", encoding="utf-8") as file_handle:
             return cls.model_validate_json(file_handle.read())
@@ -68,7 +64,7 @@ class Base(pydantic.BaseModel):
             json.dump(_data, file_handle, indent=indent, sort_keys=True)
 
     @classmethod
-    def from_json(cls, json_str: str) -> Base:
+    def from_json(cls, json_str: str) -> _Base:
         return cls.model_validate_json(json_str)
 
 
@@ -78,3 +74,20 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
 
     return self
+
+
+class AttributeData(_Base):
+    name: str  # attribute key
+    value: (
+        PrimitiveTypes | NonEmptyTuple[PrimitiveTypes] | UniqueTuple[AttributeData]
+    )  # either single primitive type value or vector of primitive type values or list of nested AttributeData objects
+    description: str | None = None
+
+
+class Base(_Base):
+    optional_data: UniqueNonEmptyTuple[AttributeData] | None = None
+
+
+class VoltageSystemType(enum.Enum):
+    AC = "AC"
+    DC = "DC"
