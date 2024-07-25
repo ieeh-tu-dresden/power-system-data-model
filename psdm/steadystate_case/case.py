@@ -30,7 +30,7 @@ class Case(Base):
     transformers: UniqueTuple[Transformer]
     external_grids: UniqueTuple[ExternalGrid]
 
-    def is_valid_topology(self, topology: Topology) -> bool:
+    def matches_topology(self, topology: Topology) -> bool:
         logger.info("Verifying steadystate case ...")
         if topology.meta != self.meta:
             logger.error("Metadata does not match.")

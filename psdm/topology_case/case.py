@@ -26,7 +26,7 @@ class Case(Base):
     meta: Meta
     elements: UniqueTuple[ElementState]
 
-    def is_valid_topology(self, topology: Topology) -> bool:
+    def matches_topology(self, topology: Topology) -> bool:
         logger.info("Verifying topology case ...")
         if topology.meta != self.meta:
             logger.error("Metadata does not match.")
