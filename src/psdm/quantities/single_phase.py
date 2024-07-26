@@ -447,7 +447,7 @@ class PhaseAngleClock(Base):
 
     value: pydantic.confloat(ge=0, lt=12)  # type: ignore[valid-type]
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def angle(self) -> float:
         return self.value * 30.0

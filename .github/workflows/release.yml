@@ -56,25 +56,30 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           fetch-depth: 0
 
-      - name: Set up PDM @ ${{ matrix.python-version }}
-        uses: pdm-project/setup-pdm@v4
+      - name: Set up rye
+        uses: eifinger/setup-rye@v4.2.1
+        id: setup-rye
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: true
-          architecture: x64
+          enable-cache: true
+          cache-prefix: ${{ matrix.python-version }}
+
+      - name: Pin python-version @ ${{ matrix.python-version }}
+        run: rye pin ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pdm install
+        if: steps.setup-rye.outputs.cache-hit != 'true'
+        run: |
+          rye sync --no-lock
 
       - name: Install graphviz
         run: sudo apt-get install -y graphviz graphviz-dev
 
       - name: Install erdantic
-        run: pdm add erdantic
+        run: rye add erdantic
 
       - name: Generate schema diagram files
         run: |
-          pdm run python -c 'import erdantic as erd
+          rye run python -c 'import erdantic as erd
           from psdm.steadystate_case.case import Case as SteadystateCase
           from psdm.topology.topology import Topology
           from psdm.topology_case.case import Case as TopologyCase
@@ -97,7 +102,7 @@ jobs:
 
       - name: Generate schema JSON files
         run: |
-          pdm run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
+          rye run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
           from psdm.topology.topology import Topology
           from psdm.topology_case.case import Case as TopologyCase
           from pathlib import Path
@@ -146,14 +151,10 @@ jobs:
           enforce_admins: ${{ steps.disable_include_admins.outputs.initial_status }}
 
       - name: Build Python packages
-        run: pdm build
+        run: rye build
 
       - name: Publish Python packages
-        run: pdm publish
-        env:
-          PDM_PUBLISH_REPO: pypi
-          PDM_PUBLISH_USERNAME: __token__
-          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: rye publish --repository pypi --username __token__ --token ${{ secrets.PYPI_TOKEN }}
 
       - name: Create release
         uses: softprops/action-gh-release@v2

@@ -234,6 +234,4 @@ $RECYCLE.BIN/
 
 examples/export/*
 scratchboard.ipynb
-.pdm.toml
 .python-version
-.pdm-python

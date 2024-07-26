@@ -38,7 +38,7 @@ class LoadModel(Base):
 
         return self
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def c_z(self) -> float:
         return 1 - self.c_p - self.c_i

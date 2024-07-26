@@ -7,7 +7,6 @@ from contextlib import nullcontext as does_not_raise
 
 import pydantic
 import pytest
-
 from psdm.quantities.multi_phase import ActivePower as ActivePowerSet
 from psdm.quantities.multi_phase import ReactivePower as ReactivePowerSet
 from psdm.quantities.single_phase import SystemType

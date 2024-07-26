@@ -57,17 +57,17 @@ class MultiPhaseQuantity(Quantity):
 
         return v
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def is_symmetrical(self) -> bool:
         return len(list(itertools.groupby(self.value))) in (0, 1)
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def n_phases(self) -> int:
         return len(self.value)
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def average(self) -> float:
         return round(sum(self.rounded) / self.n_phases, self.precision)
@@ -199,7 +199,7 @@ class Power(MultiPhaseQuantity):
 
         return v
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def total(self) -> float:
         return round(sum(self.rounded), self.precision)
@@ -299,7 +299,7 @@ class PowerFactor(MultiPhaseQuantity):
 
         return v
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def average(self) -> float:
         if not self.is_symmetrical:
@@ -370,7 +370,7 @@ class PhaseConnections(Base):
 
     value: UniqueNonEmptyTuple[PhaseConnection]
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def n_phases(self) -> int:
         return len(self.value)

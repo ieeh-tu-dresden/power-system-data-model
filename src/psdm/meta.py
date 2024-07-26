@@ -32,7 +32,7 @@ class Meta(Base):
     project: str | None = None  # optional information about the project, the grid is related to
     sign_convention: SignConvention | None = None
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def version(self) -> str:
         return VERSION
