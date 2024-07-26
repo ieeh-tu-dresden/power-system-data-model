@@ -13,7 +13,8 @@ A data model for the description of electrical power systems.
 
 ## <div id="application" /> Field of Application
 
-This data model is intended to describe electrical power systems. It provides a hierarchical structure/schema to describe unique entity relations as well as parameter sets.
+This data model is intended to describe electrical power systems.
+It provides a hierarchical structure/schema to describe unique entity relations as well as parameter sets.
 
 The data model is structured as the following schema:
 
@@ -23,8 +24,10 @@ This is the base topology containing all elements of the exported grid:
 - Nodes
 - Transformers (symmetrical: 2- or 3-winding)
 - External grids
-- Loads (consumer, producer, grid assets, fuses from type)
-  ![topology relationship diagram](./docs/topology.png)
+- Loads (consumer, producer, grid assets)
+![topology relationship diagram](./docs/topology.png)
+
+In addition to the explicitly defined element attributes, it is possible to save user-specific additional information as optional AttributeData ([Export example of powerfactory-tools](https://github.com/ieeh-tu-dresden/powerfactory-tools/blob/main/examples/powerfactory_export.ipynb)).
 
 ### Topology Case
 This holds information about disabled elements to represent a specific operational case based on the base topology.
