@@ -96,6 +96,17 @@
 [tool.ruff.lint.pep8-naming]
   classmethod-decorators = ["classmethod", "pydantic.field_validator"]
 
+[tool.commitizen]
+  name = "cz_conventional_commits"
+  tag_format = "$version"
+  version = "2.2.0"
+  version_files = [
+    ".zenodo.json:version",
+    "CITATION.cff:cff-version",
+    "psdm/meta.py:VERSION",
+    "pyproject.toml:version",
+  ]
+
 [tool.mypy]
   follow_imports         = "normal"
   ignore_missing_imports = true
