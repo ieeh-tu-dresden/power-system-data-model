@@ -6,7 +6,10 @@
     { name = "Laura Fiedler", email = "laura.fiedler1@tu-dresden.de" },
     { name = "Maximilian Schmidt", email = "maximilian.schmidt@tu-dresden.de" },
   ]
-  dependencies = ["loguru", "pydantic>=2.1.1,<=2.5.3"]
+  dependencies = [
+    "loguru>=0.7.2",
+    "pydantic>=2.8.2",
+  ]
   description = "A data model for describing power systems"
   license = { file = "LICENSE" }
   name = "ieeh-power-system-data-model"
@@ -18,20 +21,26 @@
     Source = "https://github.com/ieeh-tu-dresden/power-system-data-model"
 
 [build-system]
-  build-backend = "pdm.backend"
-  requires      = ["pdm-backend"]
+  build-backend = "hatchling.build"
+  requires      = ["hatchling"]
 
-[tool]
+[tool.rye]
+  dev-dependencies = [
+    "commitizen>=3.28.0",
+    "ipykernel>=6.29.5",
+    "mypy>=1.11.0",
+    "pytest-cov>=5.0.0",
+    "pytest-xdist>=3.6.1",
+    "pytest>=8.3.1",
+    "ruff>=0.5.5",
+  ]
+  managed = true
 
-  [tool.pdm]
+[tool.hatch.metadata]
+  allow-direct-references = true
 
-    [tool.pdm.dev-dependencies]
-      deployment = ["commitizen"]
-      formatting = ["black"]
-      linter     = ["ruff"]
-      prototype  = ["ipykernel"]
-      test       = ["pytest", "pytest-cov", "pytest-xdist"]
-      typing     = ["mypy"]
+[tool.hatch.build.targets.wheel]
+  packages = ["src/psdm"]
 
 [tool.ruff]
   line-length = 120
@@ -87,9 +96,6 @@
 [tool.ruff.lint.pep8-naming]
   classmethod-decorators = ["classmethod", "pydantic.field_validator"]
 
-[tool.black]
-  line-length = 120
-
 [tool.commitizen]
   name = "cz_conventional_commits"
   tag_format = "$version"
@@ -104,7 +110,7 @@
 [tool.mypy]
   follow_imports         = "normal"
   ignore_missing_imports = true
-  mypy_path              = "psdm"
+  mypy_path              = "src/psdm"
   namespace_packages     = true
   plugins                = "pydantic.mypy"
   strict_optional        = true
@@ -113,14 +119,13 @@
   warn_unused_ignores    = true
 
 [tool.pytest.ini_options]
-  # addopts      = "-ra --strict-markers -p pytester --cov=psdm --cov-report xml --cov-report term"
   python_files = "test_*.py"
   testpaths    = ["tests"]
 
 [tool.coverage.run]
   branch = true
   omit   = ["__pypackages__/*", "build/*", "tests/*"]
-  source = ["psdm"]
+  source = ["src/psdm"]
 
 [tool.coverage.report]
   show_missing = true

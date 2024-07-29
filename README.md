@@ -6,6 +6,9 @@ A data model for the description of electrical power systems.
 
 - [IEEH Power System Data Model](#ieeh-power-system-data-model)
   - [ Field of Application](#-field-of-application)
+    - [Grid Topology](#grid-topology)
+    - [Topology Case](#topology-case)
+    - [Steadystate Case](#steadystate-case)
   - [ General Remarks](#-general-remarks)
   - [ Installation](#-installation)
   - [ Development](#-development)
@@ -61,27 +64,7 @@ pip install ieeh-power-system-data-model
 
 ## <div id="development" /> Development
 
-Install [pdm](https://github.com/pdm-project/pdm)
-
-Windows:
-
-```bash
-(Invoke-WebRequest -Uri https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py -UseBasicParsing).Content | python -
-```
-
-Linux/Mac:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
-```
-
-Or using pipx or pip:
-```bash
-pipx install pdm
-```
-```bash
-pip install --user pdm
-```
+[Install rye](https://rye.astral.sh)
 
 Clone `power-system-data-model`
 
@@ -96,19 +79,18 @@ cd power-system-data-model
 Install `power-system-data-model` as a production tool
 
 ```bash
-pdm install --prod
+rye sync --no-dev
 ```
 
 Install `power-system-data-model` in development mode
 
 ```bash
-pdm install
+rye sync
 ```
 
 For development in [Visual Studio Code](https://github.com/microsoft/vscode), all configurations are already provided:
 
 - [ruff](https://github.com/astral-sh/ruff)
-- [black](https://github.com/psf/black)
 - [mypy](https://github.com/python/mypy)
 
 ## <div id="attribution" /> Attribution

@@ -97,12 +97,12 @@ class RatedPower(Base):
         msg = "Length mismatch."
         raise ValueError(msg)
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def is_symmetrical(self) -> bool:
         return self.apparent_power.is_symmetrical and self.cos_phi.is_symmetrical
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def cos_phi_average(self) -> float:
         try:
@@ -127,7 +127,7 @@ class RatedPower(Base):
             cos_phi=cos_phi,
         )
 
-    @pydantic.computed_field  # type: ignore[misc]
+    @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
     def n_phases(self) -> int:
         return len(self.cos_phi)
