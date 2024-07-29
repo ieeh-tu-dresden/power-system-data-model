@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          rye sync --no-lock
+          rye sync
 
       - name: Unit test using pytest
         run: rye test

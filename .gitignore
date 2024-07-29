@@ -235,3 +235,4 @@ $RECYCLE.BIN/
 examples/export/*
 scratchboard.ipynb
 .python-version
+*.lock

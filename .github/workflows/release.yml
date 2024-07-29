@@ -67,7 +67,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          rye sync --no-lock
+          rye sync
 
       - name: Install graphviz
         run: sudo apt-get install -y graphviz graphviz-dev

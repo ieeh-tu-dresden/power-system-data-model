@@ -28,7 +28,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          rye sync --no-lock
+          rye sync
 
       - name: Check code
         run: rye run ruff check .
