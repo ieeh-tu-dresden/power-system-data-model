@@ -6,14 +6,10 @@
 #   features: []
 #   all-features: false
 #   with-sources: false
-#   generate-hashes: false
-#   universal: false
 
 -e file:.
 annotated-types==0.7.0
     # via pydantic
-appnope==0.1.4
-    # via ipykernel
 argcomplete==3.4.0
     # via commitizen
 asttokens==2.4.1
@@ -22,10 +18,14 @@ charset-normalizer==3.3.2
     # via commitizen
 colorama==0.4.6
     # via commitizen
+    # via ipython
+    # via loguru
+    # via pytest
 comm==0.2.2
     # via ipykernel
 commitizen==3.28.0
 coverage==7.6.0
+    # via coverage
     # via pytest-cov
 debugpy==1.8.2
     # via ipykernel
@@ -33,9 +33,6 @@ decli==0.6.2
     # via commitizen
 decorator==5.1.1
     # via ipython
-exceptiongroup==1.2.2
-    # via ipython
-    # via pytest
 execnet==2.1.1
     # via pytest-xdist
 executing==2.0.1
@@ -72,8 +69,6 @@ packaging==24.1
     # via pytest
 parso==0.8.4
     # via jedi
-pexpect==4.9.0
-    # via ipython
 platformdirs==4.2.2
     # via jupyter-core
 pluggy==1.5.0
@@ -83,8 +78,6 @@ prompt-toolkit==3.0.36
     # via questionary
 psutil==6.0.0
     # via ipykernel
-ptyprocess==0.7.0
-    # via pexpect
 pure-eval==0.2.3
     # via stack-data
 pydantic==2.8.2
@@ -100,6 +93,8 @@ pytest-cov==5.0.0
 pytest-xdist==3.6.1
 python-dateutil==2.9.0.post0
     # via jupyter-client
+pywin32==306
+    # via jupyter-core
 pyyaml==6.0.1
     # via commitizen
 pyzmq==26.0.3
@@ -115,10 +110,6 @@ stack-data==0.6.3
     # via ipython
 termcolor==2.4.0
     # via commitizen
-tomli==2.0.1
-    # via coverage
-    # via mypy
-    # via pytest
 tomlkit==0.13.0
     # via commitizen
 tornado==6.4.1
@@ -137,3 +128,5 @@ typing-extensions==4.12.2
     # via pydantic-core
 wcwidth==0.2.13
     # via prompt-toolkit
+win32-setctime==1.1.0
+    # via loguru

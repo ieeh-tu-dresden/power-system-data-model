@@ -30,14 +30,13 @@ jobs:
         uses: eifinger/setup-rye@v4.2.1
         id: setup-rye
         with:
-          enable-cache: true
+          enable-cache: false
           cache-prefix: ${{ matrix.python-version }}
 
       - name: Pin python-version @ ${{ matrix.python-version }}
         run: rye pin ${{ matrix.python-version }}
 
       - name: Install dependencies
-        if: steps.setup-rye.outputs.cache-hit != 'true'
         run: |
           rye sync --no-lock
 

@@ -6,12 +6,12 @@
 #   features: []
 #   all-features: false
 #   with-sources: false
-#   generate-hashes: false
-#   universal: false
 
 -e file:.
 annotated-types==0.7.0
     # via pydantic
+colorama==0.4.6
+    # via loguru
 loguru==0.7.2
     # via ieeh-power-system-data-model
 pydantic==2.8.2
@@ -21,3 +21,5 @@ pydantic-core==2.20.1
 typing-extensions==4.12.2
     # via pydantic
     # via pydantic-core
+win32-setctime==1.1.0
+    # via loguru
