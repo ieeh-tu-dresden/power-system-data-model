@@ -1,3 +1,16 @@
+## 2.3.0 (2024-08-01)
+
+### Feat
+
+- add possibility for optional meta information (#127)
+- validate topology case (contributors: @SebastianDD)
+
+### Fix
+
+- **erdantic**: pin erdantic `<1` (#136)
+- use platform dependent max. size for `UniqueNonEmptyTuple` (#131)
+- rename `is_valid_topology` to `matches_topology` (#130)
+
 ## 2.2.0 (2024-02-14)
 
 ### Feat
