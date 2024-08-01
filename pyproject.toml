@@ -103,8 +103,8 @@
   version_files = [
     ".zenodo.json:version",
     "CITATION.cff:cff-version",
-    "psdm/meta.py:VERSION",
     "pyproject.toml:version",
+    "src/psdm/meta.py:VERSION",
   ]
 
 [tool.mypy]
