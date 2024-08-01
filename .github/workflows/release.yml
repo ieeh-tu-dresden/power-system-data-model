@@ -150,7 +150,7 @@ jobs:
         run: rye build
 
       - name: Publish Python packages
-        run: rye publish --repository pypi --username __token__ --token ${{ secrets.PYPI_TOKEN }}
+        run: rye publish --repository pypi --username __token__ --token ${{ secrets.PYPI_TOKEN }} --yes
 
       - name: Create release
         uses: softprops/action-gh-release@v2
