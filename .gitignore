@@ -236,3 +236,5 @@ examples/export/*
 scratchboard.ipynb
 .python-version
 *.lock
+.vscode/settings.json
+.vscode/launch.json
