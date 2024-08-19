@@ -41,9 +41,7 @@ class Branch(Base):
     phases_1: UniqueTuple[Phase]
     phases_2: UniqueTuple[Phase]
     u_n: Voltage  # nominal voltage of the branch connected nodes
-    i_r: (
-        Current | None
-    )  # rated current of branch (thermal limit in continuous operation)
+    i_r: Current | None  # rated current of branch (thermal limit in continuous operation)
     type: BranchType
     voltage_system_type: VoltageSystemType
     r1: ImpedancePosSeq  # positive sequence values of PI-representation
@@ -57,9 +55,7 @@ class Branch(Base):
     f_n: Frequency | None = None  # nominal frequency the values x and b apply
     description: str | None = None
     energized: bool | None = None
-    length: Length | None = (
-        None  # length of the line the impedance and admittance values apply
-    )
+    length: Length | None = None  # length of the line
     rn: ImpedanceNat | None = None  # neutral natural values
     xn: ImpedanceNat | None = None  # neutral natural values
     gn: AdmittanceNat | None = None  # neutral natural values

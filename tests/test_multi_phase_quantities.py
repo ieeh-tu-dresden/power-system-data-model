@@ -6,6 +6,7 @@ from contextlib import nullcontext as does_not_raise
 
 import pydantic
 import pytest
+
 from psdm.quantities.multi_phase import ActivePower
 from psdm.quantities.multi_phase import Angle
 from psdm.quantities.multi_phase import ApparentPower
