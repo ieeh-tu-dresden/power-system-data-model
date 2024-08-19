@@ -6,6 +6,7 @@ from contextlib import nullcontext as does_not_raise
 
 import pydantic
 import pytest
+
 from psdm.base import AttributeData
 
 

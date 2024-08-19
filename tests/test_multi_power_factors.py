@@ -1,6 +1,7 @@
 import math
 
 import pytest
+
 from psdm.quantities.multi_phase import ActivePower
 from psdm.quantities.multi_phase import ApparentPower
 from psdm.quantities.multi_phase import CosPhi
