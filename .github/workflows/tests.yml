@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 1
 
       - name: Set up rye
-        uses: eifinger/setup-rye@v4.2.1
+        uses: eifinger/setup-rye@v4.2.3
         id: setup-rye
 
       - name: Pin python-version @ ${{ matrix.python-version }}
