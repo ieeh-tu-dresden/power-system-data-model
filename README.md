@@ -64,7 +64,7 @@ pip install ieeh-power-system-data-model
 
 ## <div id="development" /> Development
 
-[Install rye](https://rye.astral.sh)
+[Install the Python package and project manager uv](https://github.com/astral-sh/uv)
 
 Clone `power-system-data-model`
 
@@ -79,13 +79,13 @@ cd power-system-data-model
 Install `power-system-data-model` as a production tool
 
 ```bash
-rye sync --no-dev
+uv sync --no-dev
 ```
 
 Install `power-system-data-model` in development mode
 
 ```bash
-rye sync
+uv sync
 ```
 
 For development in [Visual Studio Code](https://github.com/microsoft/vscode), all configurations are already provided:
