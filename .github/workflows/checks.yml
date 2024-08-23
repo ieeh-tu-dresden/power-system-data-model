@@ -38,10 +38,10 @@ jobs:
         run: uv venv --python ${{ matrix.python-version }} && uv sync
 
       - name: Check code
-        run: uv ruff check .
+        run: uv run ruff check .
 
       - name: Check code format
-        run: uv ruff format --check .
+        run: uv run ruff format --check .
 
       - name: Type check using mypy
-        run: uv mypy .
+        run: uv run mypy .
