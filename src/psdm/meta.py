@@ -12,7 +12,7 @@ import pydantic
 
 from psdm.base import Base
 
-VERSION = "2.3.0"
+VERSION = "2.3.1"
 
 
 class SignConvention(enum.Enum):

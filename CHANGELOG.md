@@ -1,3 +1,10 @@
+## 2.3.1 (2024-08-23)
+
+### Fix
+
+- add tests for AttributeData initialization (#141)
+- extend BranchType for series assets (RLC) (#144)
+
 ## 2.3.0 (2024-08-01)
 
 ### Feat

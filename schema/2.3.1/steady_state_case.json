@@ -1,0 +1,1724 @@
+{
+  "$defs": {
+    "Angle": {
+      "description": "Angles of complex quantity.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 5,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "DEGREE"
+        },
+        "value": {
+          "items": {
+            "maximum": 360.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Angle",
+      "type": "object"
+    },
+    "AttributeData": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "type": "array",
+              "uniqueItems": true
+            }
+          ],
+          "title": "Value"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "AttributeData",
+      "type": "object"
+    },
+    "Characteristic": {
+      "description": "This class represents a data point based characteristic of power injection for a load.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "data": {
+          "anyOf": [
+            {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Characteristic",
+      "type": "object"
+    },
+    "ControlCosPhiConst": {
+      "description": "Constant cos(phi) control mode.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "cos_phi_set": {
+          "$ref": "#/$defs/CosPhi"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "COSPHI_CONST"
+        }
+      },
+      "required": [
+        "cos_phi_set"
+      ],
+      "title": "ControlCosPhiConst",
+      "type": "object"
+    },
+    "ControlCosPhiP": {
+      "description": "cos(phi(P)) control mode.\n\np >= p_threshold_oe: cos_phi = cos_phi_oe\np_threshold_oe > u > p_threshold_ue: cos_phi is lineary interpolated between cos_phi_oe and cos_phi_ue\np <= u_threshold_ue: cos_phi = cos_phi_ue",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "cos_phi_ue": {
+          "$ref": "#/$defs/CosPhi"
+        },
+        "cos_phi_oe": {
+          "$ref": "#/$defs/CosPhi"
+        },
+        "p_threshold_ue": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ActivePower"
+        },
+        "p_threshold_oe": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ActivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "COSPHI_P"
+        }
+      },
+      "required": [
+        "cos_phi_ue",
+        "cos_phi_oe",
+        "p_threshold_ue",
+        "p_threshold_oe"
+      ],
+      "title": "ControlCosPhiP",
+      "type": "object"
+    },
+    "ControlCosPhiU": {
+      "description": "cos(phi(U)) control mode.\n\nu >= u_threshold_ue: cos_phi = cos_phi_ue\nu_threshold_ue > u > u_threshold_oe: cos_phi is lineary interpolated between cos_phi_ue and cos_phi_oe\nu <= u_threshold_oe: cos_phi = cos_phi_oe",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "cos_phi_ue": {
+          "$ref": "#/$defs/CosPhi"
+        },
+        "cos_phi_oe": {
+          "$ref": "#/$defs/CosPhi"
+        },
+        "u_threshold_ue": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_threshold_oe": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "node_ref_u": {
+          "title": "Node Ref U",
+          "type": "string"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "COSPHI_U"
+        }
+      },
+      "required": [
+        "cos_phi_ue",
+        "cos_phi_oe",
+        "u_threshold_ue",
+        "u_threshold_oe",
+        "node_ref_u"
+      ],
+      "title": "ControlCosPhiU",
+      "type": "object"
+    },
+    "ControlPConst": {
+      "description": "Constant P-setpoint control mode.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "p_set": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ActivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PControlStrategy"
+            }
+          ],
+          "default": "P_CONST"
+        }
+      },
+      "required": [
+        "p_set"
+      ],
+      "title": "ControlPConst",
+      "type": "object"
+    },
+    "ControlPF": {
+      "description": "P(f) characteristic control mode.\n\nf >= (f_p0+ f_deadband_up): p_set has to be decreased with droop_up\n(f_p0+ f_deadband_up) > f > (f_p0 - f_deadband_low): p = p_set\nf <= (f_p0 - f_deadband_low): p_set has to be increased with droop_low",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "droop_up": {
+          "$ref": "#/$defs/Droop"
+        },
+        "droop_low": {
+          "$ref": "#/$defs/Droop"
+        },
+        "f_p0": {
+          "$ref": "#/$defs/Frequency"
+        },
+        "f_deadband_up": {
+          "$ref": "#/$defs/Frequency"
+        },
+        "f_deadband_low": {
+          "$ref": "#/$defs/Frequency"
+        },
+        "p_set": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ActivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PControlStrategy"
+            }
+          ],
+          "default": "P_F"
+        }
+      },
+      "required": [
+        "droop_up",
+        "droop_low",
+        "f_p0",
+        "f_deadband_up",
+        "f_deadband_low",
+        "p_set"
+      ],
+      "title": "ControlPF",
+      "type": "object"
+    },
+    "ControlQConst": {
+      "description": "Constant Q-setpoint control mode.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "q_set": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ReactivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "Q_CONST"
+        }
+      },
+      "required": [
+        "q_set"
+      ],
+      "title": "ControlQConst",
+      "type": "object"
+    },
+    "ControlQP": {
+      "description": "Q(P) characteristic control mode.\n\nThis is the general case of ControlCosPhiP, ControlCosPhiConst, ControlTanPhiConst.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "q_p_characteristic": {
+          "$ref": "#/$defs/Characteristic"
+        },
+        "q_max_ue": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__multi_phase__ReactivePower"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "q_max_oe": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__multi_phase__ReactivePower"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "Q_P"
+        }
+      },
+      "required": [
+        "q_p_characteristic",
+        "q_max_ue",
+        "q_max_oe"
+      ],
+      "title": "ControlQP",
+      "type": "object"
+    },
+    "ControlQU": {
+      "description": "Q(U) characteristic control mode.\n\nu >= (u_q0 + u_deadband_up): q has to be increased with droop_up until q_max_ue is reached\n(u_q0 + u_deadband_up) > u > (u_q0 - u_deadband_low): q = 0\nu <= (u_q0 - u_deadband_low): q has to be decreased with droop_low until q_max_oe is reached\n\nThe droop is defined as percentage of the rated actice power infeed per percentage of voltage deviation (as per unit).\nExample:\n* Rated active power of generator: 10 MW\n* Rated line-line voltage U_n: 110 kV (1 p.u.)\n* A droop of 6 % means that the reactive power is increased by 6 % of 10 MW per 1.1 kV of voltage deviation (1 % U_n = 0.01 p.u.).\n* Consider given u_q0 = 110000 V, u_deadband_up = 1000 V, droop_up = 6 and the actual voltage is 112100 V:\n-> so q = 10 MW * 0.06 * (112100 V - (110000 V + 1000 V)) / 110000 V * 100 = 0.6 MW\n\n                 |- q_max_ue   =======\n                 |            /\n                 | u_q0      / - droop_up (cfg. german grid code VDE AR-N 4120:2018)\n     ____________|/_________/____________\n             /   |     |\ndroop_low - /    |  u_deadband_up\n           /     |\n     ======      |- q_max_oe",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "droop_up": {
+          "$ref": "#/$defs/Droop"
+        },
+        "droop_low": {
+          "$ref": "#/$defs/Droop"
+        },
+        "u_q0": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_deadband_up": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_deadband_low": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "q_max_ue": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ReactivePower"
+        },
+        "q_max_oe": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ReactivePower"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "Q_U"
+        }
+      },
+      "required": [
+        "droop_up",
+        "droop_low",
+        "u_q0",
+        "u_deadband_up",
+        "u_deadband_low",
+        "q_max_ue",
+        "q_max_oe"
+      ],
+      "title": "ControlQU",
+      "type": "object"
+    },
+    "ControlTanPhiConst": {
+      "description": "Constant tan(phi) control mode.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "tan_phi_set": {
+          "$ref": "#/$defs/TanPhi"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "TANPHI_CONST"
+        }
+      },
+      "required": [
+        "tan_phi_set"
+      ],
+      "title": "ControlTanPhiConst",
+      "type": "object"
+    },
+    "ControlUConst": {
+      "description": "Constant U-setpoint control mode.\n\nThe controller tries to keep the voltage at the setpoint via providing reactive power within the rated limits.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "u_set": {
+          "$ref": "#/$defs/Voltage"
+        },
+        "u_meas_ref": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ControlledVoltageRef"
+            }
+          ],
+          "default": "POS_SEQ"
+        },
+        "control_strategy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QControlStrategy"
+            }
+          ],
+          "default": "U_CONST"
+        }
+      },
+      "required": [
+        "u_set"
+      ],
+      "title": "ControlUConst",
+      "type": "object"
+    },
+    "ControlledVoltageRef": {
+      "enum": [
+        "A",
+        "AB",
+        "AVG",
+        "B",
+        "BC",
+        "C",
+        "CA",
+        "POS_SEQ"
+      ],
+      "title": "ControlledVoltageRef",
+      "type": "string"
+    },
+    "CosPhi": {
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 7,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "UNITLESS"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerFactorDirection"
+            }
+          ],
+          "default": "ND"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "CosPhi",
+      "type": "object"
+    },
+    "Droop": {
+      "description": "Droops of characteristics curves.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 5,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "UNITLESS"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Droop",
+      "type": "object"
+    },
+    "ExternalGrid": {
+      "description": "This class represents the operating point of an external grid or a grid subsitute equivalent respectively.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Voltage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phi_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Angle"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "p_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__multi_phase__ActivePower"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "q_0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__multi_phase__ReactivePower"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ExternalGrid",
+      "type": "object"
+    },
+    "Frequency": {
+      "description": "Frequency.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 4,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "HERTZ"
+        },
+        "value": {
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Frequency",
+      "type": "object"
+    },
+    "Load": {
+      "description": "This class represents the operating point of a load.\n\nIt is characterized by the active and reactive power.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "active_power": {
+          "$ref": "#/$defs/psdm__steadystate_case__active_power__ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/$defs/psdm__steadystate_case__reactive_power__ReactivePower"
+        }
+      },
+      "required": [
+        "name",
+        "active_power",
+        "reactive_power"
+      ],
+      "title": "Load",
+      "type": "object"
+    },
+    "Meta": {
+      "description": "This class represents the meta data related to the grid export.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "grid": {
+          "title": "Grid",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Creator"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "sign_convention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignConvention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "grid",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "PControlStrategy": {
+      "enum": [
+        "ND",
+        "P_CONST",
+        "P_F"
+      ],
+      "title": "PControlStrategy",
+      "type": "string"
+    },
+    "PController": {
+      "description": "This class represents a controller of active power of a load.\n\nIt is characterized by the control type, which comes with different controller parameters.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "external_controller_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Controller Name"
+        },
+        "control_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlPConst"
+            },
+            {
+              "$ref": "#/$defs/ControlPF"
+            }
+          ],
+          "title": "Control Type"
+        }
+      },
+      "required": [
+        "node_target",
+        "control_type"
+      ],
+      "title": "PController",
+      "type": "object"
+    },
+    "PowerFactorDirection": {
+      "enum": [
+        "UE",
+        "OE",
+        "ND"
+      ],
+      "title": "PowerFactorDirection",
+      "type": "string"
+    },
+    "PowerType": {
+      "enum": [
+        "AC_ACTIVE",
+        "AC_APPARENT",
+        "AC_REACTIVE",
+        "CURRENT",
+        "DC",
+        "GAS",
+        "IMPEDANCE",
+        "MECHANICAL",
+        "THERMAL"
+      ],
+      "title": "PowerType",
+      "type": "string"
+    },
+    "QControlStrategy": {
+      "enum": [
+        "COSPHI_CONST",
+        "COSPHI_P",
+        "COSPHI_U",
+        "ND",
+        "Q_CONST",
+        "Q_P",
+        "Q_U",
+        "TANPHI_CONST",
+        "U_CONST"
+      ],
+      "title": "QControlStrategy",
+      "type": "string"
+    },
+    "QController": {
+      "description": "This class represents a controller of reactive power of a load.\n\nIt is characterized by the control type, which comes with different controller parameters.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "node_target": {
+          "title": "Node Target",
+          "type": "string"
+        },
+        "external_controller_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Controller Name"
+        },
+        "control_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlQConst"
+            },
+            {
+              "$ref": "#/$defs/ControlUConst"
+            },
+            {
+              "$ref": "#/$defs/ControlTanPhiConst"
+            },
+            {
+              "$ref": "#/$defs/ControlCosPhiConst"
+            },
+            {
+              "$ref": "#/$defs/ControlCosPhiP"
+            },
+            {
+              "$ref": "#/$defs/ControlCosPhiU"
+            },
+            {
+              "$ref": "#/$defs/ControlQU"
+            },
+            {
+              "$ref": "#/$defs/ControlQP"
+            }
+          ],
+          "title": "Control Type"
+        }
+      },
+      "required": [
+        "node_target",
+        "control_type"
+      ],
+      "title": "QController",
+      "type": "object"
+    },
+    "SignConvention": {
+      "enum": [
+        "PASSIVE",
+        "ACTIVE"
+      ],
+      "title": "SignConvention",
+      "type": "string"
+    },
+    "SystemType": {
+      "enum": [
+        "POSITIVE_SEQUENCE",
+        "NEGATIVE_SEQUENCE",
+        "ZERO_SEQUENCE",
+        "NATURAL"
+      ],
+      "title": "SystemType",
+      "type": "string"
+    },
+    "TanPhi": {
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 7,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "UNITLESS"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerFactorDirection"
+            }
+          ],
+          "default": "ND"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "TanPhi",
+      "type": "object"
+    },
+    "Transformer": {
+      "description": "This class represents the operationg point of a transformer.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "tap_pos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Pos"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Transformer",
+      "type": "object"
+    },
+    "Unit": {
+      "enum": [
+        "AMPERE",
+        "DAY",
+        "DEGREE",
+        "HERTZ",
+        "HOUR",
+        "KELVIN",
+        "METER",
+        "MINUTE",
+        "OHM",
+        "VOLT",
+        "VA",
+        "VAR",
+        "WATT",
+        "PERCENT",
+        "SECOND",
+        "SIEMENS",
+        "UNITLESS"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "Voltage": {
+      "description": "Electrical Voltage.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 2,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VOLT"
+        },
+        "value": {
+          "items": {
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Voltage",
+      "type": "object"
+    },
+    "psdm__quantities__multi_phase__ActivePower": {
+      "description": "Electrical active powers.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 1,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "WATT"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_ACTIVE"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "psdm__quantities__multi_phase__ReactivePower": {
+      "description": "Electrical reactive powers.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 1,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VAR"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_REACTIVE"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    },
+    "psdm__steadystate_case__active_power__ActivePower": {
+      "description": "This class represents the three phase active power operating point of a load.\n\nIt must be characterized by a controller.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "controller": {
+          "$ref": "#/$defs/PController"
+        }
+      },
+      "required": [
+        "controller"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "psdm__steadystate_case__reactive_power__ReactivePower": {
+      "description": "This class represents the three phase reactive power operating point of a load.\n\nIt must be characterized by a controller.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "controller": {
+          "$ref": "#/$defs/QController"
+        }
+      },
+      "required": [
+        "controller"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    }
+  },
+  "description": "This class represents a steady state case / an operation point of a grid.\n\nIt is characterized by the operating points of all loads, transformers and external grids in operation.",
+  "properties": {
+    "optional_data": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/AttributeData"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Optional Data"
+    },
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/Load"
+      },
+      "title": "Loads",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transformers": {
+      "items": {
+        "$ref": "#/$defs/Transformer"
+      },
+      "title": "Transformers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "external_grids": {
+      "items": {
+        "$ref": "#/$defs/ExternalGrid"
+      },
+      "title": "External Grids",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "title": "Case",
+  "type": "object"
+}

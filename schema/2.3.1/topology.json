@@ -1,0 +1,2432 @@
+{
+  "$defs": {
+    "ActivePower": {
+      "description": "Electrical active powers.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 1,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "WATT"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_ACTIVE"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ActivePower",
+      "type": "object"
+    },
+    "AdmittanceNat": {
+      "description": "Natural admittance.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 13,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "SIEMENS"
+        },
+        "value": {
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "AdmittanceNat",
+      "type": "object"
+    },
+    "AdmittancePosSeq": {
+      "description": "Positive sequence admittance.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "POSITIVE_SEQUENCE"
+        },
+        "precision": {
+          "default": 13,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "SIEMENS"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "AdmittancePosSeq",
+      "type": "object"
+    },
+    "AdmittanceZerSeq": {
+      "description": "Zero sequence admittance.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "ZERO_SEQUENCE"
+        },
+        "precision": {
+          "default": 13,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "SIEMENS"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "AdmittanceZerSeq",
+      "type": "object"
+    },
+    "Angle": {
+      "description": "Angle of complex quantity.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+        },
+        "precision": {
+          "default": 5,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "DEGREE"
+        },
+        "value": {
+          "maximum": 360.0,
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "system_type",
+        "value"
+      ],
+      "title": "Angle",
+      "type": "object"
+    },
+    "AttributeData": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "type": "array",
+              "uniqueItems": true
+            }
+          ],
+          "title": "Value"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "AttributeData",
+      "type": "object"
+    },
+    "Branch": {
+      "description": "This class represents a branch adn therefore includes lines, cables or branch fuses.\n\nIt is characterized by a branch type (line, cable or fuse).",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "node_1": {
+          "title": "Node 1",
+          "type": "string"
+        },
+        "node_2": {
+          "title": "Node 2",
+          "type": "string"
+        },
+        "phases_1": {
+          "items": {
+            "$ref": "#/$defs/Phase"
+          },
+          "title": "Phases 1",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "phases_2": {
+          "items": {
+            "$ref": "#/$defs/Phase"
+          },
+          "title": "Phases 2",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "u_n": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__Voltage"
+        },
+        "i_r": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Current"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "$ref": "#/$defs/BranchType"
+        },
+        "voltage_system_type": {
+          "$ref": "#/$defs/VoltageSystemType"
+        },
+        "r1": {
+          "$ref": "#/$defs/ImpedancePosSeq"
+        },
+        "x1": {
+          "$ref": "#/$defs/ImpedancePosSeq"
+        },
+        "g1": {
+          "$ref": "#/$defs/AdmittancePosSeq"
+        },
+        "b1": {
+          "$ref": "#/$defs/AdmittancePosSeq"
+        },
+        "r0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "x0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "g0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdmittanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "b0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdmittanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "f_n": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Frequency"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "energized": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Energized"
+        },
+        "length": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Length"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "xn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "gn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdmittanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "bn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdmittanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rpn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "xpn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "gpn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdmittanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "bpn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdmittanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "node_1",
+        "node_2",
+        "phases_1",
+        "phases_2",
+        "u_n",
+        "i_r",
+        "type",
+        "voltage_system_type",
+        "r1",
+        "x1",
+        "g1",
+        "b1"
+      ],
+      "title": "Branch",
+      "type": "object"
+    },
+    "BranchType": {
+      "enum": [
+        "COUPLER",
+        "FUSE",
+        "LINE",
+        "SERIES_RLC"
+      ],
+      "title": "BranchType",
+      "type": "string"
+    },
+    "CosPhi": {
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 7,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "UNITLESS"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerFactorDirection"
+            }
+          ],
+          "default": "ND"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "CosPhi",
+      "type": "object"
+    },
+    "Current": {
+      "description": "Electrical current.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+        },
+        "precision": {
+          "default": 2,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "AMPERE"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "system_type",
+        "value"
+      ],
+      "title": "Current",
+      "type": "object"
+    },
+    "ExternalGrid": {
+      "description": "This class represents an external grid or a grid subsitute equivalent respectively.\n\nIt is characterized by a grid type (slack, P-V-node, P-Q-node).",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Description"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        },
+        "phases": {
+          "items": {
+            "$ref": "#/$defs/Phase"
+          },
+          "title": "Phases",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "short_circuit_power_max": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__ApparentPower"
+        },
+        "short_circuit_power_min": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__ApparentPower"
+        },
+        "type": {
+          "$ref": "#/$defs/GridType"
+        }
+      },
+      "required": [
+        "description",
+        "name",
+        "node",
+        "phases",
+        "short_circuit_power_max",
+        "short_circuit_power_min",
+        "type"
+      ],
+      "title": "ExternalGrid",
+      "type": "object"
+    },
+    "Frequency": {
+      "description": "Frequency.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 4,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "HERTZ"
+        },
+        "value": {
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Frequency",
+      "type": "object"
+    },
+    "GridType": {
+      "enum": [
+        "SL",
+        "PV",
+        "PQ"
+      ],
+      "title": "GridType",
+      "type": "string"
+    },
+    "ImpedanceNat": {
+      "description": "Natural impedance.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 7,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "OHM"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ImpedanceNat",
+      "type": "object"
+    },
+    "ImpedancePosSeq": {
+      "description": "Positive sequence impedance.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "POSITIVE_SEQUENCE"
+        },
+        "precision": {
+          "default": 7,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "OHM"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ImpedancePosSeq",
+      "type": "object"
+    },
+    "ImpedanceZerSeq": {
+      "description": "Zero sequence impedance.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "ZERO_SEQUENCE"
+        },
+        "precision": {
+          "default": 7,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "OHM"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ImpedanceZerSeq",
+      "type": "object"
+    },
+    "Length": {
+      "description": "Length.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 0,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "METER"
+        },
+        "value": {
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Length",
+      "type": "object"
+    },
+    "Load": {
+      "description": "This class represents a load.\n\nIt is mainly characterized by the load model of active and reactive power, the connected phases and the load type itself (Producer, Consumer, Storage or passive shunt).",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        },
+        "rated_power": {
+          "$ref": "#/$defs/RatedPower"
+        },
+        "active_power_model": {
+          "$ref": "#/$defs/LoadModel"
+        },
+        "reactive_power_model": {
+          "$ref": "#/$defs/LoadModel"
+        },
+        "phase_connections": {
+          "$ref": "#/$defs/PhaseConnections"
+        },
+        "type": {
+          "$ref": "#/$defs/LoadType"
+        },
+        "system_type": {
+          "$ref": "#/$defs/psdm__topology__load__SystemType"
+        },
+        "voltage_system_type": {
+          "$ref": "#/$defs/VoltageSystemType"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "node",
+        "rated_power",
+        "active_power_model",
+        "reactive_power_model",
+        "phase_connections",
+        "type",
+        "system_type",
+        "voltage_system_type"
+      ],
+      "title": "Load",
+      "type": "object"
+    },
+    "LoadModel": {
+      "description": "Load representation based on polynomial model.\n\npower = power_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)\nc_z = 1 - c_p - c_i",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "u_0": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__Voltage"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "c_p": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "C P",
+          "type": "number"
+        },
+        "c_i": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "C I",
+          "type": "number"
+        },
+        "exp_p": {
+          "default": 0,
+          "title": "Exp P",
+          "type": "integer"
+        },
+        "exp_i": {
+          "default": 1,
+          "title": "Exp I",
+          "type": "integer"
+        },
+        "exp_z": {
+          "default": 2,
+          "title": "Exp Z",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "u_0"
+      ],
+      "title": "LoadModel",
+      "type": "object"
+    },
+    "LoadType": {
+      "enum": [
+        "CONSUMER",
+        "PRODUCER",
+        "PROSUMER",
+        "SHUNT",
+        "STORAGE"
+      ],
+      "title": "LoadType",
+      "type": "string"
+    },
+    "Meta": {
+      "description": "This class represents the meta data related to the grid export.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "grid": {
+          "title": "Grid",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Creator"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "sign_convention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignConvention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "grid",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "Node": {
+      "description": "This class represents a terminal within the grid.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "u_n": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__Voltage"
+        },
+        "phases": {
+          "items": {
+            "$ref": "#/$defs/Phase"
+          },
+          "title": "Phases",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "u_n",
+        "phases"
+      ],
+      "title": "Node",
+      "type": "object"
+    },
+    "Phase": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "N",
+        "E",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z"
+      ],
+      "title": "Phase",
+      "type": "string"
+    },
+    "PhaseAngleClock": {
+      "description": "Phase shift between two windings in multiples of 30\u00b0.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "value": {
+          "exclusiveMaximum": 12.0,
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "PhaseAngleClock",
+      "type": "object"
+    },
+    "PhaseConnections": {
+      "description": "Phases between which elements are connected, e.g. [(A,E). (B,E). (C,E)], [(A,B), (B,C), (C,A)].",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "value": {
+          "items": {
+            "anyOf": [
+              {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "$ref": "#/$defs/Phase"
+                  },
+                  {
+                    "$ref": "#/$defs/Phase"
+                  }
+                ],
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "PhaseConnections",
+      "type": "object"
+    },
+    "PowerFactorDirection": {
+      "enum": [
+        "UE",
+        "OE",
+        "ND"
+      ],
+      "title": "PowerFactorDirection",
+      "type": "string"
+    },
+    "PowerType": {
+      "enum": [
+        "AC_ACTIVE",
+        "AC_APPARENT",
+        "AC_REACTIVE",
+        "CURRENT",
+        "DC",
+        "GAS",
+        "IMPEDANCE",
+        "MECHANICAL",
+        "THERMAL"
+      ],
+      "title": "PowerType",
+      "type": "string"
+    },
+    "RatedPower": {
+      "description": "Rated power of a load specified by rated apparent power and power factor.\n\nA RatedPower object should be created via the class method \"from_apparent_power(apparent_power, power_factor)\"\nas active and reactive power will be automatically computed based on rated power and powerfactor.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "apparent_power": {
+          "$ref": "#/$defs/psdm__quantities__multi_phase__ApparentPower"
+        },
+        "active_power": {
+          "$ref": "#/$defs/ActivePower"
+        },
+        "reactive_power": {
+          "$ref": "#/$defs/ReactivePower"
+        },
+        "cos_phi": {
+          "$ref": "#/$defs/CosPhi"
+        }
+      },
+      "required": [
+        "apparent_power",
+        "active_power",
+        "reactive_power",
+        "cos_phi"
+      ],
+      "title": "RatedPower",
+      "type": "object"
+    },
+    "ReactivePower": {
+      "description": "Electrical reactive powers.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 1,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VAR"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_REACTIVE"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ReactivePower",
+      "type": "object"
+    },
+    "SignConvention": {
+      "enum": [
+        "PASSIVE",
+        "ACTIVE"
+      ],
+      "title": "SignConvention",
+      "type": "string"
+    },
+    "TapSide": {
+      "enum": [
+        "HV",
+        "MV",
+        "LV"
+      ],
+      "title": "TapSide",
+      "type": "string"
+    },
+    "Transformer": {
+      "description": "This class represents a transformer and consists of winding elements.\n\nIt is characterized by windings elements (2w or 3w), the vector group as well as the transformer tap control.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "node_1": {
+          "title": "Node 1",
+          "type": "string"
+        },
+        "node_2": {
+          "title": "Node 2",
+          "type": "string"
+        },
+        "phases_1": {
+          "items": {
+            "$ref": "#/$defs/Phase"
+          },
+          "title": "Phases 1",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "phases_2": {
+          "items": {
+            "$ref": "#/$defs/Phase"
+          },
+          "title": "Phases 2",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "number": {
+          "title": "Number",
+          "type": "integer"
+        },
+        "vector_group": {
+          "$ref": "#/$defs/psdm__topology__transformer__VectorGroup"
+        },
+        "windings": {
+          "items": {
+            "$ref": "#/$defs/Winding"
+          },
+          "title": "Windings",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "r_fe1": {
+          "$ref": "#/$defs/ImpedancePosSeq"
+        },
+        "x_h1": {
+          "$ref": "#/$defs/ImpedancePosSeq"
+        },
+        "r_fe0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "x_h0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phase_technology_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TransformerPhaseTechnologyType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "tap_u_mag": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__Voltage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tap_u_phi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Angle"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tap_max": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Max"
+        },
+        "tap_min": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Min"
+        },
+        "tap_neutral": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tap Neutral"
+        },
+        "tap_side": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TapSide"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "node_1",
+        "node_2",
+        "phases_1",
+        "phases_2",
+        "name",
+        "number",
+        "vector_group",
+        "windings",
+        "r_fe1",
+        "x_h1"
+      ],
+      "title": "Transformer",
+      "type": "object"
+    },
+    "TransformerPhaseTechnologyType": {
+      "enum": [
+        "SINGLE_PH_E",
+        "SINGLE_PH",
+        "THREE_PH"
+      ],
+      "title": "TransformerPhaseTechnologyType",
+      "type": "string"
+    },
+    "Unit": {
+      "enum": [
+        "AMPERE",
+        "DAY",
+        "DEGREE",
+        "HERTZ",
+        "HOUR",
+        "KELVIN",
+        "METER",
+        "MINUTE",
+        "OHM",
+        "VOLT",
+        "VA",
+        "VAR",
+        "WATT",
+        "PERCENT",
+        "SECOND",
+        "SIEMENS",
+        "UNITLESS"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "VoltageSystemType": {
+      "enum": [
+        "AC",
+        "DC"
+      ],
+      "title": "VoltageSystemType",
+      "type": "string"
+    },
+    "Winding": {
+      "description": "This class represents a winding of a transformer.\n\nFor example, a 2-winding transformer has a high and low voltage level winding.\nEach windings is characterized by vector group, which defines the interconnection of the three phases.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        },
+        "s_r": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__ApparentPower"
+        },
+        "u_n": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__Voltage"
+        },
+        "u_r": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__Voltage"
+        },
+        "r1": {
+          "$ref": "#/$defs/ImpedancePosSeq"
+        },
+        "x1": {
+          "$ref": "#/$defs/ImpedancePosSeq"
+        },
+        "r0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "x0": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceZerSeq"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "re": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImpedanceNat"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phase_angle_clock": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhaseAngleClock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "vector_group": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/psdm__topology__windings__VectorGroup"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "neutral_connected": {
+          "default": false,
+          "title": "Neutral Connected",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "node",
+        "s_r",
+        "u_n",
+        "u_r",
+        "r1",
+        "x1"
+      ],
+      "title": "Winding",
+      "type": "object"
+    },
+    "psdm__quantities__multi_phase__ApparentPower": {
+      "description": "Electrical apparent powers.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 1,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VA"
+        },
+        "value": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_APPARENT"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ApparentPower",
+      "type": "object"
+    },
+    "psdm__quantities__multi_phase__Voltage": {
+      "description": "Electrical Voltage.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+            }
+          ],
+          "default": "NATURAL"
+        },
+        "precision": {
+          "default": 2,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VOLT"
+        },
+        "value": {
+          "items": {
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Voltage",
+      "type": "object"
+    },
+    "psdm__quantities__single_phase__ApparentPower": {
+      "description": "Electrical apparent power.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+        },
+        "precision": {
+          "default": 1,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VA"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "power_type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/PowerType"
+            }
+          ],
+          "default": "AC_APPARENT"
+        }
+      },
+      "required": [
+        "system_type",
+        "value"
+      ],
+      "title": "ApparentPower",
+      "type": "object"
+    },
+    "psdm__quantities__single_phase__SystemType": {
+      "enum": [
+        "POSITIVE_SEQUENCE",
+        "NEGATIVE_SEQUENCE",
+        "ZERO_SEQUENCE",
+        "NATURAL"
+      ],
+      "title": "SystemType",
+      "type": "string"
+    },
+    "psdm__quantities__single_phase__Voltage": {
+      "description": "Electrical Voltage.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "system_type": {
+          "$ref": "#/$defs/psdm__quantities__single_phase__SystemType"
+        },
+        "precision": {
+          "default": 2,
+          "title": "Precision",
+          "type": "integer"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Unit"
+            }
+          ],
+          "default": "VOLT"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "system_type",
+        "value"
+      ],
+      "title": "Voltage",
+      "type": "object"
+    },
+    "psdm__topology__load__SystemType": {
+      "enum": [
+        "BATTERY_STORAGE",
+        "BIOGAS",
+        "CHARGING_POINT",
+        "COAL",
+        "DIESEL",
+        "EXTERNAL_GRID_EQUIVALENT",
+        "FILTER_C",
+        "FILTER_HARMONIC",
+        "FILTER_RL",
+        "FILTER_RLC",
+        "FILTER_RLCCRP",
+        "FILTER_RLCRP",
+        "FIXED_CONSUMPTION",
+        "FUELCELL",
+        "GAS",
+        "HEAT_PUMP",
+        "HVAC",
+        "HVDC",
+        "HYDRO",
+        "NIGHT_STORAGE",
+        "NUCLEAR",
+        "OIL",
+        "OTHER",
+        "PEAT",
+        "PUMP_STORAGE",
+        "PV",
+        "REACTIVE_POWER_COMPENSATOR",
+        "RENEWABLE_ENERGY",
+        "SOLAR",
+        "STAT_GEN",
+        "STATIC_VAR_SYSTEM",
+        "VARIABLE_CONSUMPTION",
+        "WIND"
+      ],
+      "title": "SystemType",
+      "type": "string"
+    },
+    "psdm__topology__transformer__VectorGroup": {
+      "enum": [
+        "Dd0",
+        "Yy0",
+        "YNy0",
+        "Yyn0",
+        "YNyn0",
+        "Dz0",
+        "Dzn0",
+        "Zd0",
+        "ZNd0",
+        "Dyn1",
+        "Dy5",
+        "Dyn5",
+        "Yd5",
+        "YNd5",
+        "Yz5",
+        "YNz5",
+        "Yzn5",
+        "YNzn5",
+        "Dd6",
+        "Yy6",
+        "YNy6",
+        "Yyn6",
+        "YNyn6",
+        "Dz6",
+        "Dzn6",
+        "Zd6",
+        "ZNd6",
+        "Dyn7",
+        "Dy11",
+        "Dyn11",
+        "Yd11",
+        "YNd11",
+        "Yz11",
+        "YNz11",
+        "Yzn11",
+        "YNzn11"
+      ],
+      "title": "VectorGroup",
+      "type": "string"
+    },
+    "psdm__topology__windings__VectorGroup": {
+      "enum": [
+        "Y",
+        "YN",
+        "Z",
+        "ZN",
+        "D"
+      ],
+      "title": "VectorGroup",
+      "type": "string"
+    }
+  },
+  "description": "This class represents operating point independent topology of a grid.\n\nIt is characterized by list of branches, nodes, loads, transformers and external grids.",
+  "properties": {
+    "optional_data": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/AttributeData"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Optional Data"
+    },
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "branches": {
+      "items": {
+        "$ref": "#/$defs/Branch"
+      },
+      "title": "Branches",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/Node"
+      },
+      "title": "Nodes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/Load"
+      },
+      "title": "Loads",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transformers": {
+      "items": {
+        "$ref": "#/$defs/Transformer"
+      },
+      "title": "Transformers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "external_grids": {
+      "items": {
+        "$ref": "#/$defs/ExternalGrid"
+      },
+      "title": "External Grids",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "branches",
+    "nodes",
+    "loads",
+    "transformers",
+    "external_grids"
+  ],
+  "title": "Topology",
+  "type": "object"
+}
