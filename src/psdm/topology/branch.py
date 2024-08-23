@@ -23,9 +23,10 @@ from psdm.quantities.single_phase import Voltage
 
 
 class BranchType(Enum):
-    LINE = "LINE"
     COUPLER = "COUPLER"
     FUSE = "FUSE"
+    LINE = "LINE"
+    SERIES_RLC = "SERIES_RLC"
 
 
 class Branch(Base):
@@ -54,7 +55,7 @@ class Branch(Base):
     f_n: Frequency | None = None  # nominal frequency the values x and b apply
     description: str | None = None
     energized: bool | None = None
-    length: Length | None = None  # length of the line the impedance and admittance values apply
+    length: Length | None = None  # length of the line
     rn: ImpedanceNat | None = None  # neutral natural values
     xn: ImpedanceNat | None = None  # neutral natural values
     gn: AdmittanceNat | None = None  # neutral natural values

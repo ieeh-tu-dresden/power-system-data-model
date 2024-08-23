@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [tests]
     env:
-      PYTHON_VERSION: "3.11"
+      PYTHON_VERSION: "3.10"
 
     steps:
       - name: Check out repository
@@ -56,26 +56,35 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           fetch-depth: 0
 
-      - name: Set up rye
-        uses: eifinger/setup-rye@v4.2.1
-        id: setup-rye
+      - id: cache-cargo-bin
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin
 
-      - name: Pin python-version @ 3.11
-        run: rye pin 3.11
+      - id: cache-uv-python
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/.local/share/uv
+          key: ${{ runner.os }}-uv-python-${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+        run: |
+          curl -LsSf https://github.com/astral-sh/uv/releases/download/0.3.1/uv-installer.sh | sh
 
       - name: Install dependencies
-        run: |
-          rye sync
+        run: uv venv --python ${{ env.PYTHON_VERSION }} && uv sync
 
       - name: Install graphviz
         run: sudo apt-get install -y graphviz graphviz-dev
 
       - name: Install erdantic
-        run: rye add "erdantic<1"
+        run: uv add "erdantic<1"
 
       - name: Generate schema diagram files
         run: |
-          rye run python -c 'import erdantic as erd
+          uv run python -c 'import erdantic as erd
           from psdm.steadystate_case.case import Case as SteadystateCase
           from psdm.topology.topology import Topology
           from psdm.topology_case.case import Case as TopologyCase
@@ -98,7 +107,7 @@ jobs:
 
       - name: Generate schema JSON files
         run: |
-          rye run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
+          uv run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
           from psdm.topology.topology import Topology
           from psdm.topology_case.case import Case as TopologyCase
           from pathlib import Path
@@ -147,10 +156,13 @@ jobs:
           enforce_admins: ${{ steps.disable_include_admins.outputs.initial_status }}
 
       - name: Build Python packages
-        run: rye build
+        run: uvx --from build pyproject-build --installer uv
 
       - name: Publish Python packages
-        run: rye publish --repository pypi --username __token__ --token ${{ secrets.PYPI_TOKEN }} --yes
+        run: uvx twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
 
       - name: Create release
         uses: softprops/action-gh-release@v2
