@@ -57,13 +57,13 @@ jobs:
           fetch-depth: 0
 
       - id: cache-cargo-bin
-        uses: actions/cache@v4.1.2
+        uses: actions/cache@v4.2.0
         with:
           path: ~/.cargo/bin
           key: ${{ runner.os }}-cargo-bin
 
       - id: cache-uv-python
-        uses: actions/cache@v4.1.2
+        uses: actions/cache@v4.2.0
         with:
           path: ~/.local/share/uv
           key: ${{ runner.os }}-uv-python-${{ env.PYTHON_VERSION }}
