@@ -1,0 +1,255 @@
+{
+  "$defs": {
+    "AttributeData": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "type": "array",
+              "uniqueItems": true
+            }
+          ],
+          "title": "Value"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "AttributeData",
+      "type": "object"
+    },
+    "ElementState": {
+      "description": "This class represents the state of an element which is (partly) disconnected or out of service.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "disabled": {
+          "default": false,
+          "title": "Disabled",
+          "type": "boolean"
+        },
+        "open_switches": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Open Switches",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ElementState",
+      "type": "object"
+    },
+    "Meta": {
+      "description": "This class represents the meta data related to the grid export.",
+      "properties": {
+        "optional_data": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AttributeData"
+              },
+              "maxItems": 9223372036854775807,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Optional Data"
+        },
+        "grid": {
+          "title": "Grid",
+          "type": "string"
+        },
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "case": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Creator"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "sign_convention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignConvention"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "grid",
+        "date"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "SignConvention": {
+      "enum": [
+        "PASSIVE",
+        "ACTIVE"
+      ],
+      "title": "SignConvention",
+      "type": "string"
+    }
+  },
+  "description": "This class represents a unique topology case of the grid.\n\nIt is characterized by a list of element which are out of service.",
+  "properties": {
+    "optional_data": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/AttributeData"
+          },
+          "maxItems": 9223372036854775807,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Optional Data"
+    },
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "elements": {
+      "items": {
+        "$ref": "#/$defs/ElementState"
+      },
+      "title": "Elements",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "meta",
+    "elements"
+  ],
+  "title": "Case",
+  "type": "object"
+}

@@ -1,3 +1,10 @@
+## 2.3.2 (2025-01-24)
+
+### Fix
+
+- **ci**: release workflow (#162)
+- add py.typed marker (#160)
+
 ## 2.3.1 (2024-08-23)
 
 ### Fix
