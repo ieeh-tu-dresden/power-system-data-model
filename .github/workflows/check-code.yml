@@ -1,0 +1,35 @@
+---
+  name: Check code
+
+  on:
+    workflow_call:
+
+  jobs:
+    check-code:
+      name: Check code
+      runs-on: ubuntu-24.04
+      steps:
+        - name: Check out repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Check if commit messages are compliant
+          uses: webiny/action-conventional-commits@v1.3.0
+          with:
+            allowed-commit-types: "feat,fix,docs,style,refactor,perf,test,chore,bug,build,ci,bump"
+
+        - name: Install uv
+          uses: astral-sh/setup-uv@v5.1.0
+          with:
+            enable-cache: true
+
+        - name: Install the project
+          run: uv sync --dev
+
+        - name: Check code
+          run: uv run ruff check .
+
+        - name: Check code format
+          run: uv run ruff format --check .
+
+        - name: Type check using mypy
+          run: uv run mypy .
