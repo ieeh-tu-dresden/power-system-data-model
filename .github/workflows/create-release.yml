@@ -1,0 +1,67 @@
+---
+  name: Create release
+
+  on: workflow_dispatch
+
+  jobs:
+    test-code:
+      name: test code
+      uses: ./.github/workflows/test-code.yml
+
+    create-release:
+      name: Create release
+      runs-on: ubuntu-24.04
+      needs: [test-code]
+
+      steps:
+        - name: Check out repository
+          uses: actions/checkout@v4.2.2
+          with:
+            fetch-depth: 0
+            token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Update license year
+          uses: FantasticFiasco/action-update-license-year@v3.0.2
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            prTitle: "docs(license): update copyright year(s)"
+
+        - name: Merge license year pull request
+          continue-on-error: true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          run: gh pr merge --squash --delete-branch --admin
+
+        - name: Check out repository
+          uses: actions/checkout@v4.2.2
+          with:
+            fetch-depth: 0
+            token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Bump version and create changelog
+          id: commitizen
+          uses: commitizen-tools/commitizen-action@0.23.1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            changelog_increment_filename: body.md
+
+        - name: Install uv
+          uses: astral-sh/setup-uv@v5.1.0
+          with:
+            enable-cache: true
+
+        - name: Build python packages
+          run: uv build
+
+        - name: Create github release
+          uses: softprops/action-gh-release@v2.2.1
+          with:
+            body_path: body.md
+            tag_name: ${{ steps.commitizen.outputs.version }}
+            files: |
+              dist/*.whl
+              dist/*.tar.gz
+              LICENSE
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
