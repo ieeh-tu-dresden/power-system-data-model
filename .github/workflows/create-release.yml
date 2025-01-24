@@ -17,8 +17,17 @@
         - name: Check out repository
           uses: actions/checkout@v4.2.2
           with:
+            token: ${{ secrets.ACCESS_TOKEN }}
             fetch-depth: 0
-            token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Temporarily disable 'include administrators' default branch protection
+          uses: benjefferies/branch-protection-bot@v1.1.2
+          id: disable-include-admins
+          if: always()
+          with:
+            access_token: ${{ secrets.ACCESS_TOKEN }}
+            branch: ${{ github.event.repository.default_branch }}
+            enforce_admins: false
 
         - name: Update license year
           uses: FantasticFiasco/action-update-license-year@v3.0.2
@@ -29,30 +38,119 @@
         - name: Merge license year pull request
           continue-on-error: true
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+            GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           run: gh pr merge --squash --delete-branch --admin
 
-        - name: Check out repository
-          uses: actions/checkout@v4.2.2
+        - name: Find new version
+          id: cz
+          uses: commitizen-tools/commitizen-action@0.21.0
           with:
-            fetch-depth: 0
-            token: ${{ secrets.GITHUB_TOKEN }}
+            github_token: ${{ secrets.ACCESS_TOKEN }}
+            push: false
+            commit: false
+            changelog: false
 
-        - name: Bump version and create changelog
-          id: commitizen
-          uses: commitizen-tools/commitizen-action@0.23.1
+        - name: Check out repository
+          uses: actions/checkout@v4
           with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            changelog_increment_filename: body.md
+            token: ${{ secrets.ACCESS_TOKEN }}
+            fetch-depth: 0
 
         - name: Install uv
           uses: astral-sh/setup-uv@v5.1.0
           with:
             enable-cache: true
 
+        - name: Install the project
+          run: uv sync --dev
+
+        - name: Install graphviz
+          run: sudo apt-get install -y graphviz graphviz-dev
+
+        - name: Install erdantic
+          run: uv add "erdantic<1"
+
+        - name: Generate schema diagram files
+          run: |
+            uv run python -c 'import erdantic as erd
+            from psdm.steadystate_case.case import Case as SteadystateCase
+            from psdm.topology.topology import Topology
+            from psdm.topology_case.case import Case as TopologyCase
+            from pathlib import Path
+            f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.png")
+            f_top.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(Topology).draw(f_top)
+            f_topc = Path(f"./schema/${{ steps.cz.outputs.version }}/topology_case.png")
+            f_topc.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(TopologyCase).draw(f_topc)
+            f_ssc = Path(f"./schema/${{ steps.cz.outputs.version }}/steady_state_case.png")
+            f_ssc.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(SteadystateCase).draw(f_ssc)'
+
+        - name: Copy diagrams to docs
+          run: yes | cp -rf ./schema/${{ steps.cz.outputs.version }}/*.png ./docs/
+
+        - name: Stage schema diagram files
+          run: git add ./docs
+
+        - name: Generate schema JSON files
+          run: |
+            uv run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
+            from psdm.topology.topology import Topology
+            from psdm.topology_case.case import Case as TopologyCase
+            from pathlib import Path
+            import json
+            f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.json")
+            f_top.parent.mkdir(exist_ok=True, parents=True)
+            with f_top.open(mode="w") as f:
+                json.dump(Topology.model_json_schema(), f, indent=2)
+            f_topc = Path(f"./schema/${{ steps.cz.outputs.version }}/topology_case.json")
+            f_topc.parent.mkdir(exist_ok=True, parents=True)
+            with f_topc.open(mode="w") as f:
+                json.dump(TopologyCase.model_json_schema(), f, indent=2)
+            f_ssc = Path(f"./schema/${{ steps.cz.outputs.version }}/steady_state_case.json")
+            f_ssc.parent.mkdir(exist_ok=True, parents=True)
+            with f_ssc.open(mode="w") as f:
+                json.dump(SteadystateCase.model_json_schema(), f, indent=2)'
+
+        - name: Stage schema JSON files
+          run: git add ./schema
+
+        - name: Delete unstages changes
+          run: git restore .
+
+        - name: Get current date
+          id: get_date
+          run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+        - name: Update .zenodo.json date
+          run: echo "`jq '.publication_date="${{ steps.get_date.outputs.date }}"' .zenodo.json`" > .zenodo.json
+
+        - name: Update .zenodo.json url
+          run: echo "`jq '.related_identifiers[0].identifier="https://github.com/ieeh-tu-dresden/power-system-data-model/tree/${{ steps.cz.outputs.version }}"' .zenodo.json`" > .zenodo.json
+
+        - name: Bump version and create changelog
+          uses: commitizen-tools/commitizen-action@0.21.0
+          id: commitizen
+          with:
+            github_token: ${{ secrets.ACCESS_TOKEN }}
+            changelog_increment_filename: body.md
+
+        - name: Restore 'include administrators' default branch protection
+          uses: benjefferies/branch-protection-bot@v1.1.2
+          if: always()
+          with:
+            access_token: ${{ secrets.ACCESS_TOKEN }}
+            branch: ${{ github.event.repository.default_branch }}
+            enforce_admins: ${{ steps.disable-include-admins.outputs.initial_status }}
+
         - name: Build python packages
           run: uv build
+
+        - name: Publish python packages
+          run: uv publish
+          env:
+            UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
         - name: Create github release
           uses: softprops/action-gh-release@v2.2.1
