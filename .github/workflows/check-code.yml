@@ -18,7 +18,7 @@
             allowed-commit-types: "feat,fix,docs,style,refactor,perf,test,chore,bug,build,ci,bump"
 
         - name: Install uv
-          uses: astral-sh/setup-uv@v5.1.0
+          uses: astral-sh/setup-uv@v5.2.1
           with:
             enable-cache: true
 
