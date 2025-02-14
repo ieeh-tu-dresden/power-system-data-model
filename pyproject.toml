@@ -81,7 +81,7 @@
 
 [tool.ruff.lint.flake8-type-checking]
   runtime-evaluated-base-classes = [
-    "psdm.base._Base",
+    "psdm.base.Base",
     "psdm.topology.load.PowerBase",
     "pydantic.BaseModel",
   ]
