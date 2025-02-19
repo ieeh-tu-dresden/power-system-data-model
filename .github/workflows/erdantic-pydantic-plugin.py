@@ -89,7 +89,10 @@ def get_fields_from_pydantic_model_with_default(
             name=forward_ref,
             model_full_name=model_full_name,
         ) from e
-    if FullyQualifiedName.from_object(model) == AttributeData.__qualname__:
+    if FullyQualifiedName.from_object(model) == FullyQualifiedName.from_object(
+        AttributeData,
+    ):
+        print(FullyQualifiedName.from_object(model))
         return []
 
     return [
