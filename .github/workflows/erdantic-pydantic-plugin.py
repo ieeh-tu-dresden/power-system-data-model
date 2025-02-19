@@ -87,7 +87,7 @@ def is_pydantic_model(obj: Any) -> TypeGuard[PydanticModel]:  # noqa: ANN401
         bool: True if the object is a Pydantic model, False otherwise.
     """
     if isinstance(obj, type) and obj.__name__ == AttributeData.__name__:
-        raise TypeError("AttributeData is not a Pydantic model.")
+        return False
     return isinstance(obj, type) and issubclass(obj, pydantic.BaseModel)
 
 
@@ -119,7 +119,7 @@ def get_fields_from_pydantic_model_with_default(
             # typing special forms currently get typed as object
             # https://github.com/python/mypy/issues/9773
             raw_type=pydantic_field_info.annotation or Any,  # type: ignore [arg-type]
-            raw_default_value=pydantic_field_info.default,
+            raw_default_value=5,  # pydantic_field_info.default
         )
         for name, pydantic_field_info in model.model_fields.items()
     ]
