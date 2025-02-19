@@ -1,6 +1,7 @@
 from html import escape  # noqa: INP001
 from typing import Any
 from typing import ClassVar
+from typing import TypeGuard
 
 import pydantic
 import pydantic_core
@@ -11,11 +12,12 @@ from erdantic.core import ModelInfo
 from erdantic.core import SortedDict
 from erdantic.exceptions import UnresolvableForwardRefError
 from erdantic.plugins import register_plugin
-from erdantic.plugins.pydantic import is_pydantic_model
 from typenames import REMOVE_ALL_MODULES
 from typenames import typenames
 
 from psdm.base import AttributeData
+
+PydanticModel = type[pydantic.BaseModel]
 
 
 class FieldInfoWithDefault(FieldInfo):
@@ -39,7 +41,11 @@ class FieldInfoWithDefault(FieldInfo):
         raw_type: type,
         raw_default_value: Any,  # noqa: ANN401
     ):
-        default_value = "" if raw_default_value is pydantic_core.PydanticUndefined else repr(raw_default_value)
+        default_value = (
+            ""
+            if raw_default_value is pydantic_core.PydanticUndefined
+            else repr(raw_default_value)
+        )
         field_info = cls(
             model_full_name=model_full_name,
             name=name,
@@ -69,6 +75,22 @@ class EntityRelationshipDiagramWithDefault(EntityRelationshipDiagram):
     models: SortedDict[str, ModelInfoWithDefault] = SortedDict()
 
 
+def is_pydantic_model(obj: Any) -> TypeGuard[PydanticModel]:  # noqa: ANN401
+    """Predicate function to determine if an object is a Pydantic model (not an instance).
+
+    Also excludes AttributeData from being considered a Pydantic model in context of erdantic schema graph.
+
+    Args:
+        obj (Any): The object to check.
+
+    Returns:
+        bool: True if the object is a Pydantic model, False otherwise.
+    """
+    if isinstance(obj, type) and obj.__name__ == AttributeData.__name__:
+        return False
+    return isinstance(obj, type) and issubclass(obj, pydantic.BaseModel)
+
+
 def get_fields_from_pydantic_model_with_default(
     model: pydantic.BaseModel,
 ) -> list[FieldInfoWithDefault]:
@@ -89,11 +111,6 @@ def get_fields_from_pydantic_model_with_default(
             name=forward_ref,
             model_full_name=model_full_name,
         ) from e
-    if FullyQualifiedName.from_object(model) == FullyQualifiedName.from_object(
-        AttributeData,
-    ):
-        print(FullyQualifiedName.from_object(model))
-        return []
 
     return [
         FieldInfoWithDefault.from_raw_type(
