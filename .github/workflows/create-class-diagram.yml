@@ -1,0 +1,90 @@
+---
+  name: Create class diagram
+
+  on:
+    workflow_call:
+
+  jobs:
+    create-class-diagram:
+      name: Create class diagram
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Check out repository
+          uses: actions/checkout@v4
+          with:
+            token: ${{ secrets.ACCESS_TOKEN }}
+            fetch-depth: 0
+
+        - name: Temporarily disable 'include administrators' default branch protection
+          uses: benjefferies/branch-protection-bot@v1.1.2
+          id: disable-include-admins
+          if: always()
+          with:
+            access_token: ${{ secrets.ACCESS_TOKEN }}
+            branch: ${{ github.event.repository.default_branch }}
+            enforce_admins: false
+
+        - name: Check out repository
+          uses: actions/checkout@v4
+          with:
+            token: ${{ secrets.ACCESS_TOKEN }}
+            fetch-depth: 0
+
+        - name: Install uv
+          uses: astral-sh/setup-uv@v5
+          with:
+            version: "0.5.28"  # install a specific version of uv
+            enable-cache: true
+
+        - name: Install the project
+          run: uv sync
+
+        - name: Install graphviz
+          run: sudo apt-get install -y graphviz graphviz-dev
+
+        - name: Install erdantic
+          run: uv add "erdantic>=1.05"
+        
+        - name: Register custom erdantic plugin for pydantic
+          run: uv run python erdantic-pydantic-plugin.py
+
+        - name: Generate schema diagram files
+          run: |
+            uv run python -c 'import erdantic as erd
+            from psdm.steadystate_case.case import Case as SteadystateCase
+            from psdm.topology.topology import Topology
+            from psdm.topology_case.case import Case as TopologyCase
+            from pathlib import Path
+            f_top = Path(f"./docs/topology.png")
+            f_top.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(Topology).draw(f_top)
+            f_topc = Path(f"./docs/topology_case.png")
+            f_topc.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(TopologyCase).draw(f_topc)
+            f_ssc = Path(f"./docs/steady_state_case.png")
+            f_ssc.parent.mkdir(exist_ok=True, parents=True)
+            erd.create(SteadystateCase).draw(f_ssc)'
+
+        - name: Stage schema diagram files
+          run: git add ./docs
+
+        - name: Commit changes
+          run: |
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update schema diagram files" || echo "No changes to commit"
+  
+        - name: Push changes
+          run: git push origin HEAD:${{ github.event.pull_request.head.ref }}
+  
+        - name: Delete unstaged changes
+          run: git restore .
+
+        - name: Restore 'include administrators' default branch protection
+          uses: benjefferies/branch-protection-bot@v1.1.2
+          if: always()
+          with:
+            access_token: ${{ secrets.ACCESS_TOKEN }}
+            branch: ${{ github.event.repository.default_branch }}
+            enforce_admins: ${{ steps.disable-include-admins.outputs.initial_status }}
