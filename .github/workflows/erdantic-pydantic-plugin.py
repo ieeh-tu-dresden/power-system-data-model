@@ -1,4 +1,5 @@
-from html import escape  # noqa: INP001
+# Code based on https://erdantic.drivendata.org/stable/extending/  # noqa: INP001
+from html import escape
 from pathlib import Path
 from typing import Any
 from typing import ClassVar
@@ -120,20 +121,21 @@ def get_fields_from_pydantic_model_with_default(
             # typing special forms currently get typed as object
             # https://github.com/python/mypy/issues/9773
             raw_type=pydantic_field_info.annotation or Any,  # type: ignore [arg-type]
-            raw_default_value=5,  # pydantic_field_info.default
+            raw_default_value=pydantic_field_info.default,
         )
         for name, pydantic_field_info in model.model_fields.items()
     ]
 
 
-# Register this plugin. Will override erdantic's built-in 'pydantic' plugin.
 if __name__ == "__main__":
+    # Register this plugin. Will override erdantic's built-in 'pydantic' plugin.
     register_plugin(
         "pydantic",
         is_pydantic_model,
         get_fields_from_pydantic_model_with_default,
     )
 
+    # Generate the erdantic schema graphs
     f_top = Path("./docs/topology.png")
     f_top.parent.mkdir(exist_ok=True, parents=True)
     erd.create(Topology).draw(f_top)
