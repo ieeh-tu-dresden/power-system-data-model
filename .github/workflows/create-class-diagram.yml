@@ -44,7 +44,7 @@
             from psdm.topology.topology import Topology
             from psdm.topology_case.case import Case as TopologyCase
             from pathlib import Path
-            f_top = Path(f"./docs/topology.png")
+            f_top = Path(f"./docs/topology1.png")
             f_top.parent.mkdir(exist_ok=True, parents=True)
             erd.create(Topology).draw(f_top)
             f_topc = Path(f"./docs/topology_case.png")
