@@ -103,7 +103,7 @@ def get_fields_from_pydantic_model_with_default(
             raw_default_value=pydantic_field_info.default,
         )
         for name, pydantic_field_info in model.model_fields.items()
-        if pydantic_field_info.annotation != AttributeData
+        if model is not AttributeData
     ]
 
 
