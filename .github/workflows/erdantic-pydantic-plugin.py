@@ -39,11 +39,7 @@ class FieldInfoWithDefault(FieldInfo):
         raw_type: type,
         raw_default_value: Any,  # noqa: ANN401
     ):
-        default_value = (
-            ""
-            if raw_default_value is pydantic_core.PydanticUndefined
-            else repr(raw_default_value)
-        )
+        default_value = "" if raw_default_value is pydantic_core.PydanticUndefined else repr(raw_default_value)
         field_info = cls(
             model_full_name=model_full_name,
             name=name,
