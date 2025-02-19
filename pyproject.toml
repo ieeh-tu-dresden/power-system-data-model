@@ -24,8 +24,8 @@
   build-backend = "hatchling.build"
   requires      = ["hatchling"]
 
-[tool.uv]
-  dev-dependencies = [
+[dependency-groups]
+  dev = [
     "commitizen>=3.28.0",
     "ipykernel>=6.29.5",
     "mypy>=1.15.0",
@@ -34,6 +34,9 @@
     "pytest>=8.3.1",
     "ruff>=0.9.4",
   ]
+
+[tool.uv]
+  default-groups = ["dev"]
 
 [tool.hatch.metadata]
   allow-direct-references = true
