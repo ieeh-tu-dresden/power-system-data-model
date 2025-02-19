@@ -15,6 +15,8 @@ from erdantic.plugins.pydantic import is_pydantic_model
 from typenames import REMOVE_ALL_MODULES
 from typenames import typenames
 
+from psdm.base import AttributeData
+
 
 class FieldInfoWithDefault(FieldInfo):
     """Custom FieldInfo subclass that adds a 'default_value' field and diagram column."""
@@ -37,7 +39,11 @@ class FieldInfoWithDefault(FieldInfo):
         raw_type: type,
         raw_default_value: Any,  # noqa: ANN401
     ):
-        default_value = "" if raw_default_value is pydantic_core.PydanticUndefined else repr(raw_default_value)
+        default_value = (
+            ""
+            if raw_default_value is pydantic_core.PydanticUndefined
+            else repr(raw_default_value)
+        )
         field_info = cls(
             model_full_name=model_full_name,
             name=name,
@@ -97,7 +103,7 @@ def get_fields_from_pydantic_model_with_default(
             raw_default_value=pydantic_field_info.default,
         )
         for name, pydantic_field_info in model.model_fields.items()
-        if name != "AttributeData"
+        if pydantic_field_info.annotation != AttributeData
     ]
 
 

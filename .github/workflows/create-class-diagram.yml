@@ -8,8 +8,6 @@
 
     workflow_call:
 
-    workflow_dispatch:
-
   jobs:
     create-class-diagram:
       name: Create class diagram
@@ -63,7 +61,7 @@
           run: |
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "Update schema diagram files" || echo "No changes to commit"
+            git commit -m "build(docs): update schema diagram files" || echo "No changes to commit"
             git push origin HEAD:${{ github.event.pull_request.head.ref }}
   
         - name: Delete unstaged changes
