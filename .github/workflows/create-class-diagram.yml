@@ -5,8 +5,10 @@
     pull_request:
       branches:
         - main
-        
+
     workflow_call:
+
+    workflow_dispatch:
 
   jobs:
     create-class-diagram:
@@ -18,22 +20,11 @@
           uses: actions/checkout@v4
           with:
             token: ${{ secrets.ACCESS_TOKEN }}
-            fetch-depth: 0
-
-        - name: Temporarily disable 'include administrators' default branch protection
-          uses: benjefferies/branch-protection-bot@v1.1.2
-          id: disable-include-admins
-          if: always()
-          with:
-            access_token: ${{ secrets.ACCESS_TOKEN }}
-            branch: ${{ github.event.repository.default_branch }}
-            enforce_admins: false
 
         - name: Check out repository
           uses: actions/checkout@v4
           with:
             token: ${{ secrets.ACCESS_TOKEN }}
-            fetch-depth: 0
 
         - name: Install uv
           uses: astral-sh/setup-uv@v5
@@ -84,11 +75,3 @@
   
         - name: Delete unstaged changes
           run: git restore .
-
-        - name: Restore 'include administrators' default branch protection
-          uses: benjefferies/branch-protection-bot@v1.1.2
-          if: always()
-          with:
-            access_token: ${{ secrets.ACCESS_TOKEN }}
-            branch: ${{ github.event.repository.default_branch }}
-            enforce_admins: ${{ steps.disable-include-admins.outputs.initial_status }}
