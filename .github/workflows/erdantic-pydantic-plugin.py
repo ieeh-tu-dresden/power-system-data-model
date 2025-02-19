@@ -47,7 +47,11 @@ class FieldInfoWithDefault(FieldInfo):
         raw_type: type,
         raw_default_value: Any,  # noqa: ANN401
     ):
-        default_value = "" if raw_default_value is pydantic_core.PydanticUndefined else repr(raw_default_value)
+        default_value = (
+            ""
+            if raw_default_value is pydantic_core.PydanticUndefined
+            else repr(raw_default_value)
+        )
         field_info = cls(
             model_full_name=model_full_name,
             name=name,
@@ -135,13 +139,13 @@ if __name__ == "__main__":
         get_fields_from_pydantic_model_with_default,
     )
 
-    # Generate the erdantic schema graphs
-    f_top = Path("./docs/topology.png")
+    # Generate the erdantic schema graphs (entity relationship diagrams) for the Topology, TopologyCase, and SteadystateCase models
+    f_top = Path("./docs/entity_rel__topology.png")
     f_top.parent.mkdir(exist_ok=True, parents=True)
     erd.create(Topology).draw(f_top)
-    f_topc = Path("./docs/topology_case.png")
+    f_topc = Path("./docs/entity_rel__topology_case.png")
     f_topc.parent.mkdir(exist_ok=True, parents=True)
     erd.create(TopologyCase).draw(f_topc)
-    f_ssc = Path("./docs/steady_state_case.png")
+    f_ssc = Path("./docs/entity_rel__steady_state_case.png")
     f_ssc.parent.mkdir(exist_ok=True, parents=True)
     erd.create(SteadystateCase).draw(f_ssc)
