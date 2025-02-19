@@ -1,4 +1,4 @@
-from html import escape
+from html import escape  # noqa: INP001
 from typing import Any
 from typing import ClassVar
 
