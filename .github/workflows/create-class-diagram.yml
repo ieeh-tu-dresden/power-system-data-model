@@ -35,7 +35,7 @@
           run: uv add "erdantic>=1.0.5"
         
         - name: Register custom erdantic plugin for pydantic
-          run: uv run python erdantic-pydantic-plugin.py
+          run: uv run python ./.github/workflows/erdantic-pydantic-plugin.py
 
         - name: Generate schema diagram files
           run: |
