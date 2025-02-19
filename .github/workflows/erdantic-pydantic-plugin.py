@@ -39,7 +39,11 @@ class FieldInfoWithDefault(FieldInfo):
         raw_type: type,
         raw_default_value: Any,  # noqa: ANN401
     ):
-        default_value = "" if raw_default_value is pydantic_core.PydanticUndefined else repr(raw_default_value)
+        default_value = (
+            ""
+            if raw_default_value is pydantic_core.PydanticUndefined
+            else repr(raw_default_value)
+        )
         field_info = cls(
             model_full_name=model_full_name,
             name=name,
@@ -89,6 +93,9 @@ def get_fields_from_pydantic_model_with_default(
             name=forward_ref,
             model_full_name=model_full_name,
         ) from e
+    if model.__qualname__ == AttributeData.__qualname__:  # type: ignore [attr-defined]
+        return []
+
     return [
         FieldInfoWithDefault.from_raw_type(
             model_full_name=FullyQualifiedName.from_object(model),
@@ -99,7 +106,6 @@ def get_fields_from_pydantic_model_with_default(
             raw_default_value=pydantic_field_info.default,
         )
         for name, pydantic_field_info in model.model_fields.items()
-        if model is not AttributeData
     ]
 
 
