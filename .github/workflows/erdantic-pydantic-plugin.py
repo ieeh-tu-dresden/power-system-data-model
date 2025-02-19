@@ -1,8 +1,10 @@
 from html import escape  # noqa: INP001
+from pathlib import Path
 from typing import Any
 from typing import ClassVar
 from typing import TypeGuard
 
+import erdantic as erd
 import pydantic
 import pydantic_core
 from erdantic.core import EntityRelationshipDiagram
@@ -16,6 +18,9 @@ from typenames import REMOVE_ALL_MODULES
 from typenames import typenames
 
 from psdm.base import AttributeData
+from psdm.steadystate_case.case import Case as SteadystateCase
+from psdm.topology.topology import Topology
+from psdm.topology_case.case import Case as TopologyCase
 
 PydanticModel = type[pydantic.BaseModel]
 
@@ -128,3 +133,13 @@ if __name__ == "__main__":
         is_pydantic_model,
         get_fields_from_pydantic_model_with_default,
     )
+
+    f_top = Path("./docs/topology.png")
+    f_top.parent.mkdir(exist_ok=True, parents=True)
+    erd.create(Topology).draw(f_top)
+    f_topc = Path("./docs/topology_case.png")
+    f_topc.parent.mkdir(exist_ok=True, parents=True)
+    erd.create(TopologyCase).draw(f_topc)
+    f_ssc = Path("./docs/steady_state_case.png")
+    f_ssc.parent.mkdir(exist_ok=True, parents=True)
+    erd.create(SteadystateCase).draw(f_ssc)

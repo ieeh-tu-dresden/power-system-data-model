@@ -34,25 +34,8 @@
         - name: Install erdantic
           run: uv add "erdantic>=1.0.5"
         
-        - name: Register custom erdantic plugin for pydantic
+        - name: Register custom erdantic plugin for pydantic and generate schema diagram files
           run: uv run python ./.github/workflows/erdantic-pydantic-plugin.py
-
-        - name: Generate schema diagram files
-          run: |
-            uv run python -c 'import erdantic as erd
-            from psdm.steadystate_case.case import Case as SteadystateCase
-            from psdm.topology.topology import Topology
-            from psdm.topology_case.case import Case as TopologyCase
-            from pathlib import Path
-            f_top = Path(f"./docs/topology.png")
-            f_top.parent.mkdir(exist_ok=True, parents=True)
-            erd.create(Topology).draw(f_top)
-            f_topc = Path(f"./docs/topology_case.png")
-            f_topc.parent.mkdir(exist_ok=True, parents=True)
-            erd.create(TopologyCase).draw(f_topc)
-            f_ssc = Path(f"./docs/steady_state_case.png")
-            f_ssc.parent.mkdir(exist_ok=True, parents=True)
-            erd.create(SteadystateCase).draw(f_ssc)'
 
         - name: Stage schema diagram files
           run: git add ./docs
