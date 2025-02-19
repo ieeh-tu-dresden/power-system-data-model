@@ -2,7 +2,7 @@
   name: Create class diagram
 
   on:
-    pull_request:
+    push:
       branches:
         - main
 
