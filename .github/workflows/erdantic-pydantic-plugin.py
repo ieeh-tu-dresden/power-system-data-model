@@ -87,7 +87,7 @@ def is_pydantic_model(obj: Any) -> TypeGuard[PydanticModel]:  # noqa: ANN401
         bool: True if the object is a Pydantic model, False otherwise.
     """
     if isinstance(obj, type) and obj.__name__ == AttributeData.__name__:
-        return False
+        raise TypeError("AttributeData is not a Pydantic model.")
     return isinstance(obj, type) and issubclass(obj, pydantic.BaseModel)
 
 
