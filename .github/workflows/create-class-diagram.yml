@@ -64,7 +64,9 @@
             git commit -m "Update schema diagram files" || echo "No changes to commit"
   
         - name: Push changes
-          run: git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          run: |
+            git pull
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
   
         - name: Delete unstaged changes
           run: git restore .
