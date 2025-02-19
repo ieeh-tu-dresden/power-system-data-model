@@ -59,14 +59,10 @@
 
         - name: Commit changes
           run: |
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "Update schema diagram files" || echo "No changes to commit"
-  
-        - name: Push changes
-          run: |
-            git pull
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            git push
   
         - name: Delete unstaged changes
           run: git restore .
