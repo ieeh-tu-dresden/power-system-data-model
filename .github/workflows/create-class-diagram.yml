@@ -32,7 +32,7 @@
           run: sudo apt-get install -y graphviz graphviz-dev
 
         - name: Install erdantic
-          run: uv add "erdantic>=1.05"
+          run: uv add "erdantic>=1.0.5"
         
         - name: Register custom erdantic plugin for pydantic
           run: uv run python erdantic-pydantic-plugin.py
