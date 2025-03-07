@@ -8,10 +8,6 @@
       name: test code
       uses: ./.github/workflows/test-code.yml
     
-    create-class-diagram:
-      name: Create class diagram
-      uses: ./.github/workflows/create-class-diagram.yml
-
     create-release:
       name: Create release
       runs-on: ubuntu-latest
@@ -69,28 +65,17 @@
         - name: Install the project
           run: uv sync
 
-        - name: Install graphviz
-          run: sudo apt-get install -y graphviz graphviz-dev
-
-        - name: Install erdantic
-          run: uv add "erdantic>=1.0.5"
-        
-        - name: Register custom erdantic plugin for pydantic and generate schema diagram files
-          run: uv run python ./.github/workflows/erdantic-pydantic-plugin.py
-
-        - name: Stage schema diagram files
-          run: git add ./docs
-
         - name: Copy diagrams to schema files
           run: yes | cp -rf ./docs/entity_rel__*.png ./schema/${{ steps.cz.outputs.version }}/
 
         - name: Generate schema JSON files
           run: |
-            uv run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
+            uv run python -c 'import json
+            from pathlib import Path
+            from psdm.steadystate_case.case import Case as SteadystateCase
             from psdm.topology.topology import Topology
             from psdm.topology_case.case import Case as TopologyCase
-            from pathlib import Path
-            import json
+            
             f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.json")
             f_top.parent.mkdir(exist_ok=True, parents=True)
             with f_top.open(mode="w") as f:
