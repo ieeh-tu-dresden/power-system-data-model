@@ -28,20 +28,20 @@ This is the base topology containing all elements of the exported grid:
 - Transformers (symmetrical: 2- or 3-winding)
 - External grids
 - Loads (consumer, producer, grid assets)
-![topology relationship diagram](./docs/topology.png)
+![topology relationship diagram](./docs/entity_rel__topology.png)
 
 In addition to the explicitly defined element attributes, it is possible to save user-specific additional information as optional AttributeData ([Export example of powerfactory-tools](https://github.com/ieeh-tu-dresden/powerfactory-tools/blob/main/examples/powerfactory_export.ipynb)).
 
 ### Topology Case
 This holds information about disabled elements to represent a specific operational case based on the base topology.
-  ![topology case relationship diagram](./docs/topology_case.png)
+  ![topology case relationship diagram](./docs/entity_rel__topology_case.png)
 
 ### Steadystate Case
 This holds information for a specific operational case such as:
 - power draw/infeed of load
 - tap posistion of transformer
 - operating point of external grid
-  ![steadystate case relationship diagram](./docs/steady_state_case.png)
+  ![steadystate case relationship diagram](./docs/entity_rel__steady_state_case.png)
 
 ## <div id="remarks" /> General Remarks
 

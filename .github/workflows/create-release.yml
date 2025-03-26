@@ -7,21 +7,21 @@
     test-code:
       name: test code
       uses: ./.github/workflows/test-code.yml
-
+    
     create-release:
       name: Create release
-      runs-on: ubuntu-24.04
+      runs-on: ubuntu-latest
       needs: [test-code]
 
       steps:
         - name: Check out repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
           with:
             token: ${{ secrets.ACCESS_TOKEN }}
             fetch-depth: 0
 
         - name: Temporarily disable 'include administrators' default branch protection
-          uses: benjefferies/branch-protection-bot@v1.1.2
+          uses: benjefferies/branch-protection-bot@af281f37de86139d1c7a27b91176b5dc1c2c827c  # v1.1.2
           id: disable-include-admins
           if: always()
           with:
@@ -30,7 +30,7 @@
             enforce_admins: false
 
         - name: Update license year
-          uses: FantasticFiasco/action-update-license-year@v3.0.2
+          uses: FantasticFiasco/action-update-license-year@9135da8f9ccc675217e02357c744b6b541d45cb0  # v3.0.2
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             prTitle: "docs(license): update copyright year(s)"
@@ -43,7 +43,7 @@
 
         - name: Find new version
           id: cz
-          uses: commitizen-tools/commitizen-action@0.23.1
+          uses: commitizen-tools/commitizen-action@a49cac8e98f3954a16e107f026f71cf84b17706c  # 0.23.1
           with:
             github_token: ${{ secrets.ACCESS_TOKEN }}
             push: false
@@ -51,55 +51,31 @@
             changelog: false
 
         - name: Check out repository
-          uses: actions/checkout@v4
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
           with:
             token: ${{ secrets.ACCESS_TOKEN }}
             fetch-depth: 0
 
         - name: Install uv
-          uses: astral-sh/setup-uv@v5.1.0
+          uses: astral-sh/setup-uv@v5
           with:
+            version: "0.5.28"  # install a specific version of uv
             enable-cache: true
 
         - name: Install the project
-          run: uv sync --dev
+          run: uv sync
 
-        - name: Install graphviz
-          run: sudo apt-get install -y graphviz graphviz-dev
-
-        - name: Install erdantic
-          run: uv add "erdantic<1"
-
-        - name: Generate schema diagram files
-          run: |
-            uv run python -c 'import erdantic as erd
-            from psdm.steadystate_case.case import Case as SteadystateCase
-            from psdm.topology.topology import Topology
-            from psdm.topology_case.case import Case as TopologyCase
-            from pathlib import Path
-            f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.png")
-            f_top.parent.mkdir(exist_ok=True, parents=True)
-            erd.create(Topology).draw(f_top)
-            f_topc = Path(f"./schema/${{ steps.cz.outputs.version }}/topology_case.png")
-            f_topc.parent.mkdir(exist_ok=True, parents=True)
-            erd.create(TopologyCase).draw(f_topc)
-            f_ssc = Path(f"./schema/${{ steps.cz.outputs.version }}/steady_state_case.png")
-            f_ssc.parent.mkdir(exist_ok=True, parents=True)
-            erd.create(SteadystateCase).draw(f_ssc)'
-
-        - name: Copy diagrams to docs
-          run: yes | cp -rf ./schema/${{ steps.cz.outputs.version }}/*.png ./docs/
-
-        - name: Stage schema diagram files
-          run: git add ./docs
+        - name: Copy diagrams to schema files
+          run: yes | cp -rf ./docs/entity_rel__*.png ./schema/${{ steps.cz.outputs.version }}/
 
         - name: Generate schema JSON files
           run: |
-            uv run python -c 'from psdm.steadystate_case.case import Case as SteadystateCase
+            uv run python -c 'import json
+            from pathlib import Path
+            from psdm.steadystate_case.case import Case as SteadystateCase
             from psdm.topology.topology import Topology
             from psdm.topology_case.case import Case as TopologyCase
-            from pathlib import Path
-            import json
+            
             f_top = Path(f"./schema/${{ steps.cz.outputs.version }}/topology.json")
             f_top.parent.mkdir(exist_ok=True, parents=True)
             with f_top.open(mode="w") as f:
@@ -130,14 +106,14 @@
           run: echo "`jq '.related_identifiers[0].identifier="https://github.com/ieeh-tu-dresden/power-system-data-model/tree/${{ steps.cz.outputs.version }}"' .zenodo.json`" > .zenodo.json
 
         - name: Bump version and create changelog
-          uses: commitizen-tools/commitizen-action@0.23.1
+          uses: commitizen-tools/commitizen-action@a49cac8e98f3954a16e107f026f71cf84b17706c  # 0.23.1
           id: commitizen
           with:
             github_token: ${{ secrets.ACCESS_TOKEN }}
             changelog_increment_filename: body.md
 
         - name: Restore 'include administrators' default branch protection
-          uses: benjefferies/branch-protection-bot@v1.1.2
+          uses: benjefferies/branch-protection-bot@af281f37de86139d1c7a27b91176b5dc1c2c827c  # v1.1.2
           if: always()
           with:
             access_token: ${{ secrets.ACCESS_TOKEN }}
@@ -153,7 +129,7 @@
             UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
         - name: Create github release
-          uses: softprops/action-gh-release@v2.2.1
+          uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda  # v2.2.1
           with:
             body_path: body.md
             tag_name: ${{ steps.commitizen.outputs.version }}
