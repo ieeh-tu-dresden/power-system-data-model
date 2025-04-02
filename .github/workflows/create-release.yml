@@ -62,7 +62,7 @@
             version: "0.5.28"  # install a specific version of uv
             enable-cache: true
 
-        - name: Install the project including dpendencies
+        - name: Install the project including dependencies
           run: uv sync
 
         - name: Update year in copyright notice in all files
