@@ -1,6 +1,6 @@
 # :author: Sasan Jacob Rasti <sasan_jacob.rasti@tu-dresden.de>
 # :author: Sebastian Krahmer <sebastian.krahmer@tu-dresden.de>
-# :copyright: Copyright (c) Institute of Electrical Power Systems and High VoltagePhasePhase, VoltagePhaseEarth Engineering - TU Dresden, 2022-2023.
+# :copyright: Copyright (c) Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, 2022-2025.
 # :license: BSD 3-Clause
 
 from __future__ import annotations
@@ -17,15 +17,16 @@ class LoadModel(Base):
 
     power = power_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)
     c_z = 1 - c_p - c_i
+    Assuming the exponents exp_p=0, exp_i=1 and exp_z=2 for a ZIP equivalent model.
     """
 
     u_0: Voltage
     name: str | None = None
     c_p: pydantic.confloat(ge=0, le=1) = 1.0  # type: ignore[valid-type]
     c_i: pydantic.confloat(ge=0, le=1) = 0.0  # type: ignore[valid-type]
-    exp_p: int = 0
-    exp_i: int = 1
-    exp_z: int = 2
+    exp_p: float = 0
+    exp_i: float = 1
+    exp_z: float = 2
 
     @pydantic.model_validator(mode="after")
     def validate_range_c(self) -> LoadModel:
@@ -53,4 +54,9 @@ class LoadModel(Base):
             )
             for p, _u, _u_0 in zip(power.value, u.value, self.u_0.value, strict=True)
         )
-        return Power(power_type=power.power_type, system_type=power.system_type, value=value, unit=power.unit)
+        return Power(
+            power_type=power.power_type,
+            system_type=power.system_type,
+            value=value,
+            unit=power.unit,
+        )
