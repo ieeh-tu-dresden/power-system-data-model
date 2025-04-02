@@ -23,7 +23,7 @@ class TestAttributeData:
             ("value", does_not_raise()),
             ([1, 1], does_not_raise()),
             ([1, "value"], does_not_raise()),
-            ([], does_not_raise()),
+            ([], pytest.raises(pydantic.ValidationError)),
             (None, pytest.raises(pydantic.ValidationError)),
             (
                 {"key": "value"},
