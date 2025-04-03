@@ -13,31 +13,20 @@ from psdm.quantities.multi_phase import Voltage
 
 
 class LoadModel(Base):
-    """Load representation based on polynomial model.
+    """Load representation based on polynomial model without frequency dependency.
 
     power = power_0*(c_p*(U/U_0)^exp_p + c_i*(U/U_0)^exp_i + (c_z)*(U/U_0)^exp_z)
-    c_z = 1 - c_p - c_i
+    The component c_z is computed automatically based on c_z = 1 - c_p - c_i.
     Assuming the exponents exp_p=0, exp_i=1 and exp_z=2 for a ZIP equivalent model.
     """
 
     u_0: Voltage
     name: str | None = None
-    c_p: pydantic.confloat(ge=0, le=1) = 1.0  # type: ignore[valid-type]
-    c_i: pydantic.confloat(ge=0, le=1) = 0.0  # type: ignore[valid-type]
-    exp_p: float = 0
-    exp_i: float = 1
-    exp_z: float = 2
-
-    @pydantic.model_validator(mode="after")
-    def validate_range_c(self) -> LoadModel:
-        name = self.name
-        c_p = self.c_p
-        c_i = self.c_i
-        if c_p + c_i > 1:
-            msg = f"Load model {name!r}: Sum of components must not exceed 1, but {(c_p + c_i)=}."
-            raise ValueError(msg)
-
-        return self
+    c_p: float = 1.0
+    c_i: float = 0.0
+    exp_p: float = 0.0
+    exp_i: float = 1.0
+    exp_z: float = 2.0
 
     @pydantic.computed_field  # type: ignore[prop-decorator]
     @property
