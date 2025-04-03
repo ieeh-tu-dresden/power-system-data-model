@@ -80,8 +80,8 @@ def validate_deprecated(self: U, attr_dpr: str, attr_new: str) -> U:
 class AttributeData(_Base):
     name: str  # attribute key
     value: (
-        PrimitiveTypes | NonEmptyTuple[PrimitiveTypes] | UniqueNonEmptyTuple[AttributeData]
-    )  # either single primitive type value or vector of primitive type values or list of nested AttributeData objects
+        PrimitiveTypes | NonEmptyTuple[PrimitiveTypes] | UniqueTuple[AttributeData]
+    )  # either single primitive type value or vector of primitive type values or list of nested AttributeData objects which might be also none/empty
     description: str | None = None
 
 
