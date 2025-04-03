@@ -81,7 +81,7 @@ class AttributeData(_Base):
     name: str  # attribute key
     value: (
         PrimitiveTypes | NonEmptyTuple[PrimitiveTypes] | UniqueTuple[AttributeData]
-    )  # either single primitive type value or vector of primitive type values or list of nested AttributeData objects which might be also none/empty
+    )  # either single primitive type value or vector of primitive type values or list of nested AttributeData objects which may also be empty or None
     description: str | None = None
 
 
