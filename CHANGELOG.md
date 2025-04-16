@@ -1,3 +1,10 @@
+## 2.3.3 (2025-04-16)
+
+### Fix
+
+- broken release pipeline (#186)
+- make loadmodel true polynominal (#181)
+
 ## 2.3.2 (2025-01-24)
 
 ### Fix
