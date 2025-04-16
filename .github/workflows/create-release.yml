@@ -90,10 +90,7 @@
             for d in dirs:
                 update_year_in_copyright_notice(d)'
 
-        - name: Copy diagrams to schema files
-          run: yes | cp -rf ./docs/entity_rel__*.png ./schema/${{ steps.cz.outputs.version }}/
-
-        - name: Generate schema JSON files
+        - name: Create new schema directory and generate schema JSON files
           run: |
             uv run python -c 'import json
             from pathlib import Path
@@ -119,6 +116,9 @@
 
         - name: Delete unstages changes
           run: git restore .
+
+        - name: Copy diagrams to latest schema directory
+          run: yes | cp -rf ./docs/entity_rel__*.png ./schema/${{ steps.cz.outputs.version }}/
 
         - name: Get current date
           id: get_date
