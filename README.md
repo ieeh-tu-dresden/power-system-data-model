@@ -1,18 +1,22 @@
+
+<div align="center">
+  <img src="./docs/static/PSDM_icon_extended_360px.png" width="200">
+</div>
+
+----
+
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-
-![PSDM Icon](./docs/PSDM_icon_social_media.png)
-
 
 A data model for the description of electrical power systems.
 
-- [ Field of Application](#field-of-application)
+- [Field of Application](#field-of-application)
   - [Grid Topology](#grid-topology)
   - [Topology Case](#topology-case)
   - [Steadystate Case](#steadystate-case)
-- [ General Remarks](#general-remarks)
-- [ Installation](#installation)
-- [ Development](#development)
-- [ Attribution](#attribution)
+- [General Remarks](#general-remarks)
+- [Installation](#installation)
+- [Development](#development)
+- [Attribution](#attribution)
 
 ## Field of Application
 
