@@ -47,7 +47,7 @@ This holds information about disabled elements to represent a specific operation
 ### Steadystate Case
 This holds information for a specific operational case such as:
 - power draw/infeed of load
-- tap posistion of transformer
+- tap position of transformer
 - operating point of external grid
   ![steadystate case relationship diagram](./docs/entity_rel__steady_state_case.png)
 
