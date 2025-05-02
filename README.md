@@ -1,11 +1,13 @@
 
+# PowerSystem Data Model
+[![image](https://img.shields.io/pypi/v/ieeh-power-system-data-model.svg)](https://pypi.python.org/pypi/ieeh-power-system-data-model)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://docs.pydantic.dev/latest/contributing/#badges)
+
 <div align="center">
   <img src="./docs/static/PSDM_icon_extended_360px.png" width="200">
 </div>
-
-----
-
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 A data model for the description of electrical power systems.
 
@@ -22,6 +24,8 @@ A data model for the description of electrical power systems.
 
 This data model is intended to describe electrical power systems.
 It provides a hierarchical structure/schema to describe unique entity relations as well as parameter sets.
+
+Read also this comprehensive [blog post](https://medium.com/@Sebastian-DD/export-a-network-from-powerfactory-to-the-power-system-data-model-db46103bdabe) about the PSDM.
 
 The data model is structured as the following schema:
 
@@ -56,7 +60,7 @@ Please find below some important general remarks and assumptions to consider for
   - Only **symmetrical** grid assets, e.g. transformer or line, are supported.
   - The `Rated Power` should always be defined positive (absolute value).
 - The interaction between load models and controllers are depicted in the following schematic:
-  ![active/reactive power schematics](./docs/power_schematics.png)
+  ![active/reactive power schematics](./docs/static/power_schematics.png)
 
 ## Installation
 
