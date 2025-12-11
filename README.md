@@ -1,11 +1,14 @@
 
+# PowerSystem Data Model
+[![image](https://img.shields.io/pypi/v/ieeh-power-system-data-model.svg)](https://pypi.python.org/pypi/ieeh-power-system-data-model)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://docs.pydantic.dev/latest/contributing/#badges)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8087079.svg)](https://doi.org/10.5281/zenodo.8087079)
+
 <div align="center">
   <img src="./docs/static/PSDM_icon_extended_360px.png" width="200">
 </div>
-
-----
-
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 A data model for the description of electrical power systems.
 
@@ -22,6 +25,8 @@ A data model for the description of electrical power systems.
 
 This data model is intended to describe electrical power systems.
 It provides a hierarchical structure/schema to describe unique entity relations as well as parameter sets.
+
+Read also this comprehensive [blog post](https://medium.com/@Sebastian-DD/export-a-network-from-powerfactory-to-the-power-system-data-model-db46103bdabe) about the PSDM.
 
 The data model is structured as the following schema:
 
@@ -43,7 +48,7 @@ This holds information about disabled elements to represent a specific operation
 ### Steadystate Case
 This holds information for a specific operational case such as:
 - power draw/infeed of load
-- tap posistion of transformer
+- tap position of transformer
 - operating point of external grid
   ![steadystate case relationship diagram](./docs/entity_rel__steady_state_case.png)
 
@@ -56,7 +61,7 @@ Please find below some important general remarks and assumptions to consider for
   - Only **symmetrical** grid assets, e.g. transformer or line, are supported.
   - The `Rated Power` should always be defined positive (absolute value).
 - The interaction between load models and controllers are depicted in the following schematic:
-  ![active/reactive power schematics](./docs/power_schematics.png)
+  ![active/reactive power schematics](./docs/static/power_schematics.png)
 
 ## Installation
 
@@ -108,3 +113,9 @@ Please cite as:
 Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, _Power System Data Model - A data model for the description of electrical power systems_, Zenodo, 2023. <https://doi.org/10.5281/zenodo.8087079>.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8087079.svg)](https://doi.org/10.5281/zenodo.8087079)
+
+Alternatively, when using the PSDM together with the [powerfactory-tools](https://github.com/ieeh-tu-dresden/powerfactory-tools), please cite also:
+
+S. Krahmer, S. J. Rasti, L. Fiedler and M. Schmidt, „PowerFactory-Tools: A Python Package to Facilitate the Control of DIgSILENT PowerFactory“. Journal of Open Source Software (JOSS), 10(116), 9281, 2025. doi: 10.21105/joss.09281.
+
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.09281/status.svg)](https://doi.org/10.21105/joss.09281)
