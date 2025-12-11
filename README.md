@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://docs.pydantic.dev/latest/contributing/#badges)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8087079.svg)](https://doi.org/10.5281/zenodo.8087079)
 
 <div align="center">
   <img src="./docs/static/PSDM_icon_extended_360px.png" width="200">
@@ -112,3 +113,9 @@ Please cite as:
 Institute of Electrical Power Systems and High Voltage Engineering - TU Dresden, _Power System Data Model - A data model for the description of electrical power systems_, Zenodo, 2023. <https://doi.org/10.5281/zenodo.8087079>.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8087079.svg)](https://doi.org/10.5281/zenodo.8087079)
+
+Alternatively, when using the PSDM together with the [powerfactory-tools](https://github.com/ieeh-tu-dresden/powerfactory-tools), please cite also:
+
+S. Krahmer, S. J. Rasti, L. Fiedler and M. Schmidt, „PowerFactory-Tools: A Python Package to Facilitate the Control of DIgSILENT PowerFactory“. Journal of Open Source Software (JOSS), 10(116), 9281, 2025. doi: 10.21105/joss.09281.
+
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.09281/status.svg)](https://doi.org/10.21105/joss.09281)
