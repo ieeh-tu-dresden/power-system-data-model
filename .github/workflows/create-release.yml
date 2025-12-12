@@ -43,7 +43,7 @@
 
         - name: Find new version
           id: cz
-          uses: commitizen-tools/commitizen-action@9615e7be1cf341393c52e865ebbdaa0712176d81  # 0.25.0
+          uses: commitizen-tools/commitizen-action@bb4f1df6601e2a1a891506581b0c53acdc88e07d  # 0.26.0
           with:
             github_token: ${{ secrets.ACCESS_TOKEN }}
             push: false
@@ -131,7 +131,7 @@
           run: echo "`jq '.related_identifiers[0].identifier="https://github.com/ieeh-tu-dresden/power-system-data-model/tree/${{ steps.cz.outputs.version }}"' .zenodo.json`" > .zenodo.json
 
         - name: Bump version and create changelog
-          uses: commitizen-tools/commitizen-action@9615e7be1cf341393c52e865ebbdaa0712176d81  # 0.25.0
+          uses: commitizen-tools/commitizen-action@bb4f1df6601e2a1a891506581b0c53acdc88e07d  # 0.26.0
           id: commitizen
           with:
             github_token: ${{ secrets.ACCESS_TOKEN }}
